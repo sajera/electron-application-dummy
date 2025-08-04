@@ -29,7 +29,11 @@ const App = observer(function App () {
   // }, [])
 
   return <>
-    <h2 className="bg-gray-100 dark:bg-gray-900 text-primary-500">Hello from React! <mark>{process.env.SID}</mark></h2>
+    <h2 className="bg-gray-100 dark:bg-gray-900 text-primary-500">
+      Hello from React!
+      <mark>{process.env.SID}</mark>
+    </h2>
+
     {/* NOTE App */}
     {/*<Loader active={!currentUser.initialized || (health.isLoading && !health.isLoaded)} title="App is Loading...">*/}
     {/*  {!health.content ? <Health /> : !currentUser.isAuthenticated ? <Auth /> : <Router history={history}>*/}
@@ -45,6 +49,7 @@ const App = observer(function App () {
     {/*</Loader>*/}
     {/* NOTE common things */}
     <div id="ModalPortal" />
+
     {/*<Confirmation />*/}
     {/*<Toaster />*/}
   </>

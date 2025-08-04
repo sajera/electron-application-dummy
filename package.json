@@ -5,8 +5,8 @@
   "description": "electron-application-dummy",
   "author": "Sajera: Serhii P <allsajera@gmail.com> (Sajera)",
   "scripts": {
-    "lint": "eslint src",
-    "lint:fix": "eslint src --fix",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "build": "electron-forge make",
     "start": "electron-forge start",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -28,6 +28,11 @@
     "dotenv-webpack": "^8.1.1",
     "electron": "^37.2.4",
     "eslint": "^9.32.0",
+    "@eslint/js": "^9.32.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-webpack-plugin": "^5.0.2",
+    "globals": "^16.3.0",
     "postcss": "^8.5.6",
     "postcss-loader": "^8.1.1",
     "style-loader": "^4.0.0",
