@@ -1,0 +1,176 @@
+
+@import "tailwindcss";
+
+/* NOTE Toggling dark mode manually @see: https://tailwindcss.com/docs/dark-mode#toggling-dark-mode-manually */
+@custom-variant dark (&:where(.dark, .dark *));
+
+html {
+  height: 100%;
+  /* NOTE globally reduced all sizes of application */
+  font-size: 14px;
+}
+
+body {
+  /* NOTED match the body size to the screen and use it as a container for all content */
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow-x: hidden;
+}
+
+@theme {
+  --font-sans: Roboto, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+  /* NOTE define theme variables to work with tailwind */
+  --color-primary-50: red;
+  --color-primary-100: red;
+  --color-primary-200: red;
+  --color-primary-300: red;
+  --color-primary-400: red;
+  --color-primary-500: red;
+  --color-primary-600: red;
+  --color-primary-700: red;
+  --color-primary-800: red;
+  --color-primary-900: red;
+  --color-primary-950: red;
+}
+
+:root, #default-mode, #default-theme {
+  --color-primary-50: #ecfbff;
+  --color-primary-100: #d4f4ff;
+  --color-primary-200: #b2edff;
+  --color-primary-300: #7de4ff;
+  --color-primary-400: #40d1ff;
+  --color-primary-500: #14b3ff;
+  --color-primary-600: #0093ff;
+  --color-primary-700: #007bff;
+  --color-primary-800: #006ce0;
+  --color-primary-900: #0855a0;
+  --color-primary-950: #0a3461;
+}
+
+#cdt-mode, #cdt-theme {
+  --color-primary-50: #eefffd;
+  --color-primary-100: #c6fff9;
+  --color-primary-200: #8efff6;
+  --color-primary-300: #4efaef;
+  --color-primary-400: #19e8e1;
+  --color-primary-500: #01cbc8;
+  --color-primary-600: #00a4a4;
+  --color-primary-700: #038385;
+  --color-primary-800: #086467;
+  --color-primary-900: #0c5355;
+  --color-primary-950: #003034;
+}
+
+#wedgewood-mode, #wedgewood-theme {
+  --color-primary-50: #f2f9f9;
+  --color-primary-100: #ddeff0;
+  --color-primary-200: #bfe0e2;
+  --color-primary-300: #92cace;
+  --color-primary-400: #5faab1;
+  --color-primary-500: #438e96;
+  --color-primary-600: #3b757f;
+  --color-primary-700: #356169;
+  --color-primary-800: #325158;
+  --color-primary-900: #2d464c;
+  --color-primary-950: #1a2c32;
+}
+
+#vesuvius-mode, #vesuvius-theme {
+  --color-primary-50: #fffbeb;
+  --color-primary-100: #fef3c7;
+  --color-primary-200: #fde58a;
+  --color-primary-300: #fbd24e;
+  --color-primary-400: #fabe25;
+  --color-primary-500: #f49d0c;
+  --color-primary-600: #d87607;
+  --color-primary-700: #bc560a;
+  --color-primary-800: #923f0e;
+  --color-primary-900: #78340f;
+  --color-primary-950: #451a03;
+}
+
+#mantis-mode, #mantis-theme {
+  --color-primary-50: #f2f8ed;
+  --color-primary-100: #e9f5e3;
+  --color-primary-200: #d3eac8;
+  --color-primary-300: #afd89d;
+  --color-primary-400: #82bd69;
+  --color-primary-500: #61a146;
+  --color-primary-600: #4c8435;
+  --color-primary-700: #3d692c;
+  --color-primary-800: #345427;
+  --color-primary-900: #2b4522;
+  --color-primary-950: #14240f;
+}
+
+#wisteria-mode, #wisteria-theme {
+  --color-primary-50: #fbf8fc;
+  --color-primary-100: #f5eef9;
+  --color-primary-200: #eee0f4;
+  --color-primary-300: #dfc8ea;
+  --color-primary-400: #caa4dc;
+  --color-primary-500: #ac70c6;
+  --color-primary-600: #a163ba;
+  --color-primary-700: #8a4fa1;
+  --color-primary-800: #744584;
+  --color-primary-900: #5e386b;
+  --color-primary-950: #40204b;
+}
+
+#portage-mode, #portage-theme {
+  --color-primary-50: #eff4fe;
+  --color-primary-100: #e1ecfe;
+  --color-primary-200: #cadafb;
+  --color-primary-300: #a9c1f8;
+  --color-primary-400: #8ca3f3;
+  --color-primary-500: #6a7dea;
+  --color-primary-600: #4d57de;
+  --color-primary-700: #3f46c3;
+  --color-primary-800: #353c9e;
+  --color-primary-900: #32397d;
+  --color-primary-950: #1d2049;
+}
+
+#contessa-mode, #contessa-theme {
+  --color-primary-50: #fbf6f5;
+  --color-primary-200: #f0dcd8;
+  --color-primary-300: #e4c3bd;
+  --color-primary-400: #d3a096;
+  --color-primary-500: #ba7264;
+  --color-primary-600: #aa6558;
+  --color-primary-700: #8e5347;
+  --color-primary-800: #77463d;
+  --color-primary-900: #643f38;
+  --color-primary-950: #351e1a;
+}
+
+/* FIXME very similar to danger color */
+#amaranth-mode, #amaranth-theme {
+  --color-primary-50: #fff1f4;
+  --color-primary-100: #ffe3e8;
+  --color-primary-200: #ffcbd8;
+  --color-primary-300: #ffa1b8;
+  --color-primary-400: #ff6d94;
+  --color-primary-500: #fa3972;
+  --color-primary-600: #e91f64;
+  --color-primary-700: #c40c4f;
+  --color-primary-800: #a40d49;
+  --color-primary-900: #8c0f45;
+  --color-primary-950: #4e0321;
+}
+
+#lne-mode, #lne-theme {
+  --color-primary-50: #fff1f1;
+  --color-primary-100: #ffe3e3;
+  --color-primary-200: #ffccce;
+  --color-primary-300: #ffa2a6;
+  --color-primary-400: #fe6e79;
+  --color-primary-500: #f83b4e;
+  --color-primary-600: #e21836;
+  --color-primary-700: #c20e2d;
+  --color-primary-800: #a20f2e;
+  --color-primary-900: #8b102d;
+  --color-primary-950: #4e0313;
+}

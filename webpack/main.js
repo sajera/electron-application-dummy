@@ -1,0 +1,27 @@
+const rules = require('./rules.js')
+const plugins = require('./plugins.js')
+
+module.exports = {
+  entry: './index-main.js',
+  // https://webpack.js.org/plugins/
+  plugins: [
+    ...plugins,
+  ],
+  // https://webpack.js.org/concepts/modules/
+  module: {
+    rules: [
+      ...rules,
+      {
+        test: /[/\\]node_modules[/\\].+\.(m?js|node)$/,
+        parser: { amd: false },
+        use: {
+          loader: '@vercel/webpack-asset-relocator-loader',
+          options: {
+            outputAssetBase: 'native_modules',
+            emitDirnameAll: true,
+          },
+        },
+      },
+    ],
+  },
+}
