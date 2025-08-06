@@ -7,11 +7,11 @@ console.log('__dirname', path.resolve(path.dirname('')), path.dirname(''))
 console.log('process.env.SID', process.env.SID)
 
 
-
+// TODO
 const createWindow = () => {
   const win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1200,
+    height: 800,
     webPreferences: {
       preload: FORGE_PRELOAD_WEBPACK_ENTRY
     }

@@ -31,6 +31,18 @@ module.exports = {
     {
       name: '@electron-forge/plugin-webpack',
       config: {
+        port: 3333,
+        loggerPort: 9999,
+        devServer: {
+          client: {
+            // logging: 'warn',
+            reconnect: true,
+            overlay: {
+              errors: true,
+              warnings: false,
+            },
+          },
+        },
         mainConfig: './webpack/main.js',
         renderer: {
           config: './webpack/renderer.js',

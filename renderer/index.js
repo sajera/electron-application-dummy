@@ -1,14 +1,14 @@
 // outsource dependencies
 import { observer } from 'mobx-react'
-// import { Toaster } from 'react-hot-toast'
+import { Toaster } from 'react-hot-toast'
 import { createRoot } from 'react-dom/client'
 import React, { lazy, useEffect } from 'react'
-import { Route, Switch, Router } from 'react-router-dom'
+import { MemoryRouter, Routes, Route  } from 'react-router'
 // local injections ...
 import './style'
 // local dependencies
+import Health from './health'
 // import Auth from './views/auth'
-// import Health from './views/health'
 // import { currentUser } from './store'
 // import { Loader, Confirmation } from 'component'
 // import { LAYOUT, AUTH, history, config } from 'constant'
@@ -27,7 +27,7 @@ const App = observer(function App () {
   //   // IMPORTANT check auth after extracting from url ¯\_(ツ)_/¯
   //   currentUser.initialize(CookieEmail.get())
   // }, [])
-
+console.log('s')
   return <>
     <h2 className="bg-gray-100 dark:bg-gray-900 text-primary-500">
       Hello from React!
@@ -36,26 +36,24 @@ const App = observer(function App () {
 
     {/* NOTE App */}
     {/*<Loader active={!currentUser.initialized || (health.isLoading && !health.isLoaded)} title="App is Loading...">*/}
-    {/*  {!health.content ? <Health /> : !currentUser.isAuthenticated ? <Auth /> : <Router history={history}>*/}
-    {/*    <React.Suspense fallback={<Loader active title="App is Loading..." />}>*/}
-    {/*      <Switch>*/}
-    {/*        /!* NOTE simulate Suspense fallback *!/*/}
-    {/*        /!*<Route path="*" component={lazy(() => new Promise(() => ''))} />*!/*/}
-    {/*        <Route path={LAYOUT.ROUTE} component={lazy(() => import('./layout'))} />*/}
-    {/*        <Route component={lazy(() => import('./views/404'))} />*/}
-    {/*      </Switch>*/}
-    {/*    </React.Suspense>*/}
-    {/*  </Router>}*/}
+    {/*  {!health.content ? <Health /> : !currentUser.isAuthenticated ? <Auth /> : <Routes>*/}
+    {/*    /!* NOTE simulate Suspense fallback *!/*/}
+    {/*    /!*<Route path="*" element={lazy(() => new Promise(() => ''))} />*!/*/}
+    {/*    <Route path={LAYOUT.ROUTE} element={lazy(() => import('./layout'))} />*/}
+    {/*    <Route element={lazy(() => import('./views/404'))} />*/}
+    {/*  </Routes>}*/}
     {/*</Loader>*/}
     {/* NOTE common things */}
     <div id="ModalPortal" />
 
     {/*<Confirmation />*/}
-    {/*<Toaster />*/}
+    <Toaster />
   </>
 })
 
-createRoot(document.body).render(<App />)
+createRoot(document.body).render(<MemoryRouter>
+  <App />
+</MemoryRouter>)
 
 console.info('%c CONFIG ', 'background: #EC1B24; color: #000; font-weight: bolder; font-size: 30px;'
   , '\n sid:', process.env.SID

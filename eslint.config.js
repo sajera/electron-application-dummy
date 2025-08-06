@@ -1,13 +1,10 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import react from 'eslint-plugin-react'
-import { defineConfig } from 'eslint/config'
-import hooks from 'eslint-plugin-react-hooks'
+const js = require('@eslint/js')
+const globals = require('globals')
+const react = require('eslint-plugin-react')
+const { defineConfig } = require('eslint/config')
+const hooks = require('eslint-plugin-react-hooks')
 
-// console.log('hooks', hooks.configs)
-console.log('react.configs.flat.recommended', react.configs.flat)
-
-export default defineConfig([
+module.exports = defineConfig([
   {
     files: ['renderer/**/*.js'],
     ...hooks.configs['recommended-latest'],
@@ -24,14 +21,11 @@ export default defineConfig([
     },
     rules: {
       ...getCommonRules(),
-      ...react.configs.flat.all.rules,
-      // ...react.configs.flat.recommended.rules,
+      ...react.configs.flat.recommended.rules,
       'react/jsx-indent': ['warn', 2],
-      'react/jsx-no-literals': 'off',
-      'react/jsx-wrap-multilines': 'off',
-      'react/jsx-one-expression-per-line': 'off',
+      'react/prop-types': 'off', // with the release of React 19 where PropTypes are removed ¯\_(ツ)_/¯
       'react/jsx-closing-tag-location': ['warn', 'line-aligned'],
-      'react/jsx-filename-extension': ['warn', { 'extensions': ['.js'] }],
+      'react/jsx-filename-extension': ['warn', { extensions: ['.js'] }],
     },
   },
   {
@@ -47,25 +41,26 @@ export default defineConfig([
       },
       globals: {
         ...globals.node,
-        'FORGE_WEBPACK_ENTRY': 'readonly',
-        'FORGE_PRELOAD_WEBPACK_ENTRY': 'readonly',
+        FORGE_WEBPACK_ENTRY: 'readonly',
+        FORGE_PRELOAD_WEBPACK_ENTRY: 'readonly',
       },
     },
     rules: {
       ...getCommonRules(),
-      'no-console': ['warn', { 'allow': ['error'] }],
+      'no-console': ['warn', { allow: ['error', 'info'] }],
     },
   },
 ])
 
 function getCommonRules () {
   return {
-    'curly': ['warn', 'all'],
-    'eqeqeq': ['warn', 'smart'],
+    curly: ['warn', 'all'],
+    eqeqeq: ['warn', 'smart'],
     semi: ['warn', 'never'],
-    'quotes': ['warn', 'single'],
-    'semi-spacing': ['warn', { 'before': false, 'after': true }],
-    'no-console': ['warn', { 'allow': ['error', 'warn', 'info'] }],
-    'no-unused-vars': ['warn', { 'vars': 'local', 'args': 'none', 'ignoreRestSiblings': true, 'varsIgnorePattern': '[iI]gnored' }],
+    quotes: ['warn', 'single'],
+    'quote-props': ['warn', 'as-needed'],
+    'no-console': ['warn', { allow: ['error'] }],
+    'semi-spacing': ['warn', { before: false, after: true }],
+    'no-unused-vars': ['warn', { vars: 'local', args: 'none', ignoreRestSiblings: true, varsIgnorePattern: '[iI]gnored' }],
   }
 }
