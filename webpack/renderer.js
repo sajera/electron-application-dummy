@@ -1,10 +1,13 @@
 const rules = require('./rules.js')
 const plugins = require('./plugins.js')
+const Copy = require('copy-webpack-plugin')
 
 module.exports = {
   // https://webpack.js.org/plugins/
   plugins: [
     ...plugins,
+    // https://webpack.js.org/plugins/copy-webpack-plugin/
+    new Copy({ patterns: [{ from: './assets', to: 'assets' }] }),
   ],
   // https://webpack.js.org/concepts/modules/
   module: {

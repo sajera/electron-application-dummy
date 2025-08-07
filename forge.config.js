@@ -1,9 +1,21 @@
+const path = require('path')
+
 module.exports = {
-  outDir: '.cache',
+  outDir: '.build',
   packagerConfig: {
     asar: true,
+    // icon: path.join(process.cwd(), 'image', 'favicon-96x96.ico')
+    // icon: path.join(process.cwd(), 'image', 'logo-512x512.png')
+    // icon: './image/favicon-96x96.ico'
+    // FIXME relative path ?
+    icon: path.join(process.cwd(), 'image', 'logo-512x512.png'),
+    extraResource: [
+      path.join(process.cwd(), 'image', 'favicon-96x96.ico'),
+    ],
   },
-  rebuildConfig: {},
+  rebuildConfig: {
+    force: true
+  },
   // TODO recheck
   makers: [
     // {
@@ -22,6 +34,13 @@ module.exports = {
     //   name: '@electron-forge/maker-rpm',
     //   config: {},
     // },
+    {
+      name: '@electron-forge/maker-dmg',
+      config: {
+        icon: './public/image/logo-512x512.png',
+        format: 'ULFO',
+      }
+    }
   ],
   plugins: [
     {
@@ -48,11 +67,19 @@ module.exports = {
           config: './webpack/renderer.js',
           entryPoints: [
             {
-              name: 'forge',
-              html: './index.html',
-              js: './index-renderer.js',
+              name: 'launcher',
+              html: './src/renderer/launcher/index.html',
+              js: './src/renderer/launcher/index.js',
               preload: {
-                js: './index-preload.js',
+                js: './src/main/preload.js',
+              },
+            },
+            {
+              name: 'initializer',
+              html: './src/renderer/initializer/index.html',
+              js: './src/renderer/initializer/index.js',
+              preload: {
+                js: './src/main/preload.js',
               },
             },
           ],

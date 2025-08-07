@@ -5,9 +5,9 @@ import { createRoot } from 'react-dom/client'
 import React, { lazy, useEffect } from 'react'
 import { MemoryRouter, Routes, Route  } from 'react-router'
 // local injections ...
-import './style'
+import '../style'
 // local dependencies
-import Health from './health'
+// import Health from './health'
 // import Auth from './views/auth'
 // import { currentUser } from './store'
 // import { Loader, Confirmation } from 'component'

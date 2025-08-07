@@ -1,7 +1,6 @@
 const dotenv = require('dotenv')
 const Dotenv = require('dotenv-webpack')
 const ESLint = require('eslint-webpack-plugin')
-
 // IMPORTANT avoid overriding the original environment variables passed through the process
 dotenv.config({ path: [`.env.local${process.env.NODE_ENV || ''}`, '.env'], debug: false })
 
