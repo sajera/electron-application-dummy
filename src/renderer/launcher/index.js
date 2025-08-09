@@ -1,18 +1,19 @@
 // outsource dependencies
+import _ from 'lodash'
 import cn from 'classnames'
 import { observer } from 'mobx-react'
 import React, { useEffect } from 'react'
 import { Toaster } from 'react-hot-toast'
 import { createRoot } from 'react-dom/client'
-import { Router, useHistory, useLocation } from 'react-router-dom'
-import { Cog8ToothIcon, Bars4Icon } from '@heroicons/react/24/solid'
+import { Router, useLocation } from 'react-router-dom'
+import { Cog8ToothIcon, Bars4Icon, SunIcon, MoonIcon } from '@heroicons/react/24/solid'
 // local injections ...
 import '../style'
 // local dependencies
 import { layoutStore } from './store'
 import { PageStore } from './local-storage'
-import { Sidebar, Routing } from './navigation'
 import { createHistory } from '../../service/route'
+import { SidebarItem, Routing } from './navigation'
 
 
 const history = createHistory({ // NOTE restore last state
@@ -21,6 +22,7 @@ const history = createHistory({ // NOTE restore last state
 })
 
 const Layout = observer(function Layout () {
+  const { menu, isSidebarHidden, isDarkModeEnabled } = layoutStore
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(layoutStore.initialize, [])
   // NOTE track active page state
@@ -28,14 +30,21 @@ const Layout = observer(function Layout () {
   // NOTE Store the last visited page
   useEffect(() => { PageStore.set(pathname + search) }, [pathname, search])
 
-  return < >
+  // TODO remove
+  // console.log(`%c Layout ${'launcher'} `, 'color: #FF6766; font-weight: bolder;'
+  //   , '\n history:', history
+  //   , '\n pathname:', pathname
+  //   , '\n search:', search
+  // )
+
+  return <>
     {/* NOTE page header */}
-    <div className="flex items-center flex-nowrap bg-black text-white shadow py-2.5 h-12 fixed z-40 inset-x-0 top-0">
+    <div className="flex items-center flex-nowrap bg-alt shadow-xs py-2.5 h-12 fixed z-40 inset-x-0 top-0">
       <mark>menu toggle ?</mark>
-      <div className="flex items-center pr-3 mr-3 h-6">
+      <div className="flex items-end pr-3 mr-3 h-6">
         <button
           onClick={layoutStore.toggleSideBar}
-          title={<><strong>{layoutStore.isSidebarHidden ? 'Show' : 'Hide'}</strong> the navigation sidebar</>}
+          title={<><strong>{isSidebarHidden ? 'Show' : 'Hide'}</strong> the navigation sidebar</>}
           className="p-0 w-5 h-5 rounded-full flex items-center justify-center ring-offset-black focus:ring-black text-gray-100 hover:text-primary-700"
         >
           <Bars4Icon className="size-4 inline-block" />
@@ -43,26 +52,28 @@ const Layout = observer(function Layout () {
       </div>
       {/* NOTE header right side */}
       <div className="flex flex-1 items-center justify-end">
-        {'<SelectAppTZ className="mr-3" />'}
-        <p className="font-bold text-sm text-primary-600 _text-white mr-2">currentUser.email</p>
+        <div className="flex-1"></div>
+        <p className="font-bold text-sm text-primary-600 mx-4">currentUser.email</p>
         <button
-          title="User Settings"
-          className="p-0 w-5 h-5 rounded-full flex items-center justify-center ring-offset-black focus:ring-black text-gray-100 hover:text-primary-700"
+          onClick={() => layoutStore.setDarkMode(!isDarkModeEnabled)}
+          className="flex items-center justify-between font-bold hover:bg-gray-100 dark:hover:bg-gray-800 px-3 py-2"
         >
-          <Cog8ToothIcon className="size-4 inline-block" />
+          <span className="mr-3">{isDarkModeEnabled ? 'Light' : 'Dark'}&nbsp;mode</span>
+          {isDarkModeEnabled ? <SunIcon className="size-4 inline-block" /> : <MoonIcon className="size-4 inline-block" />}
         </button>
       </div>
     </div>
-    <Sidebar className={cn(
+    <ul className={cn(
       'sidebar overflow-y-auto pt-12 pb-12',
-      'border-r_ shadow-inner _shadow',
+      'bg-alt shadow-inner',
       // NOTE collapsible
       'inset-y-0 absolute w-60 transition-all',
-      layoutStore.isSidebarHidden ? '-left-60' : 'left-0',
+      isSidebarHidden ? '-left-60' : 'left-0',
     )}>
-      <mark>{process.env.SID}</mark>
-    </Sidebar>
-    <div className={cn('relative h-screen pt-12 transition-all overflow-y-auto', { 'ml-60': !layoutStore.isSidebarHidden })}>
+      <li className="p-4">{process.env.SID}</li>
+      {_.map(menu, item => <li key={item.name}><SidebarItem {...item} /></li>)}
+    </ul>
+    <div className={cn('relative h-screen pt-12 transition-all overflow-y-auto shadow-inner', { 'ml-60': !isSidebarHidden })}>
       <Routing />
     </div>
     <Toaster />

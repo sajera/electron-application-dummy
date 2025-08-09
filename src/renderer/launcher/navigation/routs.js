@@ -3,6 +3,20 @@
 // local dependencies
 import { Route } from '../../../service/route'
 
+// NOTE looks wierd but allows to set up true as default value for booleans
+const bool = { defaults: false, archive: Number, extract: v => [0, 1, '0', '1', true, false].includes(v) ? Boolean(Number(v)) : 2, isValid: v => [0, 1, '0', '1', true, false].includes(v) }
+const ANNOTATION = {
+  // NOTE popular params
+  ID: opt => ({ name: 'id', defaults: null, ...opt }),
+  // NOTE popular query
+  BOOL: opt => ({ ...bool, ...opt }),
+  SEARCH: opt => ({ short: 'se', name: 'search', defaults: '', ...opt }),
+  PAGE: opt => ({ short: 'p', name: 'page', archive: Number, extract: Number, isValid: v => v > -1, defaults: 0, ...opt }),
+  SIZE: opt => ({ short: 's', name: 'size', archive: Number, extract: Number, isValid: v => v > 1, defaults: 30, ...opt }),
+  SORT_D: opt => ({ short: 'sd', name: 'sortD', ...bool, ...opt }),
+  SORT_F: opt => ({ short: 'sf', name: 'sortF', defaults: 'name', isValid: v => ['name'].indexOf(v) > -1, ...opt }),
+}
+
 /**
  * create Route with helpers to work with url string
  * @param {String} url
@@ -20,43 +34,17 @@ export const NOT_FOUND = defineRoute('/404', {
   query: [{ name: 'error', short: 'e', defaults: null }],
 })
 
-const DASHBOARD = defineRoute('/dashboard')
-const dashboardRoute = (url, options) => defineRoute(`/dashboard/${clean(url)}`, options)
-DASHBOARD.STREAMING = dashboardRoute('/streaming-jobs')
-DASHBOARD.BATCH = dashboardRoute('/batch-jobs')
-DASHBOARD.RDS = dashboardRoute('/rds-export')
-DASHBOARD.DATA_EXPORT = dashboardRoute('/data-export')
-DASHBOARD.SLA = dashboardRoute('/sla')
-DASHBOARD.LATENCY = dashboardRoute('/table-latency')
-export { DASHBOARD }
+const WINDOW = defineRoute('window')
+const windowRoute = (url, options) => defineRoute(`/window/${clean(url)}`, options)
+WINDOW.LIST = windowRoute('/list')
+WINDOW.DETAILS = windowRoute('/details/:id', {
+  params: [ANNOTATION.ID({})],
+})
+export { WINDOW }
 
-const TOOLS = defineRoute('/tool')
-const toolsRoute = (url, options) => defineRoute(`/tool/${clean(url)}`, options)
-TOOLS.RDS_EXPORT = toolsRoute('/rds-export')
-TOOLS.DATA_EXPORT = toolsRoute('/data-export')
-export { TOOLS }
+const DEV = defineRoute('/dev')
+const devRoute = (url, options) => defineRoute(`/dev/${clean(url)}`, options)
+DEV.COLOR = devRoute('/color')
+DEV.TOAST = devRoute('/toast')
 
-const CCPA = defineRoute('/ccpa')
-const ccpaRoute = (url, options) => defineRoute(`ccpa/${clean(url)}`, options)
-CCPA.AUDIT = ccpaRoute('/audit')
-CCPA.ARCHIVE = ccpaRoute('/archive')
-CCPA.FAN_LOOKUP = ccpaRoute('/fan-lookup')
-CCPA.MAPPING = ccpaRoute('/mapping')
-CCPA.DISCLOSURE = ccpaRoute('/disclosure')
-export { CCPA }
-
-const PLATFORM = defineRoute('/platform')
-const platformRoute = (url, options) => defineRoute(`platform/${clean(url)}`, options)
-PLATFORM.DATABRICKS = platformRoute('/databricks')
-PLATFORM.TEAMS = platformRoute('/teams')
-PLATFORM.USERS = platformRoute('/users')
-PLATFORM.TOKENS = platformRoute('/auth-tokens')
-PLATFORM.USER_GROUPS = platformRoute('/user-groups')
-export { PLATFORM }
-
-
-const BETA = defineRoute('/beta')
-const betaRoute = (url, options) => defineRoute(`beta/${clean(url)}`, options)
-BETA.METADATA = betaRoute('/metadata')
-
-export { BETA }
+export { DEV }

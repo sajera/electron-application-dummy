@@ -4,8 +4,11 @@ import { makeAutoObservable, runInAction } from 'mobx'
 import toast from '../component/toast'
 import { delayResolve } from '../../service'
 import { ToggleStore } from './local-storage'
+import { navigationMenu } from './navigation'
 
 class LayoutStore {
+  menu = navigationMenu
+
   isDarkModeEnabled = false
   isSidebarHidden = false
   initialized = false
@@ -35,7 +38,11 @@ class LayoutStore {
       , '\n toastId:', toastId
       , '\n sid:', process.env.SID
       , '\n preload:', preload
+      , '\n menu:', navigationMenu
     )
+
+    // TODO get read stored data and apply to menu
+    this.menu = navigationMenu
 
     // TODO do async things
     Promise.all([

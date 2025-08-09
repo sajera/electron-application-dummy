@@ -1,6 +1,4 @@
 
-@import "tailwindcss";
-
 /* NOTE Toggling dark mode manually @see: https://tailwindcss.com/docs/dark-mode#toggling-dark-mode-manually */
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -19,6 +17,23 @@ body {
   position: relative;
 }
 
+.bg-body {
+  @apply bg-white dark:bg-[#212121]
+}
+.text-body {
+  @apply text-black dark:text-white
+}
+.bg-alt {
+  @apply bg-gray-50 dark:bg-gray-950
+}
+.text-alt {
+  @apply text-gray-950 dark:text-gray-50
+}
+.text-muted {
+  @apply text-gray-400
+  /*@apply text-gray-500 - ??? */
+}
+
 @theme {
   --font-sans: Roboto, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
@@ -34,7 +49,21 @@ body {
   --color-primary-800: red;
   --color-primary-900: red;
   --color-primary-950: red;
+
+  --color-gray-50: #f6f6f6;
+  --color-gray-100: #e7e7e7;
+  --color-gray-200: #d1d1d1;
+  --color-gray-300: #b0b0b0;
+  --color-gray-400: #7d7d7d;
+  --color-gray-500: #6d6d6d;
+  --color-gray-600: #5d5d5d;
+  --color-gray-700: #4f4f4f;
+  --color-gray-800: #454545;
+  --color-gray-900: #3d3d3d;
+  --color-gray-950: #262626;
 }
+/* IMPORTANT to override tailwind color vars */
+@import 'tailwindcss';
 
 :root, #default-mode, #default-theme {
   --color-primary-50: #ecfbff;

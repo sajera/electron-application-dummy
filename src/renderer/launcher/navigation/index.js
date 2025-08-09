@@ -5,23 +5,16 @@ import { Link, useLocation } from 'react-router-dom'
 import { ChevronRightIcon } from '@heroicons/react/24/solid'
 import React, { memo, useCallback, useEffect, useState } from 'react'
 // local dependencies
-import menu, { MENU_ITEM_TYPE } from './menu'
 import { SidebarStore } from '../local-storage'
+import navigationMenu, { MENU_ITEM_TYPE } from './menu'
 import { Collapsible } from '../../component/collapsible'
 
 export * from './routs'
+export { navigationMenu }
 export { default as Routing } from './routing'
 
 
-export const Sidebar = memo(function Sidebar ({ className, children, ...attr }) {
-
-  return <ul className={cn('sidebar', className)} {...attr}>
-    <li> {children} </li>
-    {_.map(menu, item => <li key={item.name}><SidebarItem { ...item } /></li>)}
-  </ul>
-})
-
-const SidebarItem = memo(function SidebarItem ({ type, ...attr }) {
+export const SidebarItem = memo(function SidebarItem ({ type, ...attr }) {
   switch (type) {
     default: return <div className="hidden" />
     case MENU_ITEM_TYPE.LINK: return <NavLink { ...attr } />
@@ -33,7 +26,11 @@ const SidebarItem = memo(function SidebarItem ({ type, ...attr }) {
 const NavLink = memo(function NavLink ({ className, icon: Icon, link, name = '~ ~ ~', isActive, disabled, hidden, onClick }) {
   const { pathname } = useLocation()
   const active = isActive(pathname)
-
+  // TODO verify the case that occurred once and concatenate the paths of the different links
+  // console.log(`%c NavLink ${name} `, 'color: #FF6766; font-weight: bolder;'
+  //   , '\n link:', link
+  //   , '\n pathname:', pathname
+  // )
   return hidden ? <div className="hidden" /> : <Link to={link} onClick={onClick} className={cn(
     'group flex w-full items-center p-2 hover:opacity-100', className, {
       'opacity-75 pointer-events-none': disabled,

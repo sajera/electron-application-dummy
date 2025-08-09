@@ -1,5 +1,5 @@
 // outsource dependencies
-import { HomeIcon, CubeIcon, ChartPieIcon, BugAntIcon } from '@heroicons/react/24/solid'
+import { HomeIcon, WindowIcon, PlusIcon, WrenchScrewdriverIcon } from '@heroicons/react/24/solid'
 // local dependencies
 import * as ROUTS from './routs'
 
@@ -20,83 +20,47 @@ export default [
     isActive: path => ROUTS.WELCOME.ROUTE === path,
   },
   {
-    // hidden: true,
-    icon: ChartPieIcon,
-    name: 'DASHBOARDS',
+    icon: WindowIcon,
+    name: 'WINDOWS',
     type: MENU_ITEM_TYPE.MENU,
-    isActive: ROUTS.DASHBOARD.TEST,
+    isActive: ROUTS.WINDOW.TEST,
     list: [
       {
-        name: 'Streaming Jobs',
+        name: 'View all',
+        icon: WindowIcon,
         type: MENU_ITEM_TYPE.LINK,
-        link: ROUTS.DASHBOARD.STREAMING.LINK(),
-        isActive: ROUTS.DASHBOARD.STREAMING.TEST,
+        link: ROUTS.WINDOW.LIST.LINK(),
+        isActive: ROUTS.WINDOW.LIST.TEST,
       },
       {
-        name: 'Batch Jobs',
+        name: 'Create',
+        icon: PlusIcon,
         type: MENU_ITEM_TYPE.LINK,
-        link: ROUTS.DASHBOARD.BATCH.LINK(),
-        isActive: ROUTS.DASHBOARD.BATCH.TEST,
+        link: ROUTS.WINDOW.DETAILS.LINK(),
+        isActive: path => ROUTS.WINDOW.DETAILS.LINK() === path,
       },
-      {
-        name: 'RDS Export',
-        type: MENU_ITEM_TYPE.LINK,
-        link: ROUTS.DASHBOARD.RDS.LINK(),
-        isActive: ROUTS.DASHBOARD.RDS.TEST,
-      },
-      {
-        name: 'Data Export',
-        type: MENU_ITEM_TYPE.LINK,
-        link: ROUTS.DASHBOARD.DATA_EXPORT.LINK(),
-        isActive: ROUTS.DASHBOARD.DATA_EXPORT.TEST,
-      },
-      {
-        name: 'SLA History',
-        type: MENU_ITEM_TYPE.LINK,
-        link: ROUTS.DASHBOARD.SLA.LINK(),
-        isActive: ROUTS.DASHBOARD.SLA.TEST,
-      },
-      {
-        name: 'Tables Latency',
-        type: MENU_ITEM_TYPE.LINK,
-        link: ROUTS.DASHBOARD.LATENCY.LINK(),
-        isActive: ROUTS.DASHBOARD.LATENCY.TEST,
-      },
+
     ]
   },
   {
-    icon: CubeIcon,
-    name: 'TOOLS',
+    icon: WrenchScrewdriverIcon,
+    name: 'DEVELOPMENT',
+    hidden: !process.env.DEBUG,
     type: MENU_ITEM_TYPE.MENU,
-    isActive: ROUTS.TOOLS.TEST,
+    isActive: ROUTS.DEV.TEST,
     list: [
       {
-        name: 'RDS Export Config',
+        name: 'Color Pallet',
         type: MENU_ITEM_TYPE.LINK,
-        link: ROUTS.TOOLS.RDS_EXPORT.LINK(),
-        isActive: ROUTS.TOOLS.RDS_EXPORT.TEST,
+        link: ROUTS.DEV.COLOR.LINK(),
+        isActive: ROUTS.DEV.COLOR.TEST,
       },
       {
-        name: 'Data Export Config',
+        name: 'Toasts',
         type: MENU_ITEM_TYPE.LINK,
-        link: ROUTS.TOOLS.DATA_EXPORT.LINK(),
-        isActive: ROUTS.TOOLS.DATA_EXPORT.TEST,
-      }
-    ]
-  },
-  {
-    icon: BugAntIcon,
-    name: 'BETA',
-    // hidden: true,
-    type: MENU_ITEM_TYPE.MENU,
-    isActive: ROUTS.BETA.TEST,
-    list: [
-      {
-        name: 'Metadata',
-        type: MENU_ITEM_TYPE.LINK,
-        link: '/TODO',
-        isActive: () => false,
-      }
+        link: ROUTS.DEV.TOAST.LINK(),
+        isActive: ROUTS.DEV.TOAST.TEST,
+      },
     ]
   },
 ]

@@ -22,8 +22,8 @@ export function pushToast ({ type, icon: Icon, header, body, ...attr }) {
   // )
   // TODO bg-alt text-alt ???
   // NOTE returns toast id to allow removing it
-  return toast.custom(t => <div className="w-full max-w-sm bg-alt text-alt overflow-hidden rounded-lg shadow-xl" role="alert">
-    <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 py-2 pl-4">
+  return toast.custom(t => <div className="w-full max-w-sm bg-alt overflow-hidden rounded-lg shadow-xl" role="alert">
+    <div className="flex items-center justify-between border-b border-gray-100 dark:!border-gray-900 py-2 pl-4">
       <span className={cn('text-sm font-semibold', {
         'text-green-800 dark:text-green-500': type === 'SUCCESS',
         'text-blue-800 dark:text-blue-500': type === 'INFO',
@@ -36,7 +36,7 @@ export function pushToast ({ type, icon: Icon, header, body, ...attr }) {
         <span className="sr-only">Close</span>
       </button>
     </div>
-    <div className="flex items-center bg-body text-body p-2">
+    <div className="flex items-center shadow-inner bg-body p-2">
       <span><Icon className={cn('w-6 h-6 ml-1', {
         'text-green-600': type === 'SUCCESS',
         'text-blue-600': type === 'INFO',
@@ -45,5 +45,5 @@ export function pushToast ({ type, icon: Icon, header, body, ...attr }) {
       </span>
       <div className="text-sm font-normal ml-2 break-all">{body || '~ ~ ~'}</div>
     </div>
-  </div>, { position: 'top-right', duration: 6e3, ...attr })
+  </div>, { position: 'bottom-right', duration: 6e3, ...attr })
 }
