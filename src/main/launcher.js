@@ -9,10 +9,9 @@ export default new class Launcher {
     y: 0,
     width: 1200,
     height: 800,
-    minWidth: 480,
-    minHeight: 640,
-    backgroundColor: 'silver',
-    title: 'The title of window',
+    minWidth: 640,
+    minHeight: 480,
+    title: 'The title of the window',
   }
 
   webPreferences = {

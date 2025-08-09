@@ -35,6 +35,8 @@ app.whenReady().then(() => {
     .then(() => {
       Initializer.hide()
       Launcher.show()
+      // TODO for now this is a main window and app should be closed
+      Launcher.window.on('close', app.quit)
       // Initializer.close()
       // TODO what next
       // createWindow()

@@ -43,14 +43,14 @@ module.exports = defineConfig([
       },
     },
     rules: {
-      curly: ['warn', 'all'],
       eqeqeq: ['warn', 'smart'],
       semi: ['warn', 'never'],
       quotes: ['warn', 'single'],
+      curly: ['warn', 'multi-line'],
       'quote-props': ['warn', 'as-needed'],
       'no-console': ['warn', { allow: ['error'] }],
       'semi-spacing': ['warn', { before: false, after: true }],
-      'no-unused-vars': ['warn', { vars: 'local', args: 'none', ignoreRestSiblings: true, varsIgnorePattern: '[iI]gnored' }],
+      'no-unused-vars': ['warn', { vars: 'local', args: 'none', ignoreRestSiblings: true, varsIgnorePattern: '[iI]gnored', caughtErrors: 'none' }],
     }
   },
 ])

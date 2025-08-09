@@ -56,10 +56,7 @@ module.exports = {
           client: {
             // logging: 'warn',
             reconnect: true,
-            overlay: {
-              errors: true,
-              warnings: false,
-            },
+            overlay: false,
           },
         },
         mainConfig: './webpack/main.js',
