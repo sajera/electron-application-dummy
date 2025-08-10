@@ -5,7 +5,7 @@ import { makeAutoObservable, runInAction } from 'mobx'
 import toast from '../component/toast'
 import { delayResolve } from '../../service'
 import { navigationMenu } from './navigation'
-import { ToggleStore, ThemeStore } from './local-storage'
+import { ToggleLS, ThemeLS } from './local-storage'
 
 class LayoutStore {
   menu = navigationMenu
@@ -32,16 +32,16 @@ class LayoutStore {
     makeAutoObservable(this)
   }
 
-  toggleSideBar = () => ToggleStore.update({ nav: this.isSidebarHidden = !this.isSidebarHidden })
+  toggleSideBar = () => ToggleLS.update({ nav: this.isSidebarHidden = !this.isSidebarHidden })
 
   setTheme = theme => {
     if (!_.includes(this.themes, theme)) return this.errorHandler('Theme')(`Theme setup failed: '${theme}' is invalid.`)
-    ThemeStore.set(theme)
+    ThemeLS.set(theme)
     document.getElementsByTagName('html')[0].id = theme
   }
 
   setDarkMode = isDarkTheme => {
-    ToggleStore.update({ dark: this.isDarkModeEnabled = Boolean(isDarkTheme) })
+    ToggleLS.update({ dark: this.isDarkModeEnabled = Boolean(isDarkTheme) })
     const html = document.getElementsByTagName('html')[0].classList
     isDarkTheme ? html?.add('dark') : html?.remove('dark')
   }
@@ -50,13 +50,11 @@ class LayoutStore {
 
   initialize = () => {
     this.initialized = false
-    this.setTheme(ThemeStore.get())
-    this.setDarkMode(ToggleStore.get()?.dark)
-    this.isSidebarHidden = Boolean(ToggleStore.get()?.nav)
-    const toastId = toast.info('test')
+    this.setTheme(ThemeLS.get())
+    this.setDarkMode(ToggleLS.get()?.dark)
+    this.isSidebarHidden = Boolean(ToggleLS.get()?.nav)
     process.env.DEBUG && console.info('%c LayoutStore.launcher ', 'color: #FF6766; font-weight: bolder;'
-      , '\n ToggleStore:', ToggleStore.get()
-      , '\n toastId:', toastId
+      , '\n ToggleLS:', ToggleLS.get()
       , '\n sid:', process.env.SID
       , '\n preload:', preload
       , '\n menu:', navigationMenu

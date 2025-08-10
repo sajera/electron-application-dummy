@@ -42,3 +42,19 @@ export const safeJsonParse = (json, def = {}) => {
  * @returns {Promise}
  */
 export const delayResolve = (delay, result) => new Promise(resolve => setTimeout(resolve, delay || 40, result))
+
+/**
+ * safe creation of dynamical regular expression
+ * IMPORTANT for "test" method of RegExp "g" flag lead to unexpected behaviour or require clearing regexp.lastIndex each time ¯\_(ツ)_/¯
+ * @param {String} value
+ * @param {String} [flags='']
+ * @param {Boolean} [strict=false]
+ * @returns {RegExp}
+ */
+export const safeRegExp = (value, flags, strict) => {
+  try {
+    return new RegExp(`(${value || '100% not match with entire string'})`, flags)
+  } catch (e) {
+    return strict ? /100% not match with entire string/ : /.*/
+  }
+}

@@ -1,0 +1,36 @@
+@reference '../theme/index.css';
+
+@layer base {
+  .select input {
+    /* NOTE clear input defaults from tailwind */
+    box-shadow: none !important;
+  }
+  .select-field.untouched {
+    @apply border-alt
+  }
+  .select-field {
+    @apply
+    rounded
+    border
+    font-medium
+    focus-within:outline-none
+    bg-alt
+    focus-within:bg-gray-100
+    dark:focus-within:bg-gray-800
+    shadow-sm
+    text-gray-900
+    dark:text-gray-200
+    dark:shadow-gray-700
+    focus-within:border-primary-800;
+  }
+  .select-field.valid {
+    @apply border-green-600 focus-within:border-primary-800;
+  }
+  .select-field.invalid {
+    @apply border-red-300 text-red-900 focus-within:border-red-500 focus:ring-red-500;
+  }
+
+  .select-field-control {
+
+  }
+}

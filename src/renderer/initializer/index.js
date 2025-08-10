@@ -3,7 +3,7 @@ import React from 'react'
 import { observer } from 'mobx-react'
 import { createRoot } from 'react-dom/client'
 // local dependencies
-import '../style'
+import '../style/theme/index.css'
 // NOTE Please try to avoid usage of "file-loader"
 // import logo from '/assets/image/logo-512x512.png'
 

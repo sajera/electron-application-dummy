@@ -1,0 +1,71 @@
+@reference '../theme/index.css';
+
+/* FIXME define better view ¯\_(ツ)_/¯ */
+@layer base {
+  .toggle {
+    @apply
+    relative
+    box-content
+    w-11
+    h-6
+    bg-gray-300
+    dark:bg-gray-700
+    peer-focus:outline-none
+    peer-focus:ring-2
+    peer-focus:ring-offset-2
+    peer-focus:ring-gray-300
+    dark:peer-focus:ring-gray-600
+    ring-offset-gray-100
+    dark:ring-offset-gray-800
+    rounded-full
+    peer-checked:after:translate-x-full
+    after:content-['']
+    after:absolute
+    after:top-[2px]
+    after:start-[2px]
+    after:bg-gray-50
+    dark:after:bg-gray-700
+    after:border-gray-400
+    after:rounded-full
+    after:border
+    after:h-5
+    after:w-5
+    after:transition-all
+    peer-disabled:opacity-55
+    peer-disabled:cursor-no-drop
+    peer-checked:after:bg-gray-50
+    dark:peer-checked:after:bg-gray-700;
+  }
+
+  .toggle-xs { @apply w-7 h-4 after:h-3 after:w-3; }
+  .toggle-lg { @apply w-[60px] h-8 after:h-7 after:w-7; }
+
+  .toggle-primary {
+    @apply
+    border-primary-500
+    after:bg-primary-500
+    peer-focus:ring-primary-300
+    peer-checked:bg-primary-600;
+  }
+  .toggle-danger {
+    @apply
+    border-red-500
+    after:bg-red-500
+    peer-focus:ring-red-300
+    peer-checked:bg-red-600;
+  }
+  .toggle-warning {
+    @apply
+    border-amber-500
+    after:bg-amber-500
+    peer-focus:ring-amber-300
+    peer-checked:bg-amber-600;
+  }
+  .toggle-secondary {
+    @apply
+    border-gray-500
+    after:bg-gray-500
+    peer-focus:ring-gray-300
+    peer-checked:bg-gray-600;
+  }
+}

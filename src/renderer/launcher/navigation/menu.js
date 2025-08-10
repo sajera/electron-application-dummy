@@ -61,6 +61,12 @@ export default [
         link: ROUTS.DEV.TOAST.LINK(),
         isActive: ROUTS.DEV.TOAST.TEST,
       },
+      {
+        name: 'DB SQL Light',
+        type: MENU_ITEM_TYPE.LINK,
+        link: ROUTS.DEV.SQL.LINK(),
+        isActive: ROUTS.DEV.SQL.TEST,
+      },
     ]
   },
 ]

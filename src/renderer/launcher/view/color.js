@@ -10,7 +10,7 @@ import { Btn } from '../../component/btn'
 export default observer(function Color () {
 
   return <div id="LayoutHome" className="relative flow-root min-h-full -p-4">
-    <h2 className="text-4xl my-10 text-center">Color Pallet</h2>
+    <h2 className="text-4xl my-10 text-center border border-alt"><span className="text-alt">C</span>olor <span className="text-muted">Pallet</span></h2>
     <h3 className="text-2xl mb-10 flex items-center">
       The {layoutStore.isDarkModeEnabled ? 'Dark' : 'Light'} mode enabled -&gt;
       <Btn
@@ -23,7 +23,7 @@ export default observer(function Color () {
     </h3>
     <h3 className="text-2xl mb-10 flex items-center">
       The {layoutStore.theme} enabled -&gt;
-      <div className="flex items-center border rounded shadow">
+      <div className="flex items-center border border-primary-500 rounded shadow">
         {_.map(layoutStore.themes, theme => <Btn
           id={theme}
           key={theme}

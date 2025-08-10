@@ -33,10 +33,10 @@ export const Tooltip = memo(function Tooltip ({ tag: Tag = 'span', content = '',
     { Boolean(content) && visible && createPortal(<div ref={setTooltipRef} {...getTooltipProps({ className: 'tooltip-container z-50' })}>
       <div className="tooltip relative">
         <Arrow { ...getArrowProps({}) } className={arrowClassName} placement={state?.placement} />
-        <div className={cn('border app-border shadow-lg px-3 py-2 bg-alt text-sm text-alt rounded-md', tooltipClassName)}>{content}</div>
+        <div className={cn('border border-alt shadow-lg px-3 py-2 bg-alt text-sm text-alt rounded-md', tooltipClassName)}>{content}</div>
         {/*<div // NOTE allows to path text<br/>text but fail with regular JSX*/}
         {/*  dangerouslySetInnerHTML={{ __html: content }}*/}
-        {/*  className={cn('app-border border-inherit shadow-lg max-w-sm px-3 py-2 bg-white text-sm text-gray-800 rounded-md', tooltipClassName)}*/}
+        {/*  className={cn('border border-inherit shadow-lg max-w-sm px-3 py-2 bg-white text-sm text-gray-800 rounded-md', tooltipClassName)}*/}
         {/*/>*/}
       </div>
     </div>,
@@ -66,7 +66,8 @@ const Arrow = memo(function Arrow ({ className, placement, ...attr }) {
   return <div
     { ...attr }
     className={cn('tooltip-arrow', placement, className,
-      'before:bg-white dark:before:bg-gray-950 before:border dark:before:border-gray-700',
+      // 'before:bg-alt before:border before:border-alt', // not working correctly ¯\_(ツ)_/¯
+      'before:bg-gray-50 dark:before:bg-gray-950 before:border before:border-gray-200 dark:before:border-gray-800',
       'before:-left-1.5 before:-top-1.5 before:rotate-45 before:block before:absolute before:w-3 before:h-3', {
         'bottom-full before:bottom-0 before:!border-r-transparent before:!border-b-transparent': placement === 'bottom',
         'right-full before:right-0 before:!border-r-transparent before:!border-t-transparent': placement === 'right',
@@ -78,7 +79,6 @@ const Arrow = memo(function Arrow ({ className, placement, ...attr }) {
 
 /**
  * Simple wrapped icon to use in place
- * @type {React.NamedExoticComponent<{readonly className?: *, readonly content?: *}>}
  */
 export const Hint = memo(function Hint ({ className = 'mb-2', ...attr }) {
   return <Tooltip

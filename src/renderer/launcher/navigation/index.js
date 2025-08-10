@@ -5,7 +5,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { ChevronRightIcon } from '@heroicons/react/24/solid'
 import React, { memo, useCallback, useEffect, useState } from 'react'
 // local dependencies
-import { SidebarStore } from '../local-storage'
+import { SidebarLS } from '../local-storage'
 import navigationMenu, { MENU_ITEM_TYPE } from './menu'
 import { Collapsible } from '../../component/collapsible'
 
@@ -64,10 +64,10 @@ const Action = memo(function Action ({ className, icon: Icon, action, name = '~ 
 const NavMenu = memo(function NavMenu ({ icon: Icon, name = '~ ~ ~', isActive, onClick, list, hidden, disabled }) {
   const { pathname } = useLocation()
   // NOTE required to rerender each time when location change
-  const storage = SidebarStore.get()
+  const storage = SidebarLS.get()
   const active = isActive && isActive(pathname)
   const [isOpen, setIsOpen] = useState(typeof storage[name] === 'undefined' ? true : storage[name] || active)
-  useEffect(() => SidebarStore.update({ [name]: isOpen }), [name, isOpen])
+  useEffect(() => SidebarLS.update({ [name]: isOpen }), [name, isOpen])
 
   const handleOpenChange = useCallback(() => setIsOpen(state => !state), [])
 

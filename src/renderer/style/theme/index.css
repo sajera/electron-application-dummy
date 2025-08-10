@@ -17,23 +17,6 @@ body {
   position: relative;
 }
 
-.bg-body {
-  @apply bg-white dark:bg-[#212121]
-}
-.text-body {
-  @apply text-black dark:text-white
-}
-.bg-alt {
-  @apply bg-gray-50 dark:bg-gray-950
-}
-.text-alt {
-  @apply text-gray-950 dark:text-gray-50
-}
-.text-muted {
-  @apply text-gray-400
-  /*@apply text-gray-500 - ??? */
-}
-
 @theme {
   --font-sans: Roboto, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
@@ -64,6 +47,8 @@ body {
 }
 /* IMPORTANT to override tailwind color vars */
 @import 'tailwindcss';
+@import './animation.css';
+@import './utility.css';
 
 :root, #default-mode, #default-theme {
   --color-primary-50: #ecfbff;

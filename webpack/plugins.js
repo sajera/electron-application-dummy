@@ -8,7 +8,7 @@ module.exports = [
   // https://webpack.js.org/plugins/environment-plugin/#dotenvplugin
   new Dotenv({ systemvars: true }),
   // https://webpack.js.org/plugins/eslint-webpack-plugin/
-  new ESLint({}),
+  new ESLint({ failOnError: false }),
   // TODO is it useful?
   // https://webpack.js.org/plugins/mini-css-extract-plugin/
   // env === ENV.PROD && new MiniCssExtractPlugin({

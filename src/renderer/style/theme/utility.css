@@ -1,0 +1,29 @@
+
+/* part of THEME */
+@utility bg-body {
+  @apply bg-white dark:bg-[#212121]
+}
+@utility text-body {
+  @apply text-black dark:text-white
+}
+@utility bg-alt {
+  @apply bg-gray-50 dark:bg-gray-950
+}
+@utility text-alt {
+  @apply text-gray-700 dark:text-gray-300
+}
+@utility required-asterisk {
+  @apply after:content-['*'] after:ml-0.5 after:-mt-5 after:text-red-500 after:inline-block after:text-xl;
+}
+@utility border-alt {
+  @apply border-gray-200 dark:border-gray-800
+}
+
+
+/* HELPERS */
+@utility text-muted {
+  @apply text-gray-500
+}
+@utility required-asterisk {
+  @apply after:content-['*'] after:ml-0.5 after:-mt-5 after:text-red-500 after:inline-block after:text-xl;
+}

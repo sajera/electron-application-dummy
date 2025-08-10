@@ -2,6 +2,7 @@
 import cn from 'classnames'
 import React, { memo } from 'react'
 // local dependencies
+import '../style/component/btn.css'
 import { Tooltip } from './tooltip'
 
 export const Btn = memo(function Btn ({ className, children, title, ...attr }) {

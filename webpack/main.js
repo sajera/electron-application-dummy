@@ -1,7 +1,6 @@
 const rules = require('./rules.js')
 const plugins = require('./plugins.js')
 
-console.log(1)
 module.exports = {
   entry: './src/main/index.js',
   // https://webpack.js.org/plugins/

@@ -1,4 +1,4 @@
-@reference '../theme.css';
+@reference '../theme/index.css';
 
 /* FIXME define better view ¯\_(ツ)_/¯ */
 @layer base {
