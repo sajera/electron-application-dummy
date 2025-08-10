@@ -1,0 +1,126 @@
+@reference '../theme.css';
+
+/* FIXME define better view ¯\_(ツ)_/¯ */
+@layer base {
+  .btn {
+    @apply
+    py-1
+    px-2
+    text-xs
+    font-medium
+    rounded-sm
+    border
+    cursor-pointer
+    border-transparent
+    shadow
+    focus:outline-none
+    focus:ring-1
+    focus:ring-offset-2
+    ring-offset-gray-50
+    dark:ring-offset-gray-900
+    transition-colors
+    duration-150;
+  }
+  /* NOTE take in mind "pointer-events-none" disables the Tooltip triggers */
+  .btn[disabled], .btn.disabled { @apply opacity-55 cursor-no-drop; }
+
+  .btn-md { @apply py-1.5 px-3 text-base; }
+  .btn-lg { @apply py-2 px-4 text-lg; }
+
+  .btn-primary {
+    @apply
+    bg-primary-700
+    text-white
+    border-primary-800
+    hover:bg-primary-800
+    hover:border-primary-900
+    focus:ring-primary-600
+    [&.active]:bg-primary-800
+    [&.active]:border-primary-900;
+  }
+  .btn-primary-outline {
+    @apply
+    bg-transparent
+    text-primary-700
+    border-primary-700
+    hover:text-white
+    hover:bg-primary-800
+    focus:ring-primary-600
+    hover:border-primary-900
+    [&.active]:text-white
+    [&.active]:bg-primary-800
+    [&.active]:border-primary-900;
+  }
+
+  .btn-secondary {
+    @apply
+    bg-gray-200
+    text-gray-700
+    border-gray-300
+    hover:bg-gray-300
+    focus:ring-gray-400
+    hover:border-gray-400
+    [&.active]:bg-gray-300
+    [&.active]:border-gray-400
+    dark:bg-gray-700
+    dark:text-gray-300
+    dark:border-gray-800
+    dark:hover:bg-gray-800
+    dark:focus:ring-gray-700
+    dark:hover:border-gray-900
+    dark:[&.active]:bg-gray-800
+    dark:[&.active]:border-gray-900;
+  }
+
+  .btn-secondary-outline {
+    @apply
+    text-gray-700
+    bg-transparent
+    border-gray-300
+    hover:bg-gray-300
+    focus:ring-gray-400
+    hover:border-gray-400
+    [&.active]:bg-gray-300
+    [&.active]:border-gray-400
+    dark:text-gray-300
+    dark:border-gray-950
+    dark:hover:bg-gray-800
+    dark:focus:ring-gray-700
+    dark:hover:border-gray-950
+    dark:[&.active]:bg-gray-800
+    dark:[&.active]:border-gray-900;
+  }
+
+  .btn-danger {
+    @apply
+    bg-red-600
+    text-white
+    border-red-700
+    hover:bg-red-800
+    focus:ring-red-600
+    hover:border-red-900
+    [&.active]:bg-red-800
+    [&.active]:border-red-900;
+  }
+  .btn-danger-outline {
+    @apply
+    bg-transparent
+    text-red-700
+    dark:text-red-500
+    border-red-600
+    hover:text-white
+    hover:border-red-900
+    hover:bg-red-800
+    focus:ring-red-600
+    [&.active]:text-white
+    [&.active]:bg-red-800
+    [&.active]:border-red-900;
+  }
+
+  .link {
+    @apply
+    text-primary-600
+    hover:text-primary-700
+    dark:hover:text-primary-600;
+  }
+}

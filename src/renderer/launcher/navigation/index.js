@@ -37,7 +37,7 @@ const NavLink = memo(function NavLink ({ className, icon: Icon, link, name = '~ 
       'hover:text-primary-600': !disabled && !active,
       'text-primary-900 dark:text-primary-500 opacity-90': active,
     })}>
-    {Boolean(Icon) && <Icon className="mr-2 h-5 w-5 flex-shrink-0 group-hover:animate-wiggle-once" aria-hidden="true" />}
+    {Boolean(Icon) && <Icon className="mr-2 h-5 w-5 flex-shrink-0 group-hover:animate-swing" aria-hidden="true" />}
     { name }
   </Link>
 })
@@ -56,7 +56,7 @@ const Action = memo(function Action ({ className, icon: Icon, action, name = '~ 
       'hover:text-primary-600': !disabled && !active,
       'text-primary-900 dark:text-primary-500 opacity-90': active,
     })}>
-    {Boolean(Icon) && <Icon className="mr-2 h-5 w-5 flex-shrink-0 group-hover:animate-wiggle-once" aria-hidden="true" />}
+    {Boolean(Icon) && <Icon className="mr-2 h-5 w-5 flex-shrink-0 group-hover:animate-swing" aria-hidden="true" />}
     { name }
   </button>
 })
@@ -78,7 +78,7 @@ const NavMenu = memo(function NavMenu ({ icon: Icon, name = '~ ~ ~', isActive, o
       'text-primary-900 dark:text-primary-300 opacity-90': active,
     })}>
       <ChevronRightIcon aria-hidden="true" className={cn('h-4 w-4 transition-transform', { 'rotate-90': isOpen })} />
-      {Boolean(Icon) && <Icon className="ml-2 h-5 w-5 flex-shrink-0 group-hover:animate-wiggle-once" aria-hidden="true" />}
+      {Boolean(Icon) && <Icon className="ml-2 h-5 w-5 flex-shrink-0 group-hover:animate-swing" aria-hidden="true" />}
       <span className="ml-2">{name}</span>
     </button>
     <Collapsible tag="ul" isOpen={isOpen} className="pl-6 text-sm">

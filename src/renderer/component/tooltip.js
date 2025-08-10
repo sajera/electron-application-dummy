@@ -91,19 +91,3 @@ export const Hint = memo(function Hint ({ className = 'mb-2', ...attr }) {
     className={cn('inline-block outline-none cursor-help size-4 text-gray-400', className)}
   />
 })
-
-export const Btn = memo(function Btn ({ className, children, title, ...attr }) {
-
-  return <Tooltip
-    delayShow="1200"
-    delayHide="150"
-    placement="top"
-    type="button"
-    tag="button"
-    {...attr}
-    content={title}
-    className={cn('btn', className)}
-  >
-    {children}
-  </Tooltip>
-})

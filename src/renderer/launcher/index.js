@@ -11,6 +11,7 @@ import { Cog8ToothIcon, Bars4Icon, SunIcon, MoonIcon } from '@heroicons/react/24
 import '../style'
 // local dependencies
 import { layoutStore } from './store'
+import { Btn } from '../component/btn'
 import { PageStore } from './local-storage'
 import { createHistory } from '../../service/route'
 import { SidebarItem, Routing } from './navigation'
@@ -39,7 +40,7 @@ const Layout = observer(function Layout () {
 
   return <>
     {/* NOTE page header */}
-    <div className="flex items-center flex-nowrap bg-alt shadow-xs py-2.5 h-12 fixed z-40 inset-x-0 top-0">
+    <div className="flex items-center flex-nowrap bg-primary-800 _bg-alt shadow-xs py-2.5 h-12 fixed z-40 inset-x-0 top-0">
       <mark>menu toggle ?</mark>
       <div className="flex items-end pr-3 mr-3 h-6">
         <button
@@ -53,14 +54,7 @@ const Layout = observer(function Layout () {
       {/* NOTE header right side */}
       <div className="flex flex-1 items-center justify-end">
         <div className="flex-1"></div>
-        <p className="font-bold text-sm text-primary-600 mx-4">currentUser.email</p>
-        <button
-          onClick={() => layoutStore.setDarkMode(!isDarkModeEnabled)}
-          className="flex items-center justify-between font-bold hover:bg-gray-100 dark:hover:bg-gray-800 px-3 py-2"
-        >
-          <span className="mr-3">{isDarkModeEnabled ? 'Light' : 'Dark'}&nbsp;mode</span>
-          {isDarkModeEnabled ? <SunIcon className="size-4 inline-block" /> : <MoonIcon className="size-4 inline-block" />}
-        </button>
+        <p className="font-bold text-sm text-primary-100 mx-4">currentUser.email</p>
       </div>
     </div>
     <ul className={cn(
