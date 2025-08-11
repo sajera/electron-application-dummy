@@ -7,7 +7,7 @@ module.exports = {
   plugins: [
     ...plugins,
     // https://webpack.js.org/plugins/copy-webpack-plugin/
-    new Copy({ patterns: [{ from: './assets', to: 'assets' }] }),
+    // new Copy({ patterns: [{ from: './assets', to: 'assets' }] }),
   ],
   // https://webpack.js.org/concepts/modules/
   module: {

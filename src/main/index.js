@@ -1,6 +1,6 @@
 // outsource dependencies
 import path from 'path'
-import { app, BrowserWindow, ipcMain, nativeImage, Tray } from 'electron'
+import { app, ipcMain } from 'electron'
 // local dependencies
 import Launcher from './launcher'
 import Initializer from './initializer'
@@ -9,8 +9,11 @@ import { delayResolve } from '../service'
 console.log('__dirname', path.resolve(path.dirname('')), path.dirname(''))
 console.log('process.env.SID', process.env.SID)
 
-// NOTE setup icon for panel
-app.dock.setIcon('./assets/image/logo-512x512.png')
+// FIXME throwing on prod
+// NOTE use absolute path for "main" process
+// app.dock.setIcon(path.join(process.cwd(), 'src', 'assets', 'app-icon', 'icon.png'))
+// app.dock.setIcon('./src/assets/app-icon/icon.png')
+
 // TODO handle close when Initializer is hidden
 // NOTE just in case ¯\_(ツ)_/¯
 app.on('window-all-closed',  app.quit)
@@ -33,9 +36,9 @@ app.whenReady().then(() => {
   // TODO simulate preparation of Launcher
   delayResolve(3e3)
     .then(() => {
-      Initializer.hide()
       Launcher.show()
-      // TODO for now this is a main window and app should be closed
+      Initializer.hide()
+      // // TODO for now this is a main window and app should be closed
       Launcher.window.on('close', app.quit)
       // Initializer.close()
       // TODO what next

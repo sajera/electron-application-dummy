@@ -1,14 +1,14 @@
 // outsource dependencies
 import cn from 'classnames'
 import React, { memo, } from 'react'
-
+import logo from '../../assets/image/logo-512x512.png'
 
 export const LogoPng = memo(function LogoPng ({ className, ...attr }) {
   return <img
     aria-hidden="true"
     {...attr}
+    src={logo}
     alt="The LOGO !!!"
-    src="/assets/image/logo-512x512.png"
     className={cn('logo', className)}
   />
 })

@@ -1,14 +1,15 @@
 {
   "name": "ead",
-  "version": "1.0.0",
+  "version": "1.0.002",
   "main": "./.webpack/main",
-  "description": "electron-application-dummy",
+  "description": "Electron application dummy/boilerplate",
   "author": "Sajera: Serhii P <allsajera@gmail.com> (Sajera)",
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "build": "electron-forge make",
     "start": "electron-forge start",
+    "package": "electron-forge package",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -17,7 +18,9 @@
     "@babel/core": "^7.28.0",
     "@babel/preset-react": "^7.27.1",
     "@electron-forge/cli": "^7.8.2",
+    "@electron-forge/maker-deb": "^7.8.3",
     "@electron-forge/maker-dmg": "^7.8.3",
+    "@electron-forge/maker-wix": "^7.8.3",
     "@electron-forge/maker-zip": "^7.8.2",
     "@electron-forge/plugin-auto-unpack-natives": "^7.8.2",
     "@electron-forge/plugin-webpack": "^7.8.2",
@@ -46,6 +49,7 @@
     "@heroicons/react": "^2.2.0",
     "classnames": "^2.5.1",
     "dayjs": "^1.11.13",
+    "history": "^4.10.1",
     "lodash": "^4.17.21",
     "mobx": "^6.13.7",
     "mobx-react": "^9.2.0",
@@ -54,7 +58,6 @@
     "react-dom": "^19.1.1",
     "react-hot-toast": "^2.5.2",
     "react-popper-tooltip": "^4.4.2",
-    "history": "^4.10.1",
     "react-router-dom": "^5.3.4"
   }
 }

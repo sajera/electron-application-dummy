@@ -4,32 +4,40 @@ module.exports = {
   outDir: '.build',
   packagerConfig: {
     asar: true,
-    // icon: path.join(process.cwd(), 'image', 'favicon-96x96.ico')
-    // icon: path.join(process.cwd(), 'image', 'logo-512x512.png')
-    // icon: './image/favicon-96x96.ico'
-    // FIXME relative path ?
-    icon: path.join(process.cwd(), 'image', 'logo-512x512.png'),
+    icon: path.join(process.cwd(), 'src', 'assets', 'app-icon', '512x512.png'),
     extraResource: [
-      path.join(process.cwd(), 'image', 'favicon-96x96.ico'),
+      path.join(process.cwd(), 'src', 'assets', 'app-icon', 'icon.ico'),
+      path.join(process.cwd(), 'src', 'assets', 'app-icon', 'icon.png'),
+      path.join(process.cwd(), 'src', 'assets', 'app-icon', 'icon.icns'),
+      path.join(process.cwd(), 'src', 'assets', 'app-icon', '32x32.png'),
+      path.join(process.cwd(), 'src', 'assets', 'app-icon', '128x128.png'),
+      path.join(process.cwd(), 'src', 'assets', 'app-icon', '512x512.png'),
     ],
   },
   rebuildConfig: {
     force: true
   },
-  // TODO recheck
   makers: [
+    //  FIXME usefully ?
     // {
     //   name: '@electron-forge/maker-squirrel',
-    //   config: {},
+    //   config: {
+    //     setupIcon: './src/assets/app-icon/icon.ico',
+    //   },
     // },
     {
       name: '@electron-forge/maker-zip',
-      platforms: ['darwin'],
+      platforms: ['darwin', 'linux'],
     },
-    // {
-    //   name: '@electron-forge/maker-deb',
-    //   config: {},
-    // },
+    {
+      name: '@electron-forge/maker-deb',
+      config: {
+        options: {
+          icon: path.join(process.cwd(), 'src', 'assets', 'app-icon', '128x128.png')
+        }
+      },
+    },
+    //  FIXME usefully ?
     // {
     //   name: '@electron-forge/maker-rpm',
     //   config: {},
@@ -37,8 +45,13 @@ module.exports = {
     {
       name: '@electron-forge/maker-dmg',
       config: {
-        icon: './public/image/logo-512x512.png',
-        format: 'ULFO',
+        icon: path.join(process.cwd(), 'src', 'assets', 'app-icon', 'icon.icns'),
+      }
+    },
+    {
+      name: '@electron-forge/maker-wix',
+      config: {
+        icon: path.join(process.cwd(), 'src', 'assets', 'app-icon', 'icon.ico'),
       }
     }
   ],
