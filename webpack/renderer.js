@@ -7,19 +7,26 @@ module.exports = {
   plugins: [
     ...plugins,
     // https://webpack.js.org/plugins/copy-webpack-plugin/
-    // new Copy({ patterns: [{ from: './assets', to: 'assets' }] }),
+    // NOTE It is much easier to understand and pass relative paths that are similar to the real structure
+    new Copy({ patterns: [{ from: './static', to: './static' }] }),
   ],
   // https://webpack.js.org/concepts/modules/
   module: {
     rules: [
       ...rules,
-      // {
-      //   test: /\.css$/,
-      //   use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],
-      // },
       {
         test: /\.css$/i,
         use: ['style-loader', 'css-loader', 'postcss-loader'],
+      },
+      {
+        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+        use: {
+          loader: 'file-loader',
+          options: {
+            name: 'image/[name].[ext]',
+            publicPath: '../.',
+          }
+        }
       },
       {
         test: /\.jsx?$/,

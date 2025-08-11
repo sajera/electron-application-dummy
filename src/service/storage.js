@@ -1,20 +1,4 @@
 
-// polyfill from MDN https://developer.mozilla.org/en-US/docs/Web/API/Storage/LocalStorage
-/* istanbul ignore next */
-const cookieStorage = {
-  getItem: sKey => (!cookieStorage.hasProperty(sKey) ? null
-    : unescape(document.cookie.replace(
-      new RegExp(`(?:^|.*;\\s*)${ escape(sKey).replace(/[-.+*]/g, '\\$&') }\\s*=\\s*((?:[^;](?!;))*[^;]?).*`),
-      '$1'
-    ))),
-  setItem: (sKey, sValue) => (!sKey ? null
-    : (document.cookie = `${escape(sKey) }=${ escape(sValue) }; expires=Tue, 19 Jan 2038 03:14:07 GMT; path=/`)) && null,
-  removeItem: sKey => (!cookieStorage.hasProperty(sKey) ? null
-    : (document.cookie = `${escape(sKey) }=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`)) && null,
-  hasProperty: sKey => (!sKey ? false
-    : (new RegExp(`(?:^|;\\s*)${ escape(sKey).replace(/[-.+*]/g, '\\$&') }\\s*\\=`)).test(document.cookie)),
-}
-
 /**
  * helper to simplify usage of stores
  * @example const local = new Storage(window.localStorage);
@@ -88,7 +72,6 @@ class Storage {
 /**
  * Prepared stores for specific things
  */
-export const cookie = new Storage(cookieStorage)
 export const localStorage = new Storage(window.localStorage)
 export const sessionStorage = new Storage(window.sessionStorage)
 

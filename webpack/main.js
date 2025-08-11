@@ -12,6 +12,16 @@ module.exports = {
     rules: [
       ...rules,
       {
+        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+        use: {
+          loader: 'file-loader',
+          options: {
+            name: 'image/[name].[ext]',
+            // publicPath: '../.',
+          }
+        }
+      },
+      {
         test: /[/\\]node_modules[/\\].+\.(m?js|node)$/,
         parser: { amd: false },
         use: {

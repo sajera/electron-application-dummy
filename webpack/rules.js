@@ -6,19 +6,6 @@ module.exports = [
     test: /native_modules[/\\].+\.node$/,
     use: 'node-loader',
   },
-  {
-    // FIXME I am not sure this is a good idea - it is third time repeat the assets
-    test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-    // TODO please avoid to use it
-    use: {
-      loader: 'file-loader',
-      options: {
-        name: 'img/[name].[ext]',
-        publicPath: '../.',
-        // outputPath: 'file-loader',
-      }
-    }
-  }
   // Put your webpack loader rules in this array.  This is where you would put
   // your ts-loader configuration for instance:
   /**

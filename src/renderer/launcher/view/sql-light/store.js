@@ -41,13 +41,19 @@ class SQLLightPageStore {
     // NOTE setup as initial
     this.form.initialize(data)
     this.disabled.set('sql', true)
+    console.log(`%c SQLLightPageStore ${'submit'} `, 'color: #FF6766; font-weight: bolder;'
+      , '\n data.query:', data.query
+    )
     // NOTE returns toastId
-    return delayResolve(3e3)
+    // return delayResolve(3e3)
+    // return preload.ping(data.query)
+    return preload.setIcon(data.query)
       .then(response => runInAction(() => {
         console.log(`%c SQLLightPageStore ${'submit'} `, 'color: #FF6766; font-weight: bolder;'
           , '\n response:', response
           , '\n data:', data
         )
+        this.data = response
       }))
       .catch(this.errorHandler('SQL Lite query execution'))
       .finally(() => runInAction(() => this.disabled.set('sql', false)))
@@ -56,9 +62,9 @@ class SQLLightPageStore {
   validate = values => {
     const errors = {}
 
-    if (!values.query) {
-      errors.query = 'The SQL query is mandatory.'
-    }
+    // if (!values.query) {
+    //   errors.query = 'The SQL query is mandatory.'
+    // }
 
     // console.log(`%c validate `, 'color: #FF6766; font-weight: bolder;'
     //   , '\n values:', values

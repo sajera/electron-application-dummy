@@ -45,6 +45,7 @@ module.exports = {
     {
       name: '@electron-forge/maker-dmg',
       config: {
+        overwrite: true,
         icon: path.join(process.cwd(), 'src', 'assets', 'app-icon', 'icon.icns'),
       }
     },

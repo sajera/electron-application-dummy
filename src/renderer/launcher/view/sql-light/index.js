@@ -9,7 +9,7 @@ import { Form, Field, Input } from '../../../component/form'
 
 
 export default observer(function Toasts () {
-  const { form, errorMessage, disabled } = store
+  const { form, errorMessage, disabled, data } = store
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(store.initialize, [])
 
@@ -41,5 +41,9 @@ export default observer(function Toasts () {
         </Btn>
       </div>
     </Form>
+
+    <div className="p-4">
+      <code>{JSON.stringify(data, null, 4)}</code>
+    </div>
   </div>
 })
