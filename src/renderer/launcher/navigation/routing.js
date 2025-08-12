@@ -21,7 +21,7 @@ export default memo(function Routing () {
 
     <Route path={ROUTS.DEV.COLOR.ROUTE} component={require('../view/color').default} />
     <Route path={ROUTS.DEV.TOAST.ROUTE} component={require('../view/toast').default} />
-    <Route path={ROUTS.DEV.SQL.ROUTE} component={require('../view/sql-light').default} />
+    <Route path={ROUTS.DEV.SQL.ROUTE} component={require('../view/sql').default} />
 
     {/* OTHERWISE */}
     <Route component={require('../view/health').default} />

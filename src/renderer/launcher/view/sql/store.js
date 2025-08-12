@@ -2,15 +2,15 @@
 import { makeAutoObservable, runInAction } from 'mobx'
 // local dependencies
 import toast from '../../../component/toast'
+import { SQLPageLS } from '../../local-storage'
 import { FormData } from '../../../component/form'
 import { delayResolve } from '../../../../service'
-import { SQLLightPageLS } from '../../local-storage'
 
 const initial = {
-  query: 'SELECT * from ',
+  query: 'SELECT * from users',
 }
 
-class SQLLightPageStore {
+class SQLPageStore {
   data = null
   errorMessage = null
   disabled = new Map()
@@ -30,9 +30,9 @@ class SQLLightPageStore {
 
   initialize = () => {
     // NOTE restore latest query
-    this.form.initialize(SQLLightPageLS.get() || initial)
+    this.form.initialize(SQLPageLS.get() || initial)
     // NOTE record query on page out
-    return () => SQLLightPageLS.set(this.form.value)
+    return () => SQLPageLS.set(this.form.value)
   }
 
   clear = () => this.form.initialize(initial)
@@ -41,15 +41,13 @@ class SQLLightPageStore {
     // NOTE setup as initial
     this.form.initialize(data)
     this.disabled.set('sql', true)
-    console.log(`%c SQLLightPageStore ${'submit'} `, 'color: #FF6766; font-weight: bolder;'
+    console.log(`%c SQLPageStore ${'submit'} `, 'color: #FF6766; font-weight: bolder;'
       , '\n data.query:', data.query
     )
-    // NOTE returns toastId
-    // return delayResolve(3e3)
-    // return preload.ping(data.query)
-    return preload.setIcon(data.query)
+
+    return preload.sqlite(data.query, {})
       .then(response => runInAction(() => {
-        console.log(`%c SQLLightPageStore ${'submit'} `, 'color: #FF6766; font-weight: bolder;'
+        console.log(`%c SQLPageStore ${'submit'} `, 'color: #FF6766; font-weight: bolder;'
           , '\n response:', response
           , '\n data:', data
         )
@@ -75,5 +73,5 @@ class SQLLightPageStore {
   }
 }
 
-export const sqlLightPageStore = new SQLLightPageStore()
-export default sqlLightPageStore
+export const sqlPageStore = new SQLPageStore()
+export default sqlPageStore

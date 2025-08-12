@@ -7,13 +7,14 @@ contextBridge.exposeInMainWorld('preload', {
   node: process.versions.node,
   chrome: process.versions.chrome,
   electron: process.versions.electron,
-  // we can also expose variables, not just functions
-  ping: (a, b, c, d) => {
-    console.log('ping', a, b, c, d)
-    return ipcRenderer.invoke('ping', a, b, c, d)
-  },
-  setIcon: (a, b, c, d) => {
-    console.log('setIcon', a, b, c, d)
-    return ipcRenderer.invoke('set-icon', a, b, c, d)
-  }
+  sqlite: (...args) => ipcRenderer.invoke('sqlite', ...args),
+})
+
+ipcRenderer.on('event-from-main', (event, a, b, c, d) => {
+  process.env.DEBUG && console.info('%c preload => ipcRenderer.on(event-from-main) ', 'color: #FF6766; font-weight: bolder;'
+    , '\n event:', event
+    , '\n args:', a, b, c, d
+    , '\n window:', window
+  )
+  // TODO way to safety trigger actions on UI
 })

@@ -1,14 +1,10 @@
 const rules = require('./rules.js')
 const plugins = require('./plugins.js')
-const Copy = require('copy-webpack-plugin')
 
 module.exports = {
   // https://webpack.js.org/plugins/
   plugins: [
     ...plugins,
-    // https://webpack.js.org/plugins/copy-webpack-plugin/
-    // NOTE It is much easier to understand and pass relative paths that are similar to the real structure
-    new Copy({ patterns: [{ from: './static', to: './static' }] }),
   ],
   // https://webpack.js.org/concepts/modules/
   module: {
@@ -23,8 +19,8 @@ module.exports = {
         use: {
           loader: 'file-loader',
           options: {
-            name: 'image/[name].[ext]',
             publicPath: '../.',
+            name: 'image/[name].[ext]',
           }
         }
       },

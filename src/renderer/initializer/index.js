@@ -4,6 +4,7 @@ import { observer } from 'mobx-react'
 import { createRoot } from 'react-dom/client'
 // local dependencies
 import '../style/theme/index.css'
+import logo from '../../assets/image/logo-512x512.png'
 
 const App = observer(function App () {
   // NOTE totally useless
@@ -14,6 +15,7 @@ const App = observer(function App () {
   </>
 })
 
+document.body.style.backgroundImage = `url("${logo}")`
 createRoot(document.body).render(<App />)
 
 // console.log('%c CONFIG ', 'background: #EC1B24; color: #000; font-weight: bolder; font-size: 30px;'

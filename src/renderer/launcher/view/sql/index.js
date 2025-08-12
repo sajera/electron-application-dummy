@@ -43,7 +43,7 @@ export default observer(function Toasts () {
     </Form>
 
     <div className="p-4">
-      <code>{JSON.stringify(data, null, 4)}</code>
+      <pre>{JSON.stringify(data, null, 4)}</pre>
     </div>
   </div>
 })

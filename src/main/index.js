@@ -3,31 +3,36 @@ import fs from 'fs'
 import path from 'path'
 import { app, ipcMain, nativeImage } from 'electron'
 // local dependencies
+import Sqlite from './sqlite'
 import Launcher from './launcher'
 import Initializer from './initializer'
 import { delayResolve } from '../service'
 import icon from '../assets/app-icon/icon.png'
 
-console.log('__dirname', path.resolve(path.dirname('')), path.dirname(''))
-console.log('process.env.SID', process.env.SID)
-
-// console.log('fs.readdirSync', fs.readdirSync(path.dirname(__filename)))
-// console.log('__filename => icon', path.resolve(path.dirname(__filename), icon))
+// TODO remove
+console.log('MAIN => ', process.env.SID
+  , '\n __filename:', __filename
+  , '\n __dirname:', path.resolve(path.dirname(''))
+  , '\n fs.readdirSync:', fs.readdirSync(path.dirname(__filename))
+  , '\n process.resourcesPath:', process.resourcesPath
+  , '\n fs.readdirSync:', fs.readdirSync(process.resourcesPath)
+)
 
 // NOTE just in case ¯\_(ツ)_/¯
 app.on('window-all-closed',  app.quit)
+app.on('quit',  Sqlite.close)
 
 app.whenReady().then(() => {
+  // FIXME to apply icon for local development - remove?
   if (process.platform === 'darwin') {
-    const AppIcon = path.resolve(path.dirname(__filename), icon)
-    app.dock.setIcon(nativeImage.createFromPath(AppIcon))
+    const appIcon = path.resolve(path.dirname(__filename), icon)
+    console.log('appIcon', appIcon)
+    app.dock.setIcon(nativeImage.createFromPath(appIcon))
   }
 
-  // TODO IPC_API
-  ipcMain.handle('ping', (event, a, b, c, d) => {
-    console.log('pong', event, a, b, c, d)
-    return 'pong'
-  })
+  // NOTE necessary DB actions
+  Sqlite.initialize(app.getAppPath('userData'))
+  ipcMain.handle('sqlite', Sqlite.handleQuery)
 
   // NOTE show loader before
   Initializer.initialize(INITIALIZER_PRELOAD_WEBPACK_ENTRY)
@@ -48,6 +53,7 @@ app.whenReady().then(() => {
       // Initializer.close()
       // TODO what next
       // app.quit()
+      delayResolve(3e3).then(() => Launcher.send('event-from-main', 1,2,3,4,5,6))
     })
 
 })

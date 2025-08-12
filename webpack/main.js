@@ -12,11 +12,11 @@ module.exports = {
     rules: [
       ...rules,
       {
-        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+        test: /\.(png|jpe?g|gif|svg|db)(\?.*)?$/,
         use: {
           loader: 'file-loader',
           options: {
-            name: 'image/[name].[ext]',
+            name: '[name].[ext]',
             // publicPath: '../.',
           }
         }

@@ -38,6 +38,8 @@ export default new class Launcher {
     }
   })
 
+  send = (...args) => this.window.webContents.send(...args)
+
   show = () => this.window.show()
 
   hide = () => this.window.hide()

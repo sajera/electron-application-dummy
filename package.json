@@ -10,6 +10,7 @@
     "build": "electron-forge make",
     "start": "electron-forge start",
     "package": "electron-forge package",
+    "sqlite-initial": "node sqlite-initial-data.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -28,7 +29,6 @@
     "@tailwindcss/postcss": "^4.1.11",
     "@vercel/webpack-asset-relocator-loader": "^1.10.0",
     "babel-loader": "^10.0.0",
-    "copy-webpack-plugin": "^13.0.0",
     "css-loader": "^7.1.2",
     "dotenv": "^17.2.1",
     "dotenv-webpack": "^8.1.1",
@@ -58,6 +58,7 @@
     "react-dom": "^19.1.1",
     "react-hot-toast": "^2.5.2",
     "react-popper-tooltip": "^4.4.2",
-    "react-router-dom": "^5.3.4"
+    "react-router-dom": "^5.3.4",
+    "sqlite3": "^5.1.7"
   }
 }

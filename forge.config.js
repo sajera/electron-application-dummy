@@ -1,17 +1,24 @@
 const path = require('path')
 
 module.exports = {
+  hooks: {
+    preStart: async forgeConfig => {
+      // console.log(`Starting up app on platform: ${process.platform}`, forgeConfig)
+      require('./sqlite-initial-data')
+    }
+  },
   outDir: '.build',
   packagerConfig: {
     asar: true,
-    icon: path.join(process.cwd(), 'src', 'assets', 'app-icon', '512x512.png'),
+    // icon: path.join(process.cwd(), 'src', 'assets', 'app-icon', '512x512.png'),
+    icon: './src/assets/app-icon/512x512.png',
     extraResource: [
-      path.join(process.cwd(), 'src', 'assets', 'app-icon', 'icon.ico'),
-      path.join(process.cwd(), 'src', 'assets', 'app-icon', 'icon.png'),
-      path.join(process.cwd(), 'src', 'assets', 'app-icon', 'icon.icns'),
-      path.join(process.cwd(), 'src', 'assets', 'app-icon', '32x32.png'),
-      path.join(process.cwd(), 'src', 'assets', 'app-icon', '128x128.png'),
-      path.join(process.cwd(), 'src', 'assets', 'app-icon', '512x512.png'),
+      './src/assets/sqlite/local.db',
+      './src/assets/app-icon/icon.ico',
+      './src/assets/app-icon/icon.png',
+      './src/assets/app-icon/icon.icns',
+      './src/assets/app-icon/512x512.png',
+      './src/assets/app-icon/electron.icns',
     ],
   },
   rebuildConfig: {
