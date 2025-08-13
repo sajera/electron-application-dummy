@@ -28,7 +28,6 @@ module.exports = {
           loader: '@vercel/webpack-asset-relocator-loader',
           options: {
             outputAssetBase: 'native_modules',
-            emitDirnameAll: true,
           },
         },
       },

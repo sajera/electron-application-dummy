@@ -29,6 +29,7 @@
     "@tailwindcss/postcss": "^4.1.11",
     "@vercel/webpack-asset-relocator-loader": "^1.10.0",
     "babel-loader": "^10.0.0",
+    "copy-webpack-plugin": "^13.0.1",
     "css-loader": "^7.1.2",
     "dotenv": "^17.2.1",
     "dotenv-webpack": "^8.1.1",
@@ -47,6 +48,7 @@
   "dependencies": {
     "@headlessui/react": "^2.2.7",
     "@heroicons/react": "^2.2.0",
+    "better-sqlite3": "^12.2.0",
     "classnames": "^2.5.1",
     "dayjs": "^1.11.13",
     "history": "^4.10.1",

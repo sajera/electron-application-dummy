@@ -15,6 +15,15 @@ export default new class SQLite {
     // TODO is that usefully ?
   }
 
+  get debugInfo () {
+    return {
+      db: this.db,
+      name: this.name,
+      initialData: initialData,
+      initial: path.resolve(path.dirname(__filename), initialData),
+    }
+  }
+
   initialData = dbPath => {
     // NOTE skip in case db already setup
     if (fs.existsSync(dbPath)) return console.log('DB already exist')
@@ -32,20 +41,14 @@ export default new class SQLite {
   }
 
   initialize = appGetPathUserData => {
-    const dbPath = path.join(appGetPathUserData, this.name)
+    const dbPath = path.join(appGetPathUserData, 'local', this.name)
     this.initialData(dbPath)
+    // FIXME faced a webpack problems using "import sqlite3 from 'sqlite3'"
+    // const Database = require('sqlite3').verbose().Database
     const Database = sqlite3.verbose().Database
     this.db = new Database(dbPath)
     // NOTE listen sql requests from renderer
-    // ipcMain.handle('sqlite', this.handleQuery)
-
-    // console.log('SQLite => ', dbPath
-    //   , '\n initialData:', initialData
-    //   , '\n initialData:', path.resolve(path.dirname(__filename), initialData)
-    //   , '\n appGetPathUserData:', appGetPathUserData
-    //   , '\n process.resourcesPath:', process.resourcesPath
-    //   , '\n fs.readdirSync:', fs.readdirSync(appGetPathUserData)
-    // )
+    ipcMain.handle('sqlite', this.handleQuery)
   }
 
   handleQuery = (event, sql, ...param) => new Promise((resolve, reject) => {
