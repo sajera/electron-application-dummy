@@ -4,6 +4,10 @@
   "main": "./.webpack/main",
   "description": "Electron application dummy/boilerplate",
   "author": "Sajera: Serhii P <allsajera@gmail.com> (Sajera)",
+  "repository": {
+    "type": "git",
+    "url": "git+ WRITE YOUR REPO LINK "
+  },
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -33,7 +37,7 @@
     "css-loader": "^7.1.2",
     "dotenv": "^17.2.1",
     "dotenv-webpack": "^8.1.1",
-    "electron": "^37.2.4",
+    "electron": "^37.2.6",
     "eslint": "^9.32.0",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
@@ -48,7 +52,6 @@
   "dependencies": {
     "@headlessui/react": "^2.2.7",
     "@heroicons/react": "^2.2.0",
-    "better-sqlite3": "^12.2.0",
     "classnames": "^2.5.1",
     "dayjs": "^1.11.13",
     "history": "^4.10.1",

@@ -8,6 +8,7 @@ contextBridge.exposeInMainWorld('preload', {
   chrome: process.versions.chrome,
   electron: process.versions.electron,
   sqlite: (...args) => ipcRenderer.invoke('sqlite', ...args),
+  getDebugInfo: (...args) => ipcRenderer.invoke('get-debug-info', ...args).then(JSON.parse),
 })
 
 ipcRenderer.on('event-from-main', (event, a, b, c, d) => {

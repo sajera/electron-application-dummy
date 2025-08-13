@@ -2,11 +2,12 @@
 import React from 'react'
 import { observer } from 'mobx-react'
 // local dependencies
+import { layoutStore } from '../store'
 import { LogoPng, LogoIcon } from '../../component/image'
 
 export default observer(function Home () {
 
-  return <div id="LayoutHome" className="relative flow-root min-h-full -p-4">
+  return <div className="relative flow-root min-h-full p-4">
     <h2 className="text-4xl my-14 text-center">
       Welcome to
       <LogoPng className="inline-block size-8 text-lne-600 mx-2 mb-2" />
@@ -14,6 +15,9 @@ export default observer(function Home () {
       <LogoIcon className="inline-block size-8 text-lne-600 mx-2 mb-2" />
     </h2>
 
+    <div className="p-4 bg-alt rounded border-alt overflow-auto">
+      <pre>{JSON.stringify(layoutStore.debugInfo, null, 4)}</pre>
+    </div>
 
   </div>
 })

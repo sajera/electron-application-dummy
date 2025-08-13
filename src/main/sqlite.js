@@ -2,61 +2,67 @@
 import fs from 'fs'
 import path from 'path'
 import sqlite3 from 'sqlite3'
-import { ipcMain } from 'electron'
 // local dependencies
-import initialData from '../assets/sqlite/local.db'
+import initialData from '../assets/sqlite/local.initial.sqlite'
 
 export default new class SQLite {
+  name = 'app.db'
+
   db = null
 
-  name = 'local.db'
+  dbPath = null
+
+  dbInitial = null
 
   constructor () {
     // TODO is that usefully ?
   }
 
-  get debugInfo () {
-    return {
-      db: this.db,
-      name: this.name,
-      initialData: initialData,
-      initial: path.resolve(path.dirname(__filename), initialData),
-    }
+  getDebugInfo () {
+    const { name, folder, dbInitial, dbPath } = this
+    return { name, folder, dbPath, dbInitial }
   }
 
-  initialData = dbPath => {
+  prebuilt = () => {
+    // NOTE getting initial DB data
+    this.dbInitial = path.join(process.resourcesPath, initialData)
+    // NOTE for dev mode
+    !fs.existsSync(this.dbInitial) && (this.dbInitial = path.join(path.dirname(this.dbPath), initialData))
     // NOTE skip in case db already setup
-    if (fs.existsSync(dbPath)) return console.log('DB already exist')
-    // const initial = path.join(process.resourcesPath, this.name)
-    const initial = path.resolve(path.dirname(__filename), initialData)
-
-    // TODO check the build
-    console.log('Coping prebuilt database to userData')
-    if (fs.existsSync(initial)) {
-      fs.copyFileSync(initial, dbPath)
-      console.log('Copied + ')
+    if (fs.existsSync(this.dbPath)) return console.log('DB already exist')
+    process.env.DEBUG && console.log('Setting up initial DB', this.dbPath)
+    if (fs.existsSync(this.dbInitial)) {
+      fs.copyFileSync(this.dbInitial, this.dbPath)
+      process.env.DEBUG && console.log('DB prefilled from', this.dbInitial)
     } else {
-      console.log('No prebuilt database found', initial)
+      process.env.DEBUG && console.log('No prebuilt found', this.dbInitial)
     }
   }
 
-  initialize = appGetPathUserData => {
-    const dbPath = path.join(appGetPathUserData, 'local', this.name)
-    this.initialData(dbPath)
-    // FIXME faced a webpack problems using "import sqlite3 from 'sqlite3'"
-    // const Database = require('sqlite3').verbose().Database
-    const Database = sqlite3.verbose().Database
-    this.db = new Database(dbPath)
-    // NOTE listen sql requests from renderer
-    ipcMain.handle('sqlite', this.handleQuery)
+  initialize = appData => {
+    this.dbPath = path.join(appData, this.name)
+    // NOTE handle prebuilt DB
+    this.prebuilt()
+    // NOTE up SQLite
+    const Database = !process.env.DEBUG ? sqlite3.Database : sqlite3.verbose().Database
+    this.db = new Database(this.dbPath)
+    // NOTE run upgrade migrations
+    this.upgrade()
   }
 
   handleQuery = (event, sql, ...param) => new Promise((resolve, reject) => {
-    this.db.all(sql, ...param, (error, rows) => error ? reject(error) : resolve(rows))
+    this.db.all(sql, ...param, (error, data) => error ? reject(error) : resolve(data))
   })
 
-  close = () => this.db.close()
+  close = () => this.db?.close()
 
-  // TODO upgrade migrations
+  upgrade = () => {
+    const upgradesPath = path.dirname(this.dbInitial)
+    // console.log('DB upgrade from', upgradesPath)
+    // console.log(fs.readdirSync(upgradesPath))
 
+    // TODO upgrade migrations
+    process.env.DEBUG && console.log('DB up to date ')
+    return upgradesPath
+  }
 }

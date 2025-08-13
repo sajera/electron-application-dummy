@@ -28,6 +28,8 @@ class LayoutStore {
   isSidebarHidden = false
   initialized = false
 
+  debugInfo = null
+
   constructor () {
     makeAutoObservable(this)
   }
@@ -66,17 +68,19 @@ class LayoutStore {
     // TODO do async things
     Promise.all([
       delayResolve(300),
+      preload.getDebugInfo(),
       // API('/something-important'),
     ])
-      .then(([a]) => runInAction(() => {
-    //     console.log('%c LayoutStore.initialize ', 'color: #FF6766; font-weight: bolder;'
-    //       , '\n environment:', environment
-    //     )
+      .then(([, debugInfo]) => runInAction(() => {
+        this.debugInfo = debugInfo
+        console.log('%c LayoutStore.initialize', 'color: #FF6766; font-weight: bolder;'
+          , '\n debugInfo:', debugInfo
+        )
     //     // NOTE infinity loop with checking session state each 5min
     //     clearInterval(this.interval)
     //     this.interval = setInterval(this.checkAuth, 3e5)
       }))
-      .catch(this.errorHandler('CDT Layout initialization'))
+      .catch(this.errorHandler('Layout initialization'))
       .finally(() => runInAction(() => this.initialized = true))
     // NOTE unmount
     return () => runInAction(() => { })

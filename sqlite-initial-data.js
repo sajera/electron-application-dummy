@@ -1,7 +1,14 @@
-const sqlite3 = require('sqlite3')
 const fs = require('fs')
+const sqlite3 = require('sqlite3')
 
-const dbPath = './src/assets/sqlite/local.db'
+/************************************************
+ * This script is required only once before the first live build.
+ * After that, initial.sqlite becomes part of the Git repository,
+ * and the database receives new changes via migrations.
+ * Until the app goes live, I will continue updating initial.sqlite
+ ************************************************/
+
+const dbPath = './src/assets/sqlite/local.initial.sqlite'
 // Delete if exists (for demo purposes)
 if (fs.existsSync(dbPath)) fs.unlinkSync(dbPath)
 
@@ -29,4 +36,4 @@ db.serialize(() => {
 })
 
 db.close()
-console.log(`Database created at ${dbPath}`)
+console.log(`SQLite initial at`, dbPath)

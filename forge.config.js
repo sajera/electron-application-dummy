@@ -2,7 +2,7 @@ const path = require('path')
 
 module.exports = {
   hooks: {
-    preStart: async forgeConfig => {
+    generateAssets: async forgeConfig => {
       // console.log(`Starting up app on platform: ${process.platform}`, forgeConfig)
       require('./sqlite-initial-data')
     }
@@ -14,12 +14,14 @@ module.exports = {
     // icon: path.join(process.cwd(), 'src', 'assets', 'app-icon', '512x512.png'),
     icon: './src/assets/app-icon/512x512.png',
     extraResource: [
-      './src/assets/sqlite/local.db',
       './src/assets/app-icon/icon.ico',
       './src/assets/app-icon/icon.png',
       './src/assets/app-icon/icon.icns',
       './src/assets/app-icon/512x512.png',
       './src/assets/app-icon/electron.icns',
+      './src/assets/sqlite/local.initial.sqlite',
+      // TODO migrations
+      // './src/assets/sqlite/upgrade-add_test_table.sqlite',
     ],
   },
   rebuildConfig: {

@@ -3,30 +3,30 @@ import fs from 'fs'
 import path from 'path'
 import { app, ipcMain, nativeImage } from 'electron'
 // local dependencies
-// import Sqlite from './sqlite'
-// import SqliteB from './sqlite-b'
+import Sqlite from './sqlite'
 import Launcher from './launcher'
 import Initializer from './initializer'
 import { delayResolve } from '../service'
 import icon from '../assets/app-icon/icon.png'
 
-
-
 // TODO remove
-const getDebugTestInfo = () => (JSON.stringify({
-  __filename: __filename,
+console.log('MAIN => ', process.env.SID)
+const getDebugInfo = () => (JSON.stringify({
+  isPackaged: app.isPackaged,
   __dirname: path.resolve(path.dirname('')),
-  read: path.dirname(__filename),
-  reader: fs.readdirSync(path.dirname(__filename)),
+  __filename: __filename,
+  main: path.dirname(__filename),
+  mainContent: fs.readdirSync(path.dirname(__filename)),
+  appData: app.getAppPath('appData'),
+  appDataContent: fs.readdirSync(app.getAppPath('appData')),
   resourcesPath: process.resourcesPath,
-  resources: fs.readdirSync(process.resourcesPath),
-  // sqlite: Sqlite.debugInfo
+  resourcesContent: fs.readdirSync(process.resourcesPath),
+  sqlite: Sqlite.getDebugInfo(),
 }, null, 4))
-console.log('MAIN => ', process.env.SID, '\n', getDebugTestInfo())
 
 // NOTE just in case ¯\_(ツ)_/¯
 app.on('window-all-closed',  app.quit)
-// app.on('quit',  Sqlite.close)
+app.on('quit',  Sqlite.close)
 
 app.whenReady().then(() => {
   // FIXME to apply icon for local development - remove?
@@ -34,11 +34,12 @@ app.whenReady().then(() => {
     const appIcon = path.resolve(path.dirname(__filename), icon)
     app.dock.setIcon(nativeImage.createFromPath(appIcon))
   }
-  ipcMain.handle('get-debug-info', getDebugTestInfo)
+  ipcMain.handle('get-debug-info', getDebugInfo)
 
   // NOTE necessary DB actions
-  // Sqlite.initialize(app.getAppPath('userData'))
-  // SqliteB.initialize(app.getAppPath('userData'))
+  const dbFolder = app.isPackaged ? app.getAppPath('appData') : path.dirname(__filename)
+  Sqlite.initialize(dbFolder)
+  ipcMain.handle('sqlite', Sqlite.handleQuery)
 
   // NOTE show loader before
   Initializer.initialize(INITIALIZER_PRELOAD_WEBPACK_ENTRY)
@@ -59,7 +60,7 @@ app.whenReady().then(() => {
       // Initializer.close()
       // TODO what next
       // app.quit()
-      delayResolve(3e3).then(() => Launcher.send('event-from-main', getDebugTestInfo()))
+      delayResolve(3e3).then(() => Launcher.send('event-from-main', getDebugInfo()))
     })
 
 })
