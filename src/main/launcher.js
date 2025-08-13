@@ -1,5 +1,6 @@
 // outsource dependencies
 import { BrowserWindow } from 'electron'
+import {delayResolve} from '../service';
 
 export default new class Launcher {
   window = null
@@ -39,6 +40,11 @@ export default new class Launcher {
   })
 
   send = (...args) => this.window.webContents.send(...args)
+
+  whenReady = () => Promise.race([
+    new Promise(resolve => this.window.once('ready-to-show', resolve)),
+    delayResolve(2e5).then(() => Promise.reject({ message: 'Launcher whenReady timeout' })),
+  ])
 
   show = () => this.window.show()
 
