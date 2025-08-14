@@ -1,5 +1,5 @@
 // outsource dependencies
-import { HomeIcon, WindowIcon, PlusIcon, WrenchScrewdriverIcon } from '@heroicons/react/24/solid'
+import { HomeIcon, QueueListIcon, WindowIcon, PlusIcon, WrenchScrewdriverIcon } from '@heroicons/react/24/solid'
 // local dependencies
 import * as ROUTS from './routs'
 
@@ -27,7 +27,7 @@ export default [
     list: [
       {
         name: 'View all',
-        icon: WindowIcon,
+        icon: QueueListIcon,
         type: MENU_ITEM_TYPE.LINK,
         link: ROUTS.WINDOW.LIST.LINK(),
         isActive: ROUTS.WINDOW.LIST.TEST,
@@ -38,8 +38,7 @@ export default [
         type: MENU_ITEM_TYPE.LINK,
         link: ROUTS.WINDOW.DETAILS.LINK(),
         isActive: path => ROUTS.WINDOW.DETAILS.LINK() === path,
-      },
-
+      }
     ]
   },
   {

@@ -33,7 +33,7 @@ export default new class SQLite {
     fs.existsSync(this.dbInitial) && fs.copyFileSync(this.dbInitial, this.dbPath)
   }
 
-  initialize = () => {
+  initialize = async () => {
     // NOTE setup DB handler
     ipcMain.handle('sqlite', this.handleQuery)
     // NOTE handle prebuilt DB

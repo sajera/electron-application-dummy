@@ -4,7 +4,6 @@ import { makeAutoObservable, runInAction } from 'mobx'
 import toast from '../../../component/toast'
 import { SQLPageLS } from '../../local-storage'
 import { FormData } from '../../../component/form'
-import { delayResolve } from '../../../../service'
 
 const initial = {
   query: 'SELECT * from users',
@@ -38,21 +37,15 @@ class SQLPageStore {
   clear = () => this.form.initialize(initial)
 
   submit = data => {
-    // NOTE setup as initial
-    this.form.initialize(data)
+    this.clearError()
     this.disabled.set('sql', true)
-    console.log(`%c SQLPageStore ${'submit'} `, 'color: #FF6766; font-weight: bolder;'
-      , '\n data.query:', data.query
-    )
+
+    // console.log(`%c SQLPageStore ${'submit'} `, 'color: #FF6766; font-weight: bolder;'
+    //   , '\n data.query:', data.query
+    // )
 
     return preload.sqlite(data.query, {})
-      .then(response => runInAction(() => {
-        console.log(`%c SQLPageStore ${'submit'} `, 'color: #FF6766; font-weight: bolder;'
-          , '\n response:', response
-          , '\n data:', data
-        )
-        this.data = response
-      }))
+      .then(data => runInAction(() => this.data = data))
       .catch(this.errorHandler('SQL Lite query execution'))
       .finally(() => runInAction(() => this.disabled.set('sql', false)))
   }
@@ -60,9 +53,9 @@ class SQLPageStore {
   validate = values => {
     const errors = {}
 
-    // if (!values.query) {
-    //   errors.query = 'The SQL query is mandatory.'
-    // }
+    if (!values.query) {
+      errors.query = 'The SQL query is mandatory.'
+    }
 
     // console.log(`%c validate `, 'color: #FF6766; font-weight: bolder;'
     //   , '\n values:', values
