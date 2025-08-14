@@ -42,9 +42,9 @@ export default new class DebugInfo {
   }
 
   getDebugInfo = () => {
-    const { errors, warnings } = this
+    const { errors, warnings, windows } = this
     return {
-      errors, warnings,
+      errors, warnings, windows,
       isPackaged: app.isPackaged,
       EXE: PATH.EXE,
       DIR_EXE: fs.readdirSync(path.dirname(PATH.EXE)),
