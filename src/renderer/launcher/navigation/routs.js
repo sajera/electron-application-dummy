@@ -46,6 +46,7 @@ const DEV = defineRoute('/dev')
 const devRoute = (url, options) => defineRoute(`/dev/${clean(url)}`, options)
 DEV.COLOR = devRoute('/color')
 DEV.TOAST = devRoute('/toast')
+DEV.DEBUG = devRoute('/debug')
 DEV.SQL = devRoute('/sql')
 
 export { DEV }

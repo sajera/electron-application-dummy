@@ -1,8 +1,11 @@
 // outsource dependencies
 import fs from 'fs'
+import _ from 'lodash'
 import path from 'path'
 import sqlite3 from 'sqlite3'
 // local dependencies
+import PATH from './app-path'
+import { ipcMain } from 'electron'
 import initialData from '../assets/sqlite/local.initial.sqlite'
 
 export default new class SQLite {
@@ -10,37 +13,29 @@ export default new class SQLite {
 
   db = null
 
-  dbPath = null
+  dbPath = path.join(PATH.APP_DATA, this.name)
 
-  dbInitial = null
+  dbInitial = path.join(PATH.RESOURCES, initialData)
 
   constructor () {
     // TODO is that usefully ?
   }
 
-  getDebugInfo () {
+  getDebugInfo = () => {
     const { name, folder, dbInitial, dbPath } = this
     return { name, folder, dbPath, dbInitial }
   }
 
   prebuilt = () => {
-    // NOTE getting initial DB data
-    this.dbInitial = path.join(process.resourcesPath, initialData)
-    // NOTE for dev mode
-    !fs.existsSync(this.dbInitial) && (this.dbInitial = path.join(path.dirname(this.dbPath), initialData))
     // NOTE skip in case db already setup
-    if (fs.existsSync(this.dbPath)) return console.log('DB already exist')
-    process.env.DEBUG && console.log('Setting up initial DB', this.dbPath)
-    if (fs.existsSync(this.dbInitial)) {
-      fs.copyFileSync(this.dbInitial, this.dbPath)
-      process.env.DEBUG && console.log('DB prefilled from', this.dbInitial)
-    } else {
-      process.env.DEBUG && console.log('No prebuilt found', this.dbInitial)
-    }
+    if (fs.existsSync(this.dbPath)) return
+    // NOTE copy initial file
+    fs.existsSync(this.dbInitial) && fs.copyFileSync(this.dbInitial, this.dbPath)
   }
 
-  initialize = appData => {
-    this.dbPath = path.join(appData, this.name)
+  initialize = () => {
+    // NOTE setup DB handler
+    ipcMain.handle('sqlite', this.handleQuery)
     // NOTE handle prebuilt DB
     this.prebuilt()
     // NOTE up SQLite
@@ -57,12 +52,17 @@ export default new class SQLite {
   close = () => this.db?.close()
 
   upgrade = () => {
-    const upgradesPath = path.dirname(this.dbInitial)
-    // console.log('DB upgrade from', upgradesPath)
-    // console.log(fs.readdirSync(upgradesPath))
+    const upgrades = _.filter(
+      fs.readdirSync(PATH.RESOURCES),
+      name => /^upgrade.*\.sqlite$/.test(name)
+    )
+
+    for (const file of upgrades) {
+      console.log('upgrade from ', file)
+
+    }
 
     // TODO upgrade migrations
-    process.env.DEBUG && console.log('DB up to date ')
-    return upgradesPath
+    console.info('DB up to date ')
   }
 }

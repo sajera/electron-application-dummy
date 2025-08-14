@@ -67,6 +67,12 @@ export default [
         link: ROUTS.DEV.SQL.LINK(),
         isActive: ROUTS.DEV.SQL.TEST,
       },
+      {
+        name: 'Debug Info',
+        type: MENU_ITEM_TYPE.LINK,
+        link: ROUTS.DEV.DEBUG.LINK(),
+        isActive: ROUTS.DEV.DEBUG.TEST,
+      }
     ]
   },
 ]

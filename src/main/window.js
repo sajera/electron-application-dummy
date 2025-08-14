@@ -1,18 +1,13 @@
 // outsource dependencies
 import { BrowserWindow } from 'electron'
-// local dependencies
 import { delayResolve } from '../service'
 
-export default new class Launcher {
+// TODO for inheritance
+export default class Window {
   window = null
 
   options = {
-    x: 0,
-    y: 0,
-    width: 1200,
-    height: 800,
-    minWidth: 640,
-    minHeight: 480,
+    // icon:
     title: 'The title of the window',
   }
 
@@ -31,7 +26,7 @@ export default new class Launcher {
     // TODO is that usefully ?
   }
 
-  initialize = (preload, options) => this.window = new BrowserWindow({
+  createWindow = (preload, options) => this.window = new BrowserWindow({
     ...this.options,
     ...options,
     webPreferences: {

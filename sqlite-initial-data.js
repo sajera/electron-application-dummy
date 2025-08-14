@@ -36,4 +36,4 @@ db.serialize(() => {
 })
 
 db.close()
-console.log(`SQLite initial at`, dbPath)
+console.log('SQLite initial at', dbPath)

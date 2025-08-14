@@ -3,12 +3,8 @@ import { contextBridge, ipcRenderer } from 'electron'
 
 // TODO
 contextBridge.exposeInMainWorld('preload', {
-  platform: process.platform,
-  node: process.versions.node,
-  chrome: process.versions.chrome,
-  electron: process.versions.electron,
   sqlite: (...args) => ipcRenderer.invoke('sqlite', ...args),
-  getDebugInfo: (...args) => ipcRenderer.invoke('get-debug-info', ...args),
+  getDebugInfo: (...args) => ipcRenderer.invoke('debug-info', ...args),
 })
 
 ipcRenderer.on('event-from-main', (event, a, b, c, d) => {

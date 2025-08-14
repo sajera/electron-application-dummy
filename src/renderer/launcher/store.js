@@ -50,16 +50,17 @@ class LayoutStore {
 
   errorHandler = header => ({ message }) => toast.error(message, header)
 
+  getDebugInfo = () => preload.getDebugInfo()
+    .then(data => runInAction(() => this.debugInfo = data))
+    .catch(this.errorHandler('Get Debug Info'))
+
   initialize = () => {
     this.initialized = false
     this.setTheme(ThemeLS.get())
     this.setDarkMode(ToggleLS.get()?.dark)
     this.isSidebarHidden = Boolean(ToggleLS.get()?.nav)
     process.env.DEBUG && console.info('%c LayoutStore.launcher ', 'color: #FF6766; font-weight: bolder;'
-      , '\n ToggleLS:', ToggleLS.get()
       , '\n sid:', process.env.SID
-      , '\n preload:', preload
-      , '\n menu:', navigationMenu
     )
 
     // TODO get read stored data and apply to menu
@@ -68,13 +69,12 @@ class LayoutStore {
     // TODO do async things
     Promise.all([
       delayResolve(300),
-      preload.getDebugInfo(),
+      this.getDebugInfo(),
       // API('/something-important'),
     ])
-      .then(([, debugInfo]) => runInAction(() => {
-        this.debugInfo = debugInfo
+      .then(([, ]) => runInAction(() => {
         console.log('%c LayoutStore.initialize', 'color: #FF6766; font-weight: bolder;'
-          , '\n debugInfo:', debugInfo
+          , '\n preload:', preload
         )
     //     // NOTE infinity loop with checking session state each 5min
     //     clearInterval(this.interval)
