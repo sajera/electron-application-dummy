@@ -27,7 +27,7 @@ export default new class Launcher extends Window {
       }
     })
 
-    this.window.loadURL(LAUNCHER_WEBPACK_ENTRY)
+    this.loadURL(LAUNCHER_WEBPACK_ENTRY)
   }
 
 }

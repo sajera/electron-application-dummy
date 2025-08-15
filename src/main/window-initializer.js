@@ -22,10 +22,11 @@ export default new class Initializer extends Window {
       webPreferences: {
         preload: INITIALIZER_PRELOAD_WEBPACK_ENTRY,
         ...this.webPreferences,
+        transparent: true,
       }
     })
 
-    this.window.loadURL(INITIALIZER_WEBPACK_ENTRY)
+    this.loadURL(INITIALIZER_WEBPACK_ENTRY)
   }
 
 }

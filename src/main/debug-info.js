@@ -4,12 +4,13 @@ import path from 'path'
 import { ipcMain, app } from 'electron'
 // local dependencies
 import PATH from './app-path'
-import sqlite from './sqlite'
 
 export default new class DebugInfo {
   errors = []
 
   windows = []
+
+  modules = []
 
   constructor () {
     // TODO is that usefully ?
@@ -21,7 +22,7 @@ export default new class DebugInfo {
 
   handleError = error => {
     console.error('The app encountered an error\n', error)
-    this.warnings.push(this.debugError(error))
+    this.errors.push(this.debugError(error))
     return this.outputError(error)
   }
 
@@ -41,10 +42,11 @@ export default new class DebugInfo {
   }
 
   getDebugInfo = () => {
-    const { errors, windows } = this
+    const { errors: ERRORS, windows: WINDOWS, modules: MODULES } = this
     return {
-      errors, windows,
       isPackaged: app.isPackaged,
+      ERRORS, WINDOWS, MODULES,
+      SRC: `--------------------------------${process.env.SID}--------------------------------`,
       EXE: PATH.EXE,
       DIR_EXE: fs.readdirSync(path.dirname(PATH.EXE)),
       MAIN: PATH.MAIN,
@@ -59,7 +61,6 @@ export default new class DebugInfo {
       DIR_LOGS: fs.readdirSync(PATH.LOGS),
       TEMP: PATH.TEMP,
       DIR_TEMP: fs.readdirSync(PATH.TEMP),
-      sqlite: sqlite.getDebugInfo(),
       ENV: `--------------------------------${process.env.SID}--------------------------------`,
       ...process.env
     }

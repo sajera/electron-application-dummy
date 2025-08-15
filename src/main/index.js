@@ -5,9 +5,9 @@ import { app, nativeImage } from 'electron'
 import PATH from './app-path'
 import sqlite from './sqlite'
 import debugInfo from './debug-info'
-import launcher from './launcher.window'
+import launcher from './window-launcher'
 import { delayResolve } from '../service'
-import initializer from './initializer.window'
+import initializer from './window-initializer'
 import icon from '../assets/app-icon/icon.png'
 
 

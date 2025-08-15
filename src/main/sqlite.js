@@ -6,7 +6,7 @@ import sqlite3 from 'sqlite3'
 import { ipcMain } from 'electron'
 // local dependencies
 import PATH from './app-path'
-import DebugInfo from './debug-info'
+import debugInfo from './debug-info'
 import initialData from '../assets/sqlite/local.initial.sqlite'
 
 export default new class SQLite {
@@ -19,12 +19,13 @@ export default new class SQLite {
   dbInitial = path.join(PATH.RESOURCES, initialData)
 
   constructor () {
-    // TODO is that usefully ?
-  }
-
-  getDebugInfo = () => {
-    const { name, folder, dbInitial, dbPath } = this
-    return { name, folder, dbPath, dbInitial }
+    const { name, dbInitial, dbPath } = this
+    debugInfo.modules.push({
+      module: 'SQLite',
+      name,
+      dbPath,
+      dbInitial,
+    })
   }
 
   prebuilt = () => {
@@ -36,7 +37,7 @@ export default new class SQLite {
 
   initialize = async () => {
     // NOTE setup DB handler
-    ipcMain.handle('sqlite', this.handleQuery)
+    ipcMain.handle('sqlite', this.handle)
     // NOTE handle prebuilt DB
     this.prebuilt()
     // NOTE up SQLite
@@ -48,10 +49,10 @@ export default new class SQLite {
     this.upgrade()
   }
 
-  handleQuery = (event, sql, ...param) => new Promise(resolve => {
+  handle = (event, sql, ...param) => new Promise(resolve => {
     this.db.all(sql, ...param, (error, data) => {
       if (!error) return resolve(data)
-      resolve(DebugInfo.handleError(error))
+      resolve(debugInfo.handleError(error))
     })
   })
 

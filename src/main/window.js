@@ -19,12 +19,15 @@ export default class Window {
   webPreferences = {
     // TODO reduce ability of window to minimum
     webgl: false,
+    plugins: false,
     webSecurity: false,
     enableWebSQL: false,
+    nodeIntegration: false,
+    contextIsolation: true,
+    navigateOnDragDrop: false,
     textAreasAreResizable: false,
     allowRunningInsecureContent: false,
     devTools: Boolean(process.env.DEBUG),
-    additionalArguments: ['--sample=var'],
   }
 
   constructor () {
