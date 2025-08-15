@@ -10,8 +10,8 @@ import { Btn } from '../../component/btn'
 export default observer(function Color () {
 
   return <div id="LayoutHome" className="relative flow-root min-h-full -p-4">
-    <h2 className="text-4xl my-10 text-center border border-alt"><span className="text-alt">C</span>olor <span className="text-muted">Pallet</span></h2>
-    <h3 className="text-2xl mb-10 flex items-center">
+    <h2 className="text-3xl mb-4 text-center border border-alt"><span className="text-alt">C</span>olor <span className="text-muted">Pallet</span></h2>
+    <h3 className="text-2xl mb-4 flex items-center">
       The {layoutStore.isDarkModeEnabled ? 'Dark' : 'Light'} mode enabled -&gt;
       <Btn
         onClick={() => layoutStore.setDarkMode(!layoutStore.isDarkModeEnabled)}

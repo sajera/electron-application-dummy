@@ -3,9 +3,10 @@ import fs from 'fs'
 import _ from 'lodash'
 import path from 'path'
 import sqlite3 from 'sqlite3'
+import { ipcMain } from 'electron'
 // local dependencies
 import PATH from './app-path'
-import { ipcMain } from 'electron'
+import DebugInfo from './debug-info'
 import initialData from '../assets/sqlite/local.initial.sqlite'
 
 export default new class SQLite {
@@ -39,14 +40,19 @@ export default new class SQLite {
     // NOTE handle prebuilt DB
     this.prebuilt()
     // NOTE up SQLite
-    const Database = !process.env.DEBUG ? sqlite3.Database : sqlite3.verbose().Database
+    // const Database = !process.env.DEBUG ? sqlite3.Database : sqlite3.verbose().Database
+    const Database = sqlite3.verbose().Database
+    // const Database = sqlite3.Database
     this.db = new Database(this.dbPath)
     // NOTE run upgrade migrations
     this.upgrade()
   }
 
-  handleQuery = (event, sql, ...param) => new Promise((resolve, reject) => {
-    this.db.all(sql, ...param, (error, data) => error ? reject(error) : resolve(data))
+  handleQuery = (event, sql, ...param) => new Promise(resolve => {
+    this.db.all(sql, ...param, (error, data) => {
+      if (!error) return resolve(data)
+      resolve(DebugInfo.handleError(error))
+    })
   })
 
   close = () => this.db?.close()

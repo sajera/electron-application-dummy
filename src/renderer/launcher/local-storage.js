@@ -6,8 +6,9 @@ import { localStorage } from '../../service/storage'
 export const PageLS = localStorage.bindToPath('page')
 export const ThemeLS = localStorage.bindToPath('theme')
 export const SidebarLS = localStorage.bindToPath('nav')
-export const ToastPageLS = localStorage.bindToPath('tps')
 export const SQLPageLS = localStorage.bindToPath('sql')
+export const WindowListLS = localStorage.bindToPath('wl')
+export const ToastPageLS = localStorage.bindToPath('tps')
 export const ToggleLS = localStorage.bindToPath('toggle')
 // NOTE this is object that why require pre-definition before will be use
 ThemeLS.get() || ThemeLS.set('default-theme')

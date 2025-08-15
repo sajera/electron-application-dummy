@@ -1,19 +1,19 @@
 // outsource dependencies
 import path from 'path'
-import { BrowserWindow } from 'electron'
+import { BrowserWindow, nativeImage } from 'electron'
 // local dependencies
 import PATH from './app-path'
 import debugInfo from './debug-info'
 import { delayResolve } from '../service'
 import icon from '../assets/app-icon/icon.png'
 
-
 export default class Window {
   window = null
 
   options = {
     title: 'The title of the window',
-    icon: path.join(PATH.RESOURCES, icon)
+    // icon: path.join(PATH.RESOURCES, icon),
+    icon: nativeImage.createFromPath(path.join(PATH.RESOURCES, icon))
   }
 
   webPreferences = {

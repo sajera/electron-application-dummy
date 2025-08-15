@@ -83,7 +83,7 @@ class LayoutStore {
       .catch(this.errorHandler('Layout initialization'))
       .finally(() => runInAction(() => this.initialized = true))
     // NOTE unmount
-    return () => runInAction(() => { })
+    // return () => { }
   }
 }
 

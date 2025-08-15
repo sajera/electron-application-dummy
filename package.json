@@ -1,6 +1,6 @@
 {
   "name": "ead",
-  "version": "1.0.002",
+  "version": "1.0.003",
   "main": "./.webpack/main",
   "description": "Electron application dummy/boilerplate",
   "author": "Sajera: Serhii P <allsajera@gmail.com> (Sajera)",

@@ -14,7 +14,7 @@ export default observer(function Toasts () {
   useEffect(store.initialize, [])
 
   return <div className="relative flow-root min-h-full p-4">
-    <h2 className="text-4xl my-10 text-center">DB SQL Light</h2>
+    <h2 className="text-3xl mb-4">DB SQLite query</h2>
     <ErrorMessage message={errorMessage} onClear={store.clearError} className="mb-4" />
 
     <Form store={form} className="relative">

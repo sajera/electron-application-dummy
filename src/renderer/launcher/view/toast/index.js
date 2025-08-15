@@ -12,6 +12,7 @@ export default observer(function Toasts () {
   useEffect(store.initialize, [])
 
   return <div className="relative flow-root min-h-full p-4">
+    <h2 className="text-3xl mb-4">Toasts</h2>
     <Btn className="btn-primary-outline btn-lg m-4" onClick={() => toast.info('toast.info')}>toast.info</Btn>
     <Btn className="btn-primary btn-lg m-4" onClick={() => toast.success('toast.success')}>toast.success</Btn>
     <Btn className="btn-danger btn-lg m-4" onClick={() => toast.error('toast.error')}>toast.error</Btn>

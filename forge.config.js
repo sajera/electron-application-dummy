@@ -11,6 +11,7 @@ module.exports = {
   packagerConfig: {
     asar: true,
     prune: true,
+    osxSign: {}, // object must exist even if empty
     // icon: path.join(process.cwd(), 'src', 'assets', 'app-icon', '512x512.png'),
     icon: './src/assets/app-icon/512x512.png',
     extraResource: [

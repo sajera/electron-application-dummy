@@ -17,6 +17,7 @@ export default new class Initializer extends Window {
       height: 400,
       frame: false,
       alwaysOnTop: true,
+      title: 'Initializer',
       ...options,
       webPreferences: {
         preload: INITIALIZER_PRELOAD_WEBPACK_ENTRY,

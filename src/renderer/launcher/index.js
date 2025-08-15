@@ -36,6 +36,7 @@ const Layout = observer(function Layout () {
   //   , '\n history:', history
   //   , '\n pathname:', pathname
   //   , '\n search:', search
+  //   , '\n PageLS.get():', PageLS.get()
   // )
 
   return <>

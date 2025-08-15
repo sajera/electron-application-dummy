@@ -9,30 +9,29 @@ import sqlite from './sqlite'
 export default new class DebugInfo {
   errors = []
 
-  warnings = []
-
   windows = []
 
   constructor () {
     // TODO is that usefully ?
   }
 
-  handleWarning = warning => {
-    console.error('The app encountered an warning\n', warning)
-    this.warnings.push(warning)
-  }
+  outputError = error => ({ isError: true, message: error.message })
+
+  debugError = error => ({ ...error, message: error.message, stack: error.stack })
 
   handleError = error => {
     console.error('The app encountered an error\n', error)
-    this.errors.push(error)
+    this.warnings.push(this.debugError(error))
+    return this.outputError(error)
   }
 
   handleCrash = error => {
-    this.errors.push(error)
+    this.handleError(error)
+    this.errors.push({ ...error })
     // TODO store/save/send error report ?
     const report = this.getDebugInfo()
 
-    console.error('The app where crashed\n', error)
+    console.error('The app crashed and will now close')
     app.quit()
   }
 
@@ -42,9 +41,9 @@ export default new class DebugInfo {
   }
 
   getDebugInfo = () => {
-    const { errors, warnings, windows } = this
+    const { errors, windows } = this
     return {
-      errors, warnings, windows,
+      errors, windows,
       isPackaged: app.isPackaged,
       EXE: PATH.EXE,
       DIR_EXE: fs.readdirSync(path.dirname(PATH.EXE)),

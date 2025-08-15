@@ -1,10 +1,14 @@
 // outsource dependencies
 import { contextBridge, ipcRenderer } from 'electron'
 
-// TODO
+
+const ipcInvoke = channel => (...args) => ipcRenderer.invoke(channel, ...args)
+  // NOTE this is a tricky part for passing errors through IPC
+  .then(data => data?.isError ? Promise.reject(data) : data)
+
 contextBridge.exposeInMainWorld('preload', {
-  sqlite: (...args) => ipcRenderer.invoke('sqlite', ...args),
-  getDebugInfo: (...args) => ipcRenderer.invoke('debug-info', ...args),
+  sqlite: ipcInvoke('sqlite'),
+  getDebugInfo: ipcInvoke('debug-info'),
 })
 
 ipcRenderer.on('event-from-main', (event, a, b, c, d) => {
