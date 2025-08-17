@@ -22,13 +22,13 @@ export default new class DebugInfo {
 
   handleError = error => {
     console.error('The app encountered an error\n', error)
-    this.errors.push(this.debugError(error))
+    this.errors.unshift(this.debugError(error))
     return this.outputError(error)
   }
 
   handleCrash = error => {
     this.handleError(error)
-    this.errors.push({ ...error })
+    this.errors.unshift({ ...error })
     // TODO store/save/send error report ?
     const report = this.getDebugInfo()
 

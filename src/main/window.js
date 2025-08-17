@@ -35,7 +35,7 @@ export default class Window {
   }
 
   createWindow = options => {
-    debugInfo.windows.push(options)
+    debugInfo.windows.unshift(options)
     return new BrowserWindow(options)
   }
 
