@@ -18,9 +18,8 @@ export const NotchIcon = memo(function NotchIcon ({ className, ...attr }) {
 /**
  * Prepared Spinner
  */
-export const Spinner = withLoader(function Spinner ({ className, size = 15, ...attr }) {
-  const style = useMemo(() => !size ? {} : ({ width: size, minWidth: size, height: size, minHeight: size }), [size])
-  return <NotchIcon style={style} {...attr} className={cn('app-spinner animate-spin inline-block', className)} />
+export const Spinner = withLoader(function Spinner ({ className, ...attr }) {
+  return <NotchIcon {...attr} className={cn('app-spinner animate-spin inline-block', className)} />
 })
 /**
  * Prepared Loader
@@ -28,7 +27,7 @@ export const Spinner = withLoader(function Spinner ({ className, size = 15, ...a
 export const Loader = withLoader(function Loader ({ className, title = 'Data is loading...', size = 120, ...attr }) {
   return <div className={cn('app-loader relative w-full h-full flex items-center justify-center', className)} { ...attr }>
     <div className="text-center">
-      <Spinner active size={size} />
+      <Spinner active className="size-30" />
       {title &&<h3 className="font-bold text-muted pt-2 px-4">{title}</h3>}
     </div>
   </div>

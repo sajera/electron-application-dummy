@@ -73,10 +73,10 @@ export const Input = memo(function Input ({ input, error, value, isTouched, skip
       {ending && <div className="pointer-events-none absolute inset-y-0 right-1.5 flex items-center pl-3">{ending}</div>}
       {/* NOTE the icon place */}
       <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-        {isLoading ? <Spinner active={isLoading} size="18" />
+        {isLoading ? <Spinner active={isLoading} className="size-5" />
           : checkmark ? (!touched ? null : !isInvalid
-            ? <CheckCircleIcon className="h-5 w-5 text-green-400" aria-hidden="true" />
-            : <ExclamationCircleIcon className="h-5 w-5 text-red-300" aria-hidden="true" />)
+            ? <CheckCircleIcon className="size-5 text-green-400" aria-hidden="true" />
+            : <ExclamationCircleIcon className="size-5 text-red-300" aria-hidden="true" />)
             : clearable ? !value ? null : <XMarkIcon
               role="button"
               onClick={handleClear}

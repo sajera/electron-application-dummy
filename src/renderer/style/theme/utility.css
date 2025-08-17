@@ -12,9 +12,6 @@
 @utility text-alt {
   @apply text-gray-700 dark:text-gray-300
 }
-@utility required-asterisk {
-  @apply after:content-['*'] after:ml-0.5 after:-mt-5 after:text-red-500 after:inline-block after:text-xl;
-}
 @utility border-alt {
   @apply border-gray-200 dark:border-gray-800
 }

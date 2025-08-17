@@ -60,13 +60,13 @@ export const SimpleSelect = memo(function SimpleSelect ({ input, error, value, i
       {ending && <div className="pointer-events-none absolute inset-y-0 right-1.5 flex items-center pl-3">{ending}</div>}
       {/* NOTE the icon place */}
       <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-        {isLoading ? <Spinner active={isLoading} size="18" />
+        {isLoading ? <Spinner active={isLoading} className="size-5" />
           : clearable && !value ? <XMarkIcon
             role="button"
             onClick={handleClear}
-            className="pointer-events-auto h-5 w-5 text-gray-400 hover:text-gray-950 dark:hover:text-gray-100 cursor-pointer"
+            className="pointer-events-auto size-5 text-gray-400 hover:text-gray-950 dark:hover:text-gray-100 cursor-pointer"
           /> : <ChevronDownIcon
-            className="pointer-events-none h-5 w-5 text-gray-400 hover:text-gray-950 dark:hover:text-gray-100 cursor-pointer"
+            className="pointer-events-none size-5 text-gray-400 hover:text-gray-950 dark:hover:text-gray-100 cursor-pointer"
           />}
       </div>
       {isOptionsShown && <ul className="absolute w-full overflow-y-auto max-h-36 rounded-md shadow-lg border border-alt divide-y divide-gray-400 mt-2 z-10">
