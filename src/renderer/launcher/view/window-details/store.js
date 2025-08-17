@@ -15,6 +15,7 @@ const initial = {
   width: '',
   frame: true,
   show: true,
+  closable: true,
   fullscreenable: true,
   resizable: true,
   minimizable: true,
@@ -69,12 +70,12 @@ class WindowDetailsStore {
   }
 
   remove = () => {
-    this.disabled.set('details', true)
+    this.disabled.set('remove', true)
     return preload.windowExplorer('remove-window-by-id', this.id)
       .then(() => WINDOW.DETAILS.PUSH())
       .then(layoutStore.refineNavigation)
       .catch(this.errorHandler('Removing window'))
-      .finally(() => runInAction(() => this.disabled.set('details', false)))
+      .finally(() => runInAction(() => this.disabled.set('remove', false)))
   }
 
   refreshDetails = () => {
@@ -101,8 +102,11 @@ class WindowDetailsStore {
       , '\n values:', values
     )
 
-    return preload.windowExplorer(isNew ? 'create-window' : 'update-window', { id: this.id, ...values })
-      .then(data => {
+    return Promise.all([
+      delayResolve(4e2),
+      preload.windowExplorer(isNew ? 'create-window' : 'update-window', { id: this.id, ...values })
+    ])
+      .then(([, data]) => {
         console.log(`%c WindowDetailsStore.submit.then ${this.id} `, 'color: #FF6766; font-weight: bolder;'
           , '\n data:', data
         )
