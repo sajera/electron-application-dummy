@@ -7,7 +7,18 @@ import { createMemoryHistory } from 'history'
 let history
 export const createHistory = (...args) => history = createMemoryHistory(...args)
 
-export class Route {
+/**
+ * create Route with helpers to work with url string
+ * @param {String} url
+ * @param {Object} options
+ * @returns {Route}
+ */
+export default (url, options = {}) => {
+  if (typeof url !== 'string') throw new Error('Create new Route error: first parameter "url" is mandatory and should be a string')
+  return new Route(url, options)
+}
+
+class Route {
   static regParam = /:([^/]*)/gi
 
   static secret = Symbol('ROUTE')
@@ -17,12 +28,6 @@ export class Route {
   static getSearch = () => String(Route.history.location.search || '')
 
   static getPathname = () => String(Route.history.location.pathname || '')
-
-  static create = (url, options = {}) => {
-    if (typeof url !== 'string') { throw new Error('Route error: first parameter "url" is required and should be a string') }
-
-    return new Route(url, options)
-  }
 
   constructor (url, options) {
     this[Route.secret] = {}
