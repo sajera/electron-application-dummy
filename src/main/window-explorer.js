@@ -6,25 +6,6 @@ import SQLiteModel from '../service/model-sqlite'
 import Sqlite from './sqlite'
 import debugInfo from './debug-info'
 
-const windowSQ = new class WindowSQ extends SQLiteModel {
-  table = 'windows'
-
-  schema = {
-    title: String,
-    width: Number,
-    height: Number,
-    show: SQLiteModel.Bool,
-    closed: SQLiteModel.Bool,
-  }
-
-  constructor () {
-    super()
-    this.sqlite3all = (...args) => Sqlite.promise('all', ...args)
-    this.test()
-  }
-}
-
-
 // NOTE something specific to this particular window
 export default new class WindowExplorer {
   windows = []
@@ -78,16 +59,14 @@ export default new class WindowExplorer {
    ************************************************/
   'get-all' = () => Sqlite.promise('all', 'SELECT * FROM windows')
 
-  'get-window-by-id' = $id => Sqlite.promise('all', 'SELECT title, width, height FROM windows where id = $id', { $id })
-    .then(_.first)
-    .then(data => data || Promise.reject({ message: `No record with ID ${$id} exists in the "${this.table}" table` }))
+  'get-window-by-id' = $id => windowSQ.getByID($id).then(data => ({
+    // NOTE limited data available to modify on the form
+    ..._.pick(data, ['id', 'title', 'width', 'height'])
+  }))
 
-  // NOTE limited data available to modify on the form
-  'get-window-state-by-id' = $id => Sqlite.promise('all', 'SELECT * FROM windows where id = $id', { $id })
-    .then(_.first)
-    .then(data => data || Promise.reject({ message: `No record with ID ${$id} exists in the "${this.table}" table` }))
+  'get-window-state-by-id' = $id => windowSQ.getByID($id)
 
-  'remove-window-by-id' = $id => Sqlite.promise('all', 'DELETE FROM windows where id = $id', { $id })
+  'remove-window-by-id' = $id => windowSQ.removeByID($id)
 
   'create-window' = data => windowSQ.insert(data)
 
@@ -126,4 +105,22 @@ export default new class WindowExplorer {
   //   // `, { $title: title, $width: width, $height: height }).then(_.first)
   // }
 
+}
+
+const windowSQ = new class WindowSQ extends SQLiteModel {
+  table = 'windows'
+
+  schema = {
+    title: String,
+    width: Number,
+    height: Number,
+    show: SQLiteModel.Bool,
+    closed: SQLiteModel.Bool,
+  }
+
+  constructor () {
+    super()
+    this.sqlite3all = Sqlite.promise.bind(Sqlite, 'all')
+    this.test()
+  }
 }

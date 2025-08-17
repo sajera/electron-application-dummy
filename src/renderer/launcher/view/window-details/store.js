@@ -13,6 +13,12 @@ const initial = {
   title: 'Window',
   height: '',
   width: '',
+  frame: true,
+  show: true,
+  fullscreenable: true,
+  resizable: true,
+  minimizable: true,
+  maximizable: true
 }
 
 class WindowDetailsStore {
@@ -51,7 +57,8 @@ class WindowDetailsStore {
       // NOTE load
       Promise.all([
         delayResolve(6e2),
-        this.refreshData()
+        this.refreshForm(),
+        this.refreshDetails(),
       ])
         .catch(this.errorHandler('Initialization'))
         .finally(() => runInAction(() => this.initialized = true))
@@ -70,29 +77,26 @@ class WindowDetailsStore {
       .finally(() => runInAction(() => this.disabled.set('details', false)))
   }
 
-  refreshData = () => {
+  refreshDetails = () => {
     this.disabled.set('details', true)
-    // TODO split to editable data and window state
-    return Promise.all([
-      preload.windowExplorer('get-window-by-id', this.id),
-      preload.windowExplorer('get-window-state-by-id', this.id),
-    ])
-      .then(([win, state]) => runInAction(() => {
-        console.log(`%c WindowDetailsStore ${'refreshData'} `, 'color: #FF6766; font-weight: bolder;'
-          , '\n data:', state
-          , '\n options:', win
-        )
-        this.form.initialize(win)
-        return this.details = state
-      }))
-      .catch(this.errorHandler('Get window details'))
+    return preload.windowExplorer('get-window-state-by-id', this.id)
+      .then(details => runInAction(() => this.details = details))
+      .catch(this.errorHandler('Get window state'))
       .finally(() => runInAction(() => this.disabled.set('details', false)))
+  }
+
+  refreshForm = () => {
+    this.disabled.set('form', true)
+    return preload.windowExplorer('get-window-by-id', this.id)
+      .then(data => this.form.initialize(data))
+      .catch(this.errorHandler('Get window details'))
+      .finally(() => runInAction(() => this.disabled.set('form', false)))
   }
 
   submit = values => {
     this.clearError()
     const isNew = !this.id
-    this.disabled.set('details', true)
+    this.disabled.set('form', true)
     console.log(`%c WindowDetailsStore.submit ${this.id} `, 'color: #FF6766; font-weight: bolder;'
       , '\n values:', values
     )
@@ -107,10 +111,13 @@ class WindowDetailsStore {
           WINDOW.DETAILS.REPLACE({ id: data.id })
           return layoutStore.refineNavigation()
         }
-        return this.refreshData()
+        return Promise.all([
+          this.refreshForm(),
+          this.refreshDetails(),
+        ])
       })
       .catch(this.errorHandler('Updating window'))
-      .finally(() => runInAction(() => this.disabled.set('details', false)))
+      .finally(() => runInAction(() => this.disabled.set('form', false)))
   }
 
   validate = values => {
@@ -120,10 +127,42 @@ class WindowDetailsStore {
       errors.title = 'The Title of the window is mandatory'
     }
 
-    // console.log(`%c validate `, 'color: #FF6766; font-weight: bolder;'
-    //   , '\n values:', values
-    //   , '\n errors:', errors
-    // )
+    if (values.width && values.width < 64) {
+      errors.width = 'The "width" cant be less than 64'
+    }
+
+    if (values.defaultWidth && values.defaultWidth < 64) {
+      errors.defaultWidth = 'The "defaultWidth" cant be less than 64'
+    }
+    if (values.maxWidth && values.maxWidth < 64) {
+      errors.maxWidth = 'The "max-width" cant be less than 64'
+    }
+
+    if (values.minWidth && values.minWidth < 64) {
+      errors.minWidth = 'The "min-width" cant be less than 64'
+    }
+
+    if (values.height && values.height < 48) {
+      errors.height = 'The "height" cant be less than 48'
+    }
+
+    if (values.defaultHeight && values.defaultHeight < 48) {
+      errors.defaultHeight = 'The "defaultHeight" cant be less than 48'
+    }
+
+    if (values.minHeight && values.minHeight < 48) {
+      errors.minHeight = 'The "min-height" cant be less than 48'
+    }
+
+    if (values.maxHeight && values.maxHeight < 48) {
+      errors.maxHeight = 'The "max-height" cant be less than 48'
+    }
+
+
+    console.log(`%c validate `, 'color: #FF6766; font-weight: bolder;'
+      , '\n values:', values
+      , '\n errors:', errors
+    )
 
     return errors
   }

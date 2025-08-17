@@ -8,8 +8,8 @@
     box-content
     w-11
     h-6
-    bg-gray-300
-    dark:bg-gray-700
+    bg-alt
+    border
     peer-focus:outline-none
     peer-focus:ring-2
     peer-focus:ring-offset-2
@@ -38,7 +38,7 @@
   }
 
   .toggle-xs { @apply w-7 h-4 after:h-3 after:w-3; }
-  .toggle-lg { @apply w-[60px] h-8 after:h-7 after:w-7; }
+  .toggle-lg { @apply w-[54px] h-8 after:h-7 after:w-7; }
 
   .toggle-primary {
     @apply

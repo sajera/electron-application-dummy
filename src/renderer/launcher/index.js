@@ -48,8 +48,8 @@ const Layout = observer(function Layout () {
       </div>
       {/* NOTE header right side */}
       <div className="flex flex-1 items-center justify-end">
-        <Spinner active={!initialized} />
-        <p className="font-bold text-sm text-primary-100 mx-4">!!!</p>
+        <Spinner active={!initialized} className="mr-2 text-primary-100" />
+        <p className="font-bold text-sm text-primary-100 mx-4">@sajera</p>
       </div>
     </div>
     <ul className={cn(
