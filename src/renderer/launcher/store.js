@@ -4,11 +4,11 @@ import { makeAutoObservable, runInAction } from 'mobx'
 // local dependencies
 import toast from '../component/toast'
 import { delayResolve } from '../../service'
-import { navigationMenu } from './navigation'
 import { ToggleLS, ThemeLS } from './local-storage'
+import { navigationMenu, createWindowMenuItem } from './navigation'
 
 class LayoutStore {
-  menu = navigationMenu
+  menu = _.cloneDeep(navigationMenu)
 
   theme = null
   themes = [
@@ -50,6 +50,16 @@ class LayoutStore {
 
   errorHandler = header => ({ message }) => toast.error(message, header)
 
+  refineNavigation = async () => {
+    // NOTE load necessary things to expand menu dynamically
+    const menu = _.cloneDeep(navigationMenu)
+    const windowSection = _.find(menu, { name: 'WINDOWS' })
+    const windows = await preload.windowExplorer('get-all')
+    _.map(windows, item => windowSection.list.push(createWindowMenuItem(item)))
+    // NOTE update menu
+    runInAction(() => this.menu = menu)
+  }
+
   getDebugInfo = () => preload.getDebugInfo()
     .then(data => runInAction(() => this.debugInfo = data))
     .catch(this.errorHandler('Get Debug Info'))
@@ -59,29 +69,26 @@ class LayoutStore {
     this.setTheme(ThemeLS.get())
     this.setDarkMode(ToggleLS.get()?.dark)
     this.isSidebarHidden = Boolean(ToggleLS.get()?.nav)
-    process.env.DEBUG && console.info('%c LayoutStore.launcher ', 'color: #FF6766; font-weight: bolder;'
+    console.info('%c LayoutStore.launcher ', 'color: #FF6766; font-weight: bolder;'
       , '\n sid:', process.env.SID
+      , '\n preload:', preload
     )
-
-    // TODO get read stored data and apply to menu
-    this.menu = navigationMenu
 
     // TODO do async things
     Promise.all([
       delayResolve(300),
       this.getDebugInfo(),
+      this.refineNavigation(),
       // API('/something-important'),
     ])
-      .then(([, ]) => runInAction(() => {
-        console.log('%c LayoutStore.initialize', 'color: #FF6766; font-weight: bolder;'
-          , '\n preload:', preload
-        )
-    //     // NOTE infinity loop with checking session state each 5min
-    //     clearInterval(this.interval)
-    //     this.interval = setInterval(this.checkAuth, 3e5)
-      }))
+      // .then(() => runInAction(() => {
+      //   // NOTE infinity loop with checking session state each 5min
+      //   clearInterval(this.interval)
+      //   this.interval = setInterval(this.checkAuth, 3e5)
+      // }))
       .catch(this.errorHandler('Layout initialization'))
       .finally(() => runInAction(() => this.initialized = true))
+
     // NOTE unmount
     // return () => { }
   }

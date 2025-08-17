@@ -21,7 +21,6 @@ export default observer(function Toasts () {
       <Field
         rows="12"
         checkmark
-        clearable
         name="query"
         type="textarea"
         component={Input}

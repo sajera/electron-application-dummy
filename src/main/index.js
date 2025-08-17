@@ -7,6 +7,7 @@ import sqlite from './sqlite'
 import debugInfo from './debug-info'
 import launcher from './window-launcher'
 import { delayResolve } from '../service'
+import windowExplorer from './window-explorer'
 import initializer from './window-initializer'
 import icon from '../assets/app-icon/icon.png'
 
@@ -28,6 +29,7 @@ app.whenReady()
     await debugInfo.initialize()
 
     await sqlite.initialize()
+    await windowExplorer.initialize()
 
     // NOTE for now this is a main window and app should be closed
     await launcher.initialize({ show: false })

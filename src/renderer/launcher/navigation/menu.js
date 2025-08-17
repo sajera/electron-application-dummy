@@ -11,6 +11,14 @@ export const MENU_ITEM_TYPE = {
   EXTERNAL_LINK: 'EXTERNAL_LINK',
 }
 
+export const createWindowMenuItem = ({ id, title }) => ({
+  name: title,
+  icon: WindowIcon,
+  type: MENU_ITEM_TYPE.LINK,
+  link: ROUTS.WINDOW.DETAILS.LINK({ id }),
+  isActive: path => ROUTS.WINDOW.DETAILS.LINK({ id }) === path,
+})
+
 export default [
   {
     icon: HomeIcon,
@@ -20,8 +28,8 @@ export default [
     isActive: path => ROUTS.WELCOME.ROUTE === path,
   },
   {
-    icon: WindowIcon,
     name: 'WINDOWS',
+    // icon: WindowIcon,
     type: MENU_ITEM_TYPE.MENU,
     isActive: ROUTS.WINDOW.TEST,
     list: [
@@ -33,7 +41,7 @@ export default [
         isActive: ROUTS.WINDOW.LIST.TEST,
       },
       {
-        name: 'Create',
+        name: 'Create new',
         icon: PlusIcon,
         type: MENU_ITEM_TYPE.LINK,
         link: ROUTS.WINDOW.DETAILS.LINK(),

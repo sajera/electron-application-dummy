@@ -5,13 +5,14 @@ import { Link, useLocation } from 'react-router-dom'
 import { ChevronRightIcon } from '@heroicons/react/24/solid'
 import React, { memo, useCallback, useEffect, useState } from 'react'
 // local dependencies
+import { MENU_ITEM_TYPE } from './menu'
 import { SidebarLS } from '../local-storage'
-import navigationMenu, { MENU_ITEM_TYPE } from './menu'
 import { Collapsible } from '../../component/collapsible'
 
+export * from './menu'
 export * from './routs'
-export { navigationMenu }
 export { default as Routing } from './routing'
+export { default as navigationMenu } from './menu'
 
 
 export const SidebarItem = memo(function SidebarItem ({ type, ...attr }) {
@@ -57,7 +58,7 @@ const Action = memo(function Action ({ className, icon: Icon, action, name = '~ 
       'text-primary-900 dark:text-primary-500 opacity-90': active,
     })}>
     {Boolean(Icon) && <Icon className="mr-2 h-5 w-5 flex-shrink-0 group-hover:animate-swing" aria-hidden="true" />}
-    { name }
+    {name}
   </button>
 })
 
@@ -82,7 +83,7 @@ const NavMenu = memo(function NavMenu ({ icon: Icon, name = '~ ~ ~', isActive, o
       <span className="ml-2">{name}</span>
     </button>
     <Collapsible tag="ul" isOpen={isOpen} className="pl-6 text-sm">
-      {_.map(list, item => <li key={item.name}>
+      {_.map(list, (item, index) => <li key={item.name + index}>
         <SidebarItem { ...item } onClick={onClick} />
       </li>)}
     </Collapsible>

@@ -35,7 +35,7 @@ export default observer(function List () {
         className="btn-primary-outline flex ml-4"
       >
         <PlusIcon className="size-6" />
-      </Btn>
+      </Btn> - TODO is that usefully ?
     </h2>
     <ErrorMessage message={errorMessage} onClear={store.clearError} className="m-4" />
     <div className="overflow-auto">

@@ -18,8 +18,8 @@ export default observer(function Toasts () {
     <Btn className="btn-danger btn-lg m-4" onClick={() => toast.error('toast.error')}>toast.error</Btn>
     <Form store={store.form} className="w-lg">
       <Field
-        // checkmark
-        clearable
+        checkmark
+        // clearable or checkmark
         name="header"
         component={Input}
         placeholder="header"

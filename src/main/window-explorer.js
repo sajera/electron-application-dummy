@@ -1,9 +1,29 @@
 // outsource dependencies
+import _ from 'lodash'
 import { BrowserWindow, ipcMain } from 'electron'
-
+import SQLiteModel from '../service/model-sqlite'
 // local dependencies
-import Window from './window'
+import Sqlite from './sqlite'
 import debugInfo from './debug-info'
+
+const windowSQ = new class WindowSQ extends SQLiteModel {
+  table = 'windows'
+
+  schema = {
+    title: String,
+    width: Number,
+    height: Number,
+    show: SQLiteModel.Bool,
+    closed: SQLiteModel.Bool,
+  }
+
+  constructor () {
+    super()
+    this.sqlite3all = (...args) => Sqlite.promise('all', ...args)
+    this.test()
+  }
+}
+
 
 // NOTE something specific to this particular window
 export default new class WindowExplorer {
@@ -11,7 +31,7 @@ export default new class WindowExplorer {
 
   constructor () {
     const { name, dbInitial, dbPath } = this
-    debugInfo.modules.push({
+    debugInfo.modules.unshift({
       module: 'WindowExplorer',
       name,
       dbPath,
@@ -19,13 +39,13 @@ export default new class WindowExplorer {
     })
   }
 
-  createWindow = options => {
+  _createWindow = options => {
     options.webPreferences = options.webPreferences || {}
     options.webPreferences.preload = EXPLORER_PRELOAD_WEBPACK_ENTRY
 
-    debugInfo.windows.push(options)
+    debugInfo.windows.unshift(options)
     const window = new BrowserWindow(options)
-    this.windows.push(window)
+    this.windows.unshift(window)
     window.loadURL(EXPLORER_WEBPACK_ENTRY)
     return window
   }
@@ -33,15 +53,77 @@ export default new class WindowExplorer {
   initialize = async options => {
     // NOTE setup DB handler
     ipcMain.handle('window-explorer', this.handle)
+  }
+
+  _handle = (event, action, ...params) => new Promise(resolve => {
+    try {
+      const v = this[action](...params)
+      console.log('WindowExplorer.handle', v)
+      resolve(v)
+    } catch (error) {
+      resolve(debugInfo.handleError(error))
+    }
+  })
+
+  handle = async (event, action, ...params) => {
+    try {
+      return await this[action](...params)
+    } catch (error) {
+      return debugInfo.handleError({ message: error.message, stack: error.stack, action, params })
+    }
+  }
+
+  /************************************************
+   *          IPC HANDLERS
+   ************************************************/
+  'get-all' = () => Sqlite.promise('all', 'SELECT * FROM windows')
+
+  'get-window-by-id' = $id => Sqlite.promise('all', 'SELECT title, width, height FROM windows where id = $id', { $id })
+    .then(_.first)
+    .then(data => data || Promise.reject({ message: `No record with ID ${$id} exists in the "${this.table}" table` }))
+
+  // NOTE limited data available to modify on the form
+  'get-window-state-by-id' = $id => Sqlite.promise('all', 'SELECT * FROM windows where id = $id', { $id })
+    .then(_.first)
+    .then(data => data || Promise.reject({ message: `No record with ID ${$id} exists in the "${this.table}" table` }))
+
+  'remove-window-by-id' = $id => Sqlite.promise('all', 'DELETE FROM windows where id = $id', { $id })
+
+  'create-window' = data => windowSQ.insert(data)
+
+  'update-window' = data => windowSQ.updateByID(data.id, data)
+
+  'open-by-id' = ({ }) => {
 
   }
 
-  handle = (event, action, ...params) => new Promise(resolve => {
-    try {
-      this[action](...params)
-    } catch (error) {
-      resolve(debugInfo.handleError({ message: '', action, params }))
-    }
-  })
+  // FIXME manual sql....
+  // 'create-window' = ({ title, width, height }) => {
+  //   // const params = {}
+  //   // // allowed fields
+  //   // const fields = []
+  //   // const values = _.reduce(['title', 'width', 'height'], (acc, field) => {
+  //   //   const value = data[field]
+  //   //   if (_.isUndefined(value) && !_.isNull(value) && value !== '') {
+  //   //     const key = `$${field}`
+  //   //     params[key] = value
+  //   //     fields.push(field)
+  //   //     acc.push(key)
+  //   //   }
+  //   //   return acc
+  //   // }, [])
+  //   //
+  //   //  return Sqlite.promise(`
+  //   //    INSERT INTO windows (${fields.join()})
+  //   //    VALUES (${values.join()})
+  //   //    RETURNING *;
+  //   // `, params).then(_.first)
+  //
+  //   // return Sqlite.promise('all', `
+  //   //   INSERT INTO windows (title, width, height)
+  //   //   VALUES (title = $title, width = $width, $height)
+  //   //   RETURNING *;
+  //   // `, { $title: title, $width: width, $height: height }).then(_.first)
+  // }
 
 }

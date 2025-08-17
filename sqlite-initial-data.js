@@ -26,6 +26,7 @@ db.serialize(() => {
   const windows = db.prepare('INSERT INTO windows (title) VALUES (?)')
   windows.run('Test 1')
   windows.run('Test 2')
+  windows.finalize()
 
   db.run(`CREATE TABLE users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

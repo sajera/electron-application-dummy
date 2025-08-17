@@ -13,6 +13,7 @@ import '../style/theme/index.css'
 import { layoutStore } from './store'
 import { Btn } from '../component/btn'
 import { PageLS } from './local-storage'
+import { Spinner } from '../component/loader'
 import { createHistory } from '../../service/route'
 import { SidebarItem, Routing } from './navigation'
 
@@ -23,7 +24,7 @@ const history = createHistory({ // NOTE restore last state
 })
 
 const Layout = observer(function Layout () {
-  const { menu, isSidebarHidden } = layoutStore
+  const { menu, isSidebarHidden, initialized } = layoutStore
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(layoutStore.initialize, [])
   // NOTE track active page state
@@ -31,31 +32,24 @@ const Layout = observer(function Layout () {
   // NOTE Store the last visited page
   useEffect(() => { PageLS.set(pathname + search) }, [pathname, search])
 
-  // TODO remove
-  // console.log(`%c Layout ${'launcher'} `, 'color: #FF6766; font-weight: bolder;'
-  //   , '\n history:', history
-  //   , '\n pathname:', pathname
-  //   , '\n search:', search
-  //   , '\n PageLS.get():', PageLS.get()
-  // )
-
+  // FIXME makes sense to use queued loading?
+  // return <Loader active={!initialized} className="!h-96">
   return <>
-    {/* NOTE page header */}
     <div className="flex items-center flex-nowrap bg-primary-800 _bg-alt shadow-xs py-2.5 h-12 fixed z-40 inset-x-0 top-0">
       <div className="flex items-center pr-3 mr-3 h-6">
-        <mark>menu toggle ?</mark>
         <Btn
           onClick={layoutStore.toggleSideBar}
           className="ptn-secondary-outline flex items-center justify-center"
           title={<><strong>{isSidebarHidden ? 'Show' : 'Hide'}</strong> the navigation sidebar</>}
         >
           <Bars4Icon className="size-6 inline-block" />
+          <strong>{isSidebarHidden ? 'Show' : 'Hide'}</strong>&nbsp;navigation
         </Btn>
       </div>
       {/* NOTE header right side */}
       <div className="flex flex-1 items-center justify-end">
-        <div className="flex-1"></div>
-        <p className="font-bold text-sm text-primary-100 mx-4">currentUser.email</p>
+        <Spinner active={!initialized} />
+        <p className="font-bold text-sm text-primary-100 mx-4">!!!</p>
       </div>
     </div>
     <ul className={cn(
@@ -73,6 +67,7 @@ const Layout = observer(function Layout () {
     </div>
     <Toaster />
   </>
+// </Loader>
 })
 
 createRoot(document.body).render(<Router history={history}>
