@@ -59,18 +59,20 @@ export default new class WindowExplorer {
    ************************************************/
   'get-all' = () => Sqlite.promise('all', 'SELECT * FROM windows')
 
-  'get-window-by-id' = $id => windowSQ.getByID($id).then(data => ({
-    // NOTE limited data available to modify on the form
-    ..._.pick(data, ['id', 'title', 'width', 'height'])
-  }))
+  'get-window-by-id' = $id => windowSQL.getByID($id)
 
-  'get-window-state-by-id' = $id => windowSQ.getByID($id)
+  'remove-window-by-id' = $id => windowSQL.removeByID($id)
 
-  'remove-window-by-id' = $id => windowSQ.removeByID($id)
+  'create-window' = data => windowSQL.insert(data)
 
-  'create-window' = data => windowSQ.insert(data)
+  'update-window' = data => windowSQL.updateByID(data.id, data)
 
-  'update-window' = data => windowSQ.updateByID(data.id, data)
+  'get-window-runtime-by-id' = async $id => {
+    const options = await windowSQL.getByID($id)
+
+    // TODO expand by current state
+    return { options }
+  }
 
   'open-by-id' = ({ }) => {
 
@@ -107,15 +109,43 @@ export default new class WindowExplorer {
 
 }
 
-const windowSQ = new class WindowSQ extends SQLiteModel {
+const windowSQL = new class WindowSQL extends SQLiteModel {
   table = 'windows'
 
   schema = {
-    title: String,
-    width: Number,
-    height: Number,
-    show: SQLiteModel.Bool,
-    closed: SQLiteModel.Bool,
+    id: SQLiteModel.Number(),
+
+    title: SQLiteModel.String(),
+    frame: SQLiteModel.Boolean(),
+    show: SQLiteModel.Boolean(),
+    closable: SQLiteModel.Boolean(),
+    kiosk: SQLiteModel.Boolean(),
+
+    backgroundColor: SQLiteModel.String(),
+    opacity: SQLiteModel.Number(),
+    transparent: SQLiteModel.Boolean(),
+    zoomFactor: SQLiteModel.Number(),
+
+    alwaysOnTop: SQLiteModel.Boolean(),
+    x: SQLiteModel.Number(),
+    y: SQLiteModel.Number(),
+    center: SQLiteModel.Boolean(),
+
+    fullscreen: SQLiteModel.Boolean(),
+    fullscreenable: SQLiteModel.Boolean(),
+    resizable: SQLiteModel.Boolean(),
+    minimizable: SQLiteModel.Boolean(),
+    maximizable: SQLiteModel.Boolean(),
+
+    width: SQLiteModel.Number(),
+    defaultWidth: SQLiteModel.Number(),
+    minWidth: SQLiteModel.Number(),
+    maxWidth: SQLiteModel.Number(),
+
+    height: SQLiteModel.Number(),
+    defaultHeight: SQLiteModel.Number(),
+    minHeight: SQLiteModel.Number(),
+    maxHeight: SQLiteModel.Number(),
   }
 
   constructor () {

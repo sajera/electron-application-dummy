@@ -32,7 +32,7 @@ export default new class DebugInfo {
     // TODO store/save/send error report ?
     const report = this.getDebugInfo()
 
-    console.error('The app crashed and will now close')
+    console.error('The app crashed and will now close', report)
     app.quit()
   }
 

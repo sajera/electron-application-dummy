@@ -1,6 +1,6 @@
 // outsource dependencies
 import cn from 'classnames'
-import React, { memo, useMemo } from 'react'
+import React, { memo } from 'react'
 // local dependencies
 
 /**

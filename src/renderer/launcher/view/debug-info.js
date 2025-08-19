@@ -17,7 +17,7 @@ export default observer(function DebugInfo () {
       </Btn>
     </h2>
 
-    <div className="p-2 bg-alt rounded border-alt overflow-auto">
+    <div className="bg-alt rounded border-alt overflow-auto p-2">
       <pre>{JSON.stringify(layoutStore.debugInfo, null, 4)}</pre>
     </div>
 

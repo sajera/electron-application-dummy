@@ -18,14 +18,40 @@ db.serialize(() => {
   db.run(`CREATE TABLE windows (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT NOT NULL,
-    height INTEGER,
-    width INTEGER,
-    show INTEGER DEFAULT 0,
-    closed INTEGER DEFAULT 1
+    frame INTEGER DEFAULT 1,
+    show INTEGER DEFAULT 1,
+    closable INTEGER DEFAULT 1,
+    kiosk INTEGER DEFAULT 1,
+
+    backgroundColor TEXT DEFAULT NULL,
+    opacity INTEGER DEFAULT NULL,
+    transparent INTEGER DEFAULT 0,
+    zoomFactor INTEGER DEFAULT 1,
+
+    alwaysOnTop INTEGER DEFAULT 0,
+    x INTEGER DEFAULT NULL,
+    y INTEGER DEFAULT NULL,
+    center INTEGER DEFAULT 0,
+
+    fullscreen INTEGER DEFAULT 0,
+    fullscreenable INTEGER DEFAULT 1,
+    resizable INTEGER DEFAULT 1,
+    minimizable INTEGER DEFAULT 1,
+    maximizable INTEGER DEFAULT 1,
+
+    width INTEGER DEFAULT NULL,
+    defaultWidth INTEGER DEFAULT NULL,
+    minWidth INTEGER DEFAULT NULL,
+    maxWidth INTEGER DEFAULT NULL,
+
+    height INTEGER DEFAULT NULL,
+    defaultHeight INTEGER DEFAULT NULL,
+    minHeight INTEGER DEFAULT NULL,
+    maxHeight INTEGER DEFAULT NULL
   )`)
-  const windows = db.prepare('INSERT INTO windows (title) VALUES (?)')
-  windows.run('Test 1')
-  windows.run('Test 2')
+  const windows = db.prepare('INSERT INTO windows (title, frame) VALUES (?,?)')
+  windows.run('Default', 1)
+  windows.run('No Frame', 0)
   windows.finalize()
 
   db.run(`CREATE TABLE users (
@@ -42,4 +68,5 @@ db.serialize(() => {
 })
 
 db.close()
+// eslint-disable-next-line no-console
 console.log('SQLite initial at', dbPath)

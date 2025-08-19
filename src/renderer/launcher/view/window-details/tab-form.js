@@ -8,10 +8,12 @@ import { Btn } from '../../../component/btn'
 import { Field, Form, Input, Switch } from '../../../component/form'
 
 
-export default observer(function DetailsForm ({ isNew, className, ...attr }) {
-  const { disabled, form } = store
-  // console.log(`%c WindowDetails ${id} `, 'color: #FF6766; font-weight: bolder;'
-  //   , '\n details:', details
+export default observer(function TabForm ({ className, ...attr }) {
+  const { disabled, form, id } = store
+  const isNew = !id
+
+  // console.log(`%c TabForm ${id} `, 'color: #FF6766; font-weight: bolder;'
+  //   , '\n values:', { ...form.value }
   // )
 
   return <Form store={form} className={cn('relative', className)} {...attr}>
@@ -70,18 +72,11 @@ export default observer(function DetailsForm ({ isNew, className, ...attr }) {
         </Btn>
         <Btn
           type="submit"
+          className="btn-primary btn-md"
           disabled={disabled.get('form')}
-          className="btn-primary btn-md mr-3"
         >
           {isNew ? 'CREATE' : 'SAVE'}
         </Btn>
-        {!isNew && <Btn
-          onClick={store.remove}
-          className="btn-danger btn-md"
-          disabled={disabled.get('remove')}
-        >
-          DELETE
-        </Btn>}
       </div>
     </div>
 

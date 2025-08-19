@@ -8,18 +8,39 @@ import toast from '../../../component/toast'
 import { FormData } from '../../../component/form'
 import { delayResolve } from '../../../../service'
 
-
+// configure
 const initial = {
   title: 'Window',
-  height: '',
-  width: '',
   frame: true,
   show: true,
   closable: true,
+  kiosk: false,
+
+  backgroundColor: '',
+  opacity: 0.01,
+  transparent: false,
+  zoomFactor: '',
+
+  alwaysOnTop: false,
+  x: '',
+  y: '',
+  center: false,
+
+  fullscreen: false,
   fullscreenable: true,
   resizable: true,
   minimizable: true,
-  maximizable: true
+  maximizable: true,
+
+  width: '',
+  defaultWidth: '',
+  minWidth: '',
+  maxWidth: '',
+
+  height: '',
+  defaultHeight: '',
+  minHeight: '',
+  maxHeight: '',
 }
 
 class WindowDetailsStore {
@@ -48,11 +69,12 @@ class WindowDetailsStore {
     this.initialized = !id
     // NOTE cleanup
     this.clearError()
+    this.details = null
     this.form.initialize(initial)
-    console.info(`%c WindowDetailsStore.initialize ${id}`, 'color: #FF6766; font-weight: bolder;'
-      , '\n initialized:', this.initialized
-      , '\n id:', id
-    )
+    // console.log(`%c WindowDetailsStore.initialize ${id}`, 'color: #FF6766; font-weight: bolder;'
+    //   , '\n isNew:', !id
+    //   , '\n details:', this.details
+    // )
 
     if (id) {
       // NOTE load
@@ -80,7 +102,7 @@ class WindowDetailsStore {
 
   refreshDetails = () => {
     this.disabled.set('details', true)
-    return preload.windowExplorer('get-window-state-by-id', this.id)
+    return preload.windowExplorer('get-window-runtime-by-id', this.id)
       .then(details => runInAction(() => this.details = details))
       .catch(this.errorHandler('Get window state'))
       .finally(() => runInAction(() => this.disabled.set('details', false)))
@@ -102,11 +124,9 @@ class WindowDetailsStore {
       , '\n values:', values
     )
 
-    return Promise.all([
-      delayResolve(4e2),
-      preload.windowExplorer(isNew ? 'create-window' : 'update-window', { id: this.id, ...values })
-    ])
-      .then(([, data]) => {
+    return preload.windowExplorer(isNew ? 'create-window' : 'update-window', { id: this.id, ...values })
+      .then(data => delayResolve(6e2, data))
+      .then(data => {
         console.log(`%c WindowDetailsStore.submit.then ${this.id} `, 'color: #FF6766; font-weight: bolder;'
           , '\n data:', data
         )
@@ -162,11 +182,10 @@ class WindowDetailsStore {
       errors.maxHeight = 'The "max-height" cant be less than 48'
     }
 
-
-    console.log(`%c validate `, 'color: #FF6766; font-weight: bolder;'
-      , '\n values:', values
-      , '\n errors:', errors
-    )
+    // console.log('%c validate ', 'color: #FF6766; font-weight: bolder;'
+    //   , '\n values:', { ...values }
+    //   , '\n errors:', errors
+    // )
 
     return errors
   }
@@ -174,26 +193,3 @@ class WindowDetailsStore {
 
 export const windowDetailsStore = new WindowDetailsStore()
 export default windowDetailsStore
-
-
-class WindowModel {
-  execute = null
-
-  constructor (execute) {
-    this.execute = execute
-  }
-
-  getById = $id => this.execute('SELECT * FROM windows where id = $id', { $id })
-
-  insert = () => this.execute(`
-    INSERT INTO table_name (column1, column2, ...)
-    VALUES (value1, value2, ...)
-  `)
-
-  update = () => this.execute(`
-    UPDATE table_name
-    SET email = 'alice_new@example.com'
-    WHERE id = 1
-  `)
-
-}
