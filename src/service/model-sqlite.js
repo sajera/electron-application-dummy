@@ -28,9 +28,9 @@ class DataType {
   }
 
   SQL = {
-    [TYPE.STRING]: value => !value ? null : String(value),
-    [TYPE.NUMBER]: value => !value && value !== 0 ? null : Number(value),
-    [TYPE.BOOLEAN]: value => ![0, 1, '0', '1', true, false].includes(value) ? null : Number(value)
+    [TYPE.STRING]: value => !value ? void(0) : String(value),
+    [TYPE.NUMBER]: value => !value && value !== 0 ? void(0) : Number(value),
+    [TYPE.BOOLEAN]: value => ![0, 1, '0', '1', true, false].includes(value) ? void(0) : Number(value)
   }
 }
 
@@ -74,7 +74,8 @@ export default class SQLiteModel {
   removeByID = $id => this.sqlite3all(`DELETE FROM ${this.table} where id = $id`, { $id })
 
   prepareJS = data => _.reduce(_.keys(this.schema), (acc, field) => {
-    acc[field] = this.schema[field].js(data[field])
+    const value = this.schema[field].js(data[field])
+    !_.isUndefined(value) && (acc[field] = value)
     return acc
   }, {})
 

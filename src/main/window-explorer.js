@@ -58,6 +58,7 @@ export default new class WindowExplorer {
    *          IPC HANDLERS
    ************************************************/
   'get-all' = () => Sqlite.promise('all', 'SELECT * FROM windows')
+    .then(list => _.map(list, windowSQL.prepareJS))
 
   'get-window-by-id' = $id => windowSQL.getByID($id)
 
@@ -78,37 +79,8 @@ export default new class WindowExplorer {
 
   }
 
-  // FIXME manual sql....
-  // 'create-window' = ({ title, width, height }) => {
-  //   // const params = {}
-  //   // // allowed fields
-  //   // const fields = []
-  //   // const values = _.reduce(['title', 'width', 'height'], (acc, field) => {
-  //   //   const value = data[field]
-  //   //   if (_.isUndefined(value) && !_.isNull(value) && value !== '') {
-  //   //     const key = `$${field}`
-  //   //     params[key] = value
-  //   //     fields.push(field)
-  //   //     acc.push(key)
-  //   //   }
-  //   //   return acc
-  //   // }, [])
-  //   //
-  //   //  return Sqlite.promise(`
-  //   //    INSERT INTO windows (${fields.join()})
-  //   //    VALUES (${values.join()})
-  //   //    RETURNING *;
-  //   // `, params).then(_.first)
-  //
-  //   // return Sqlite.promise('all', `
-  //   //   INSERT INTO windows (title, width, height)
-  //   //   VALUES (title = $title, width = $width, $height)
-  //   //   RETURNING *;
-  //   // `, { $title: title, $width: width, $height: height }).then(_.first)
-  // }
-
 }
-
+// TODO how to organize ?
 const windowSQL = new class WindowSQL extends SQLiteModel {
   table = 'windows'
 
