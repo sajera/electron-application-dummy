@@ -10,9 +10,9 @@ import { Btn } from '../../../component/btn'
 export default observer(function TabRuntime ({ className, ...attr }) {
   const { details, disabled, id } = store
 
-  console.log(`%c TabRuntime ${id} `, 'color: #FF6766; font-weight: bolder;'
-    , '\n details:', details
-  )
+  // console.log(`%c TabRuntime ${id} `, 'color: #FF6766; font-weight: bolder;'
+  //   , '\n details:', details
+  // )
 
   return <div className={cn('relative', className)} {...attr}>
     <div className="grid grid-cols-3 gap-4 mb-4">

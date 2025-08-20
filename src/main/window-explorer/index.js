@@ -20,31 +20,16 @@ export default new class WindowExplorer {
     })
   }
 
-  getOrCreateWindowRuntime = async id => {
-    // NOTE the window already exist
-    let window = this.runtime[id]
-    if (window) return window
-    const options = await windowSQL.getByID($id)
-
-    // options.webPreferences = options.webPreferences || {}
-    // options.webPreferences.preload = EXPLORER_PRELOAD_WEBPACK_ENTRY
-    // debugInfo.windows.unshift(options)
-    // const window = new BrowserWindow(options)
-    // this.windows.unshift(window)
-    // window.loadURL(EXPLORER_WEBPACK_ENTRY)
-    // return window
-  }
-
-  initialize = async options => {
+  initialize = async () => {
     // NOTE setup DB handler
     ipcMain.handle('window-explorer', this.handle)
   }
 
   handle = async (event, action, ...params) => {
     try {
-      return await this[action](...params)
+      return await this[action](...params, event)
     } catch (error) {
-      return debugInfo.handleError({ message: error.message, stack: error.stack, action, params })
+      return debugInfo.handleError({ action, params, message: error.message, stack: error.stack })
     }
   }
 
@@ -69,25 +54,27 @@ export default new class WindowExplorer {
   'get-window-details-by-id' = async id => {
     const runtime = this.runtime[id]
     const options = await windowSQL.getByID(id)
-    console.log('get-window-details-by-id'
-      , '\noptions:', options
-      , '\nruntime:', runtime
-    )
-    return {
-      active: Boolean(runtime),
-      options,
-      runtime: { },
-    }
+    return { active: Boolean(runtime), options }
+  }
+
+  'get-self-id' = event => {
+    const { id: senderWindowId } = BrowserWindow.fromWebContents(event.sender)
+    const runtime = _.find(this.runtime, runtime => runtime?.window?.id == senderWindowId)
+    return runtime?.id || null
   }
 
   'start-runtime-by-id' = async id => {
     if (this.runtime[id]) return true
+    const runtime = this.runtime[id] = new Window()
+    runtime.id = id // IMPORTANT for get-self-id
     // FIXME for sure I pass all props into one table ¯\_(ツ)_/¯
     const options = await windowSQL.getByID(id)
-    const runtime = this.runtime[id] = new Window()
-    // TODO something went wrong with options - need recheck
+    console.log('start-runtime-by-id'
+      , '\noptions:', options
+    )
     runtime.create({
-      // ...options,
+    // TODO unexpected behavior
+      ...options,
       webPreferences: {
         // ...options,
         preload: EXPLORER_PRELOAD_WEBPACK_ENTRY
@@ -96,9 +83,6 @@ export default new class WindowExplorer {
     runtime.loadURL(EXPLORER_WEBPACK_ENTRY)
     // NOTE cleanup
     runtime.on('close', () => this.runtime[id] = null)
-
-    await runtime.whenReady()
-    runtime.send('started-runtime', options)
     return Boolean(this.runtime[id])
   }
 

@@ -74,6 +74,8 @@ class LayoutStore {
       , '\n preload:', preload
     )
 
+    this.listenMain()
+
     Promise.all([
       delayResolve(300),
       this.getDebugInfo(),
@@ -90,6 +92,16 @@ class LayoutStore {
 
     // NOTE unmount
     // return () => { }
+  }
+
+  listenMain = () => {
+    preload.on('fake', () => '')
+    preload.on('events', () => '')
+    preload.on('event-from-main', (...args) => {
+      console.info('%c LayoutStore.listenMain => event-from-main ', 'color: #FF6766; font-weight: bolder;'
+        , '\n args:', args
+      )
+    })
   }
 
   // TODO to think about events from "main"

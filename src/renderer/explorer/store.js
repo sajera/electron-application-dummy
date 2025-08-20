@@ -49,10 +49,9 @@ class ExplorerStore {
       .finally(() => runInAction(() => this.disabled.set('details', false)))
   }
 
-  waitSelfId = () => Promise.race([
-    delayResolve(3e3),
-    new Promise(resolve => preload.once('started-runtime', ({ id }) => resolve(this.id = id)))
-  ])
+  getSelfId = () => preload.windowExplorer('get-self-id')
+    .then(id => runInAction(() => this.id = id))
+    .catch(this.errorHandler('Get self ID'))
 
   initialize = () => {
     this.initialized = false
@@ -61,10 +60,9 @@ class ExplorerStore {
       , '\n sid:', process.env.SID
       , '\n preload:', preload
     )
-
     Promise.all([
+      this.getSelfId(),
       delayResolve(3e2),
-      this.waitSelfId(),
     ])
       .then(this.refreshDetails)
       .then(() => {

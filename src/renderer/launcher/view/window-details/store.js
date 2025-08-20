@@ -66,29 +66,32 @@ class WindowDetailsStore {
 
   initialize = id => {
     this.id = id
-    this.initialized = !id
     // NOTE cleanup
     this.clearError()
     this.details = null
+    this.initialized = !id
     this.form.initialize(initial)
+    if (!id) return
     // console.log(`%c WindowDetailsStore.initialize ${id}`, 'color: #FF6766; font-weight: bolder;'
     //   , '\n isNew:', !id
     //   , '\n details:', this.details
     // )
-
-    if (id) {
-      // NOTE load
-      Promise.all([
-        delayResolve(6e2),
-        this.refreshForm(),
-        this.refreshDetails(),
-      ])
-        .catch(this.errorHandler('Initialization'))
-        .finally(() => runInAction(() => this.initialized = true))
-    }
+    // NOTE load
+    Promise.all([
+      delayResolve(6e2),
+      this.refreshForm(),
+      this.refreshDetails(),
+    ])
+      .then(() => {
+        // NOTE infinity loop with checking state each 6s
+        clearInterval(this.interval)
+        this.interval = setInterval(this.refreshDetails, 6e3)
+      })
+      .catch(this.errorHandler('Initialization'))
+      .finally(() => runInAction(() => this.initialized = true))
 
     // NOTE unmount
-    // return () => {}
+    return () => clearInterval(this.interval)
   }
 
   open = () => {

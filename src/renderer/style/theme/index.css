@@ -46,7 +46,7 @@ body {
   --color-gray-950: #262626;
 }
 /* IMPORTANT to override tailwind color vars */
-@import 'tailwindcss';
+@import 'tailwindcss' source('../../../renderer');
 @import './animation.css';
 @import './utility.css';
 
