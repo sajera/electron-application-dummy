@@ -74,7 +74,6 @@ class LayoutStore {
       , '\n preload:', preload
     )
 
-    // TODO do async things
     Promise.all([
       delayResolve(300),
       this.getDebugInfo(),
@@ -92,6 +91,8 @@ class LayoutStore {
     // NOTE unmount
     // return () => { }
   }
+
+  // TODO to think about events from "main"
 }
 
 export const layoutStore = new LayoutStore()

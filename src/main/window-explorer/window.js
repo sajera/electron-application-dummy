@@ -2,10 +2,10 @@
 import path from 'path'
 import { BrowserWindow, nativeImage } from 'electron'
 // local dependencies
-import PATH from './app-path'
-import debugInfo from './debug-info'
-import { delayResolve } from '../service'
-import icon from '../assets/app-icon/icon.png'
+import PATH from '../app-path'
+import debugInfo from '../debug-info'
+import { delayResolve } from '../../service'
+import icon from '../../assets/app-icon/icon.png'
 
 export default class Window {
   window = null
@@ -34,22 +34,31 @@ export default class Window {
     // TODO is that usefully ?
   }
 
-  createWindow = options => {
+  create = options => {
     debugInfo.windows.unshift(options)
-    return new BrowserWindow(options)
+    return this.window = new BrowserWindow(options)
   }
 
   whenReady = () => Promise.race([
-    // new Promise(resolve => this.window.once('ready-to-show', resolve)),
+    new Promise(resolve => this.window.once('ready-to-show', resolve)),
     new Promise(resolve => this.window.webContents.once('did-finish-load', resolve)),
     delayResolve(2e5).then(() => Promise.reject({ message: 'Window whenReady timeout' })),
   ])
+
+  on = (...args) => this.window.on(...args)
+
+  once = (...args) => this.window.once(...args)
+
+  off = (...args) => this.window.off(...args)
 
   show = () => this.window.show()
 
   hide = () => this.window.hide()
 
-  close = () => this.window.close()
+  close = () => {
+    this.window.closable = true
+    return this.window.close()
+  }
 
   loadURL = url => this.window.loadURL(url)
 

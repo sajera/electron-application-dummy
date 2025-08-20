@@ -104,6 +104,14 @@ module.exports = {
                 js: './src/main/preload.js',
               },
             },
+            {
+              name: 'explorer',
+              html: './src/renderer/explorer/index.html',
+              js: './src/renderer/explorer/index.js',
+              preload: {
+                js: './src/main/preload.js',
+              }
+            },
           ],
         },
       },

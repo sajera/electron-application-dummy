@@ -91,6 +91,23 @@ class WindowDetailsStore {
     // return () => {}
   }
 
+  open = () => {
+    this.disabled.set('open', true)
+    return preload.windowExplorer('start-runtime-by-id', this.id)
+      .then(this.refreshDetails)
+      .catch(this.errorHandler('Open window'))
+      .finally(() => runInAction(() => this.disabled.set('open', false)))
+  }
+
+
+  close = () => {
+    this.disabled.set('close', true)
+    return preload.windowExplorer('stop-runtime-by-id', this.id)
+      .then(this.refreshDetails)
+      .catch(this.errorHandler('Close window'))
+      .finally(() => runInAction(() => this.disabled.set('close', false)))
+  }
+
   remove = () => {
     this.disabled.set('remove', true)
     return preload.windowExplorer('remove-window-by-id', this.id)
@@ -102,8 +119,8 @@ class WindowDetailsStore {
 
   refreshDetails = () => {
     this.disabled.set('details', true)
-    return preload.windowExplorer('get-window-runtime-by-id', this.id)
-      .then(details => runInAction(() => this.details = details))
+    return preload.windowExplorer('get-window-details-by-id', this.id)
+      .then(data => runInAction(() => this.details = data))
       .catch(this.errorHandler('Get window state'))
       .finally(() => runInAction(() => this.disabled.set('details', false)))
   }

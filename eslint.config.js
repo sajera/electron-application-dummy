@@ -40,6 +40,8 @@ module.exports = defineConfig([
         LAUNCHER_PRELOAD_WEBPACK_ENTRY: 'readonly',
         INITIALIZER_WEBPACK_ENTRY: 'readonly',
         INITIALIZER_PRELOAD_WEBPACK_ENTRY: 'readonly',
+        EXPLORER_WEBPACK_ENTRY: 'readonly',
+        EXPLORER_PRELOAD_WEBPACK_ENTRY: 'readonly',
       },
     },
     rules: {

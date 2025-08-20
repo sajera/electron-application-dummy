@@ -1,7 +1,7 @@
 // outsource dependencies
 
 // local dependencies
-import Window from './window'
+import Window from './window-explorer/window'
 
 // NOTE something specific to this particular window
 export default new class Initializer extends Window {
@@ -11,7 +11,7 @@ export default new class Initializer extends Window {
   }
 
   initialize = async options => {
-    this.window = this.createWindow({
+    this.create({
       ...this.options,
       width: 400,
       height: 400,
@@ -27,6 +27,8 @@ export default new class Initializer extends Window {
     })
 
     this.loadURL(INITIALIZER_WEBPACK_ENTRY)
+
+    await this.whenReady()
   }
 
 }

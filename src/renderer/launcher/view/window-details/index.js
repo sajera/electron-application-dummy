@@ -23,7 +23,6 @@ export default observer(function WindowDetails () {
   const { initialized, disabled, errorMessage, details } = store
 
   const { id } = WINDOW.DETAILS.PARAMS()
-
   useEffect(() => store.initialize(id), [id])
 
   const [selectedTab, setTab] = useState(TAB.FORM)

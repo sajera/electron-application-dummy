@@ -10,6 +10,11 @@ contextBridge.exposeInMainWorld('preload', {
   sqlite: ipcInvoke('sqlite'),
   getDebugInfo: ipcInvoke('debug-info'),
   windowExplorer: ipcInvoke('window-explorer'),
+  once: (event, handler) => ipcRenderer.once(event, handler),
+  on: (event, handler) => {
+    ipcRenderer.on(event, handler)
+    return () => ipcRenderer.off(event, handler)
+  },
 })
 
 ipcRenderer.on('event-from-main', (event, a, b, c, d) => {

@@ -268,5 +268,8 @@ export default observer(function TabForm ({ className, ...attr }) {
         disabled={disabled.get('form')}
       />
     </div>
+
+    <h3 className="text-lg font-medium mb-2">Web Preferences TODO</h3>
+
   </Form>
 })
