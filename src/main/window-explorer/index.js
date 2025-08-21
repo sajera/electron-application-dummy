@@ -10,13 +10,15 @@ import debugInfo from '../debug-info'
 export default new class WindowExplorer {
   runtime = {}
 
+  preload = EXPLORER_PRELOAD_WEBPACK_ENTRY
+  url = EXPLORER_WEBPACK_ENTRY
+
   constructor () {
-    const { name, dbInitial, dbPath } = this
+    const { preload, url, runtime } = this
     debugInfo.modules.unshift({
       module: 'WindowExplorer',
-      name,
-      dbPath,
-      dbInitial,
+      preload,
+      url,
     })
   }
 
@@ -64,20 +66,21 @@ export default new class WindowExplorer {
     return runtime?.id || null
   }
 
-  'start-runtime-by-id' = async (e, id) => {
+  'start-runtime-by-id' = async (event, id) => {
     if (this.runtime[id]) return true
     const runtime = this.runtime[id] = new Window()
     runtime.id = id // IMPORTANT for get-self-id
     // FIXME for sure I pass all props into one table ¯\_(ツ)_/¯
     const options = await windowSQL.getByID(id)
     runtime.create({
+      parent: event.sender,
       ..._.pick(options, Window.optionNames),
       webPreferences: {
         ..._.pick(options, Window.webPreferencesNames),
-        preload: EXPLORER_PRELOAD_WEBPACK_ENTRY
+        preload: this.preload
       }
     })
-    runtime.loadURL(EXPLORER_WEBPACK_ENTRY)
+    runtime.loadURL(this.url)
     // NOTE cleanup
     runtime.on('close', () => this.runtime[id] = null)
     return Boolean(this.runtime[id])

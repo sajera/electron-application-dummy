@@ -1,6 +1,7 @@
 // outsource dependencies
 import fs from 'fs'
 import path from 'path'
+import dayjs from 'dayjs'
 import { ipcMain, app } from 'electron'
 // local dependencies
 import PATH from './app-path'
@@ -10,7 +11,10 @@ export default new class DebugInfo {
 
   windows = []
 
-  modules = []
+  modules = [{
+    module: 'DebugInfo',
+    logs: PATH.LOGS
+  }]
 
   constructor () {
     // TODO is that usefully ?
@@ -29,9 +33,9 @@ export default new class DebugInfo {
   handleCrash = error => {
     this.handleError(error)
     this.errors.unshift({ ...error })
-    // TODO store/save/send error report ?
-    const report = this.getDebugInfo()
-
+    const report = JSON.stringify(this.getDebugInfo(), null, 2)
+    const file = `${dayjs().format('hh:mm_DD-MM-YYYY')}-crash.json`
+    fs.existsSync(PATH.LOGS) && fs.writeFileSync(path.join(PATH.LOGS, file), report, 'utf8');
     console.error('The app crashed and will now close', report)
     app.quit()
   }

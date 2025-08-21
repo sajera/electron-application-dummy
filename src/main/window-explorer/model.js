@@ -10,24 +10,27 @@ export const windowSQL = new class WindowSQL extends SQLiteModel {
 
   schema = {
     id: SQLiteModel.Number(),
-
     title: SQLiteModel.String(),
-    frame: SQLiteModel.Boolean(),
-    show: SQLiteModel.Boolean(),
-    closable: SQLiteModel.Boolean(),
-    kiosk: SQLiteModel.Boolean(),
-
+    // TODO icon
     backgroundColor: SQLiteModel.String(),
     opacity: SQLiteModel.Number(),
     transparent: SQLiteModel.Boolean(),
     zoomFactor: SQLiteModel.Number(),
 
-    alwaysOnTop: SQLiteModel.Boolean(),
+    useContentSize: SQLiteModel.Boolean(),
     x: SQLiteModel.Number(),
     y: SQLiteModel.Number(),
     center: SQLiteModel.Boolean(),
 
+    frame: SQLiteModel.Boolean(),
+    show: SQLiteModel.Boolean(),
+    closable: SQLiteModel.Boolean(),
+    kiosk: SQLiteModel.Boolean(),
+    alwaysOnTop: SQLiteModel.Boolean(),
     fullscreen: SQLiteModel.Boolean(),
+    skipTaskbar: SQLiteModel.Boolean(),
+    movable: SQLiteModel.Boolean(),
+    focusable: SQLiteModel.Boolean(),
     fullscreenable: SQLiteModel.Boolean(),
     resizable: SQLiteModel.Boolean(),
     minimizable: SQLiteModel.Boolean(),
@@ -42,6 +45,8 @@ export const windowSQL = new class WindowSQL extends SQLiteModel {
     defaultHeight: SQLiteModel.Number(),
     minHeight: SQLiteModel.Number(),
     maxHeight: SQLiteModel.Number(),
+
+    // TODO webPreferences
   }
 
   constructor () {

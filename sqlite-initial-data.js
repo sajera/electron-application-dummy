@@ -18,22 +18,27 @@ db.serialize(() => {
   db.run(`CREATE TABLE windows (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT NOT NULL,
-    frame INTEGER DEFAULT 1,
-    show INTEGER DEFAULT 1,
-    closable INTEGER DEFAULT 1,
-    kiosk INTEGER DEFAULT 0,
+--     icon TEXT DEFAULT NULL,
 
     backgroundColor TEXT DEFAULT NULL,
     opacity INTEGER DEFAULT NULL,
     transparent INTEGER DEFAULT 0,
-    zoomFactor INTEGER DEFAULT 1,
+    zoomFactor INTEGER DEFAULT NULL,
 
-    alwaysOnTop INTEGER DEFAULT 0,
+    useContentSize INTEGER DEFAULT 0,
     x INTEGER DEFAULT NULL,
     y INTEGER DEFAULT NULL,
     center INTEGER DEFAULT 0,
 
+    frame INTEGER DEFAULT 1,
+    show INTEGER DEFAULT 1,
+    closable INTEGER DEFAULT 1,
+    kiosk INTEGER DEFAULT 0,
+    alwaysOnTop INTEGER DEFAULT 0,
     fullscreen INTEGER DEFAULT 0,
+    skipTaskbar INTEGER DEFAULT 0,
+    movable INTEGER DEFAULT 1,
+    focusable INTEGER DEFAULT 1,
     fullscreenable INTEGER DEFAULT 1,
     resizable INTEGER DEFAULT 1,
     minimizable INTEGER DEFAULT 1,
@@ -49,9 +54,10 @@ db.serialize(() => {
     minHeight INTEGER DEFAULT NULL,
     maxHeight INTEGER DEFAULT NULL
   )`)
-  const windows = db.prepare('INSERT INTO windows (title, frame, kiosk) VALUES (?,?,?)')
-  windows.run('Default', 1, 0)
-  windows.run('No Frame - Kiosk', 0, 1)
+  // TODO webPreferences
+  const windows = db.prepare('INSERT INTO windows (title, kiosk) VALUES (?,?)')
+  windows.run('Default', 0)
+  windows.run('Kiosk', 1)
   windows.finalize()
 
   db.run(`CREATE TABLE users (

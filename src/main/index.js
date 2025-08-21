@@ -18,6 +18,7 @@ app.on('quit',  sqlite.close)
 
 app.whenReady()
   .then(async () => {
+    await debugInfo.initialize()
     // FIXME to apply icon for local development - remove?
     if (process.platform === 'darwin') {
       app.dock.setIcon(nativeImage.createFromPath(path.resolve(PATH.RESOURCES, icon)))
@@ -25,8 +26,6 @@ app.whenReady()
 
     await initializer.initialize()
     // initializer.openDevTools()
-
-    await debugInfo.initialize()
 
     await sqlite.initialize()
     await windowExplorer.initialize()

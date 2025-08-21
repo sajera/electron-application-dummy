@@ -17,7 +17,7 @@ export default new class Launcher extends Window {
       y: 0,
       width: 1200,
       height: 800,
-      minWidth: 640,
+      minWidth: 680,
       minHeight: 480,
       title: 'Launcher',
       ...options,

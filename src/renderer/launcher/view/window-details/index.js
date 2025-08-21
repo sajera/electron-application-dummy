@@ -44,7 +44,7 @@ export default observer(function WindowDetails () {
       <h2 className="text-3xl">
         <WindowIcon className="size-10 inline-block mb-2" />
         <strong className="text-muted mx-2">{id ? `#${id}` : 'NEW'}</strong>
-        {!id ? <span className="mx-2">Create new Window</span> : <>
+        {!id ? <span className="mx-2">Window</span> : <>
           <Spinner active={!initialized} className="size-8 mx-4">
             <span className="mx-2">{details?.options?.title}</span>
           </Spinner>

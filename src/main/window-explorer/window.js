@@ -1,4 +1,5 @@
 // outsource dependencies
+import _ from 'lodash'
 import path from 'path'
 import { BrowserWindow, nativeImage } from 'electron'
 // local dependencies
@@ -13,8 +14,8 @@ const options = {
   icon: nativeImage.createFromPath(path.join(PATH.RESOURCES, icon))
 }
 
+// TODO by default reduce ability of window to minimum
 const webPreferences = {
-  // TODO reduce ability of window to minimum
   webgl: false,
   plugins: false,
   webSecurity: false,
@@ -43,7 +44,6 @@ export default class Window {
   }
 
   get windowID () {
-    this.window.getBackgroundColor()
     return this.window?.id
   }
 
@@ -86,7 +86,13 @@ export default class Window {
   }
 
   create = options => {
-    debugInfo.windows.unshift(options)
+    // IMPORTANT may cause an error: object cannot be cloned
+    debugInfo.windows.unshift({
+      ...options,
+      top: Boolean(options.top) || void(0),
+      icon: Boolean(options.icon) || void(0),
+      parent: Boolean(options.parent) || void(0),
+    })
     return this.window = new BrowserWindow(options)
   }
 
@@ -122,55 +128,40 @@ export default class Window {
 }
 
 const browserWindowOptionNames = [
-  // Size & Position
-  'width',
-  'height',
+  // Parenting
+  'parent',
+  'modal',
+  //
+  'title',
+  'icon',
+  // Position
   'x',
   'y',
-  'useContentSize',
   'center',
-  // Size Limits
-  'minWidth',
+  'useContentSize',
+  // Sizes
+  'height',
   'minHeight',
-  'maxWidth',
   'maxHeight',
+  'defaultHeight',
+  'width',
+  'minWidth',
+  'maxWidth',
+  'defaultWidth',
   // Behavior & Appearance
-  'resizable',
-  'movable',
-  'minimizable',
-  'maximizable',
+  'show',
+  'frame',
+  'kiosk',
   'closable',
+  'movable',
+  'resizable',
   'focusable',
   'alwaysOnTop',
   'fullscreen',
   'fullscreenable',
+  'minimizable',
+  'maximizable',
   'skipTaskbar',
-  'kiosk',
-  'title',
-  'icon',
-  // Parenting
-  'parent',
-  'modal',
-
-  // Visual & Rendering
-  'backgroundThrottling',
-  'offscreen',
-  'defaultFontFamily',
-  'defaultFontSize',
-  'defaultMonospaceFontSize',
-  'minimumFontSize',
-  'defaultEncoding',
-  'disableBlinkFeatures',
-  'spellcheck',
-  'autoplayPolicy',
-  'disableHtmlFullscreenWindowResize',
-  // Dialogs
-  'safeDialogs',
-  'disableDialogs',
-  'safeDialogsMessage',
-  // Extras
-  'additionalArguments',
-  'accessibleTitle',
 ]
 
 const webPreferencesOptionNames = [

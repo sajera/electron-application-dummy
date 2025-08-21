@@ -11,22 +11,27 @@ import { delayResolve } from '../../../../service'
 // configure
 const initial = {
   title: 'Window',
-  frame: true,
-  show: true,
-  closable: true,
-  kiosk: false,
+  // TODO icon
 
   backgroundColor: '',
-  opacity: 0.01,
+  opacity: '',
   transparent: false,
   zoomFactor: '',
 
-  alwaysOnTop: false,
+  useContentSize: false,
   x: '',
   y: '',
   center: false,
 
+  frame: true,
+  show: true,
+  closable: true,
+  kiosk: false,
+  alwaysOnTop: false,
   fullscreen: false,
+  skipTaskbar: false,
+  movable: true,
+  focusable: true,
   fullscreenable: true,
   resizable: true,
   minimizable: true,
@@ -41,6 +46,9 @@ const initial = {
   defaultHeight: '',
   minHeight: '',
   maxHeight: '',
+
+  // TODO webPreferences
+
 }
 
 class WindowDetailsStore {
