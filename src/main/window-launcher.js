@@ -12,7 +12,7 @@ export default new class Launcher extends Window {
 
   initialize = async options => {
     this.create({
-      ...this.options,
+      ...Window.defaults.options,
       x: 0,
       y: 0,
       width: 1200,
@@ -23,7 +23,7 @@ export default new class Launcher extends Window {
       ...options,
       webPreferences: {
         preload: LAUNCHER_PRELOAD_WEBPACK_ENTRY,
-        ...this.webPreferences,
+        ...Window.defaults.webPreferences,
       }
     })
 

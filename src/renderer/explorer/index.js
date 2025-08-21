@@ -19,7 +19,7 @@ const App = observer(function App () {
 
   // NOTE totally useless
   return <Loader active={!initialized}>
-    <div className="relative flow-root min-h-full p-4">
+    <div className="relative flow-root h-full overflow-auto p-4">
       <div className="flex items-center justify-end mb-4">
         <Btn
           onClick={store.refreshDetails}
@@ -46,7 +46,7 @@ const App = observer(function App () {
       <ErrorMessage message={errorMessage} onClear={store.clearError} className="m-4" />
 
       <h3 className="text-lg font-medium mb-2">Details</h3>
-      <div className="bg-alt rounded border-alt overflow-auto p-2">
+      <div className="bg-alt rounded border-alt overflow-x-auto p-2">
         <pre>{JSON.stringify(details, null, 4)}</pre>
       </div>
       <Toaster />

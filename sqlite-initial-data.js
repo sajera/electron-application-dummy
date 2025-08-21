@@ -21,7 +21,7 @@ db.serialize(() => {
     frame INTEGER DEFAULT 1,
     show INTEGER DEFAULT 1,
     closable INTEGER DEFAULT 1,
-    kiosk INTEGER DEFAULT 1,
+    kiosk INTEGER DEFAULT 0,
 
     backgroundColor TEXT DEFAULT NULL,
     opacity INTEGER DEFAULT NULL,
@@ -49,9 +49,9 @@ db.serialize(() => {
     minHeight INTEGER DEFAULT NULL,
     maxHeight INTEGER DEFAULT NULL
   )`)
-  const windows = db.prepare('INSERT INTO windows (title, frame) VALUES (?,?)')
-  windows.run('Default', 1)
-  windows.run('No Frame', 0)
+  const windows = db.prepare('INSERT INTO windows (title, frame, kiosk) VALUES (?,?,?)')
+  windows.run('Default', 1, 0)
+  windows.run('No Frame - Kiosk', 0, 1)
   windows.finalize()
 
   db.run(`CREATE TABLE users (

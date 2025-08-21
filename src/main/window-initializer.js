@@ -12,7 +12,7 @@ export default new class Initializer extends Window {
 
   initialize = async options => {
     this.create({
-      ...this.options,
+      ...Window.defaults.options,
       width: 400,
       height: 400,
       frame: false,
@@ -21,7 +21,7 @@ export default new class Initializer extends Window {
       ...options,
       webPreferences: {
         preload: INITIALIZER_PRELOAD_WEBPACK_ENTRY,
-        ...this.webPreferences,
+        ...Window.defaults.webPreferences,
         transparent: true,
       }
     })
