@@ -39,7 +39,7 @@ export default observer(function WindowDetails () {
   //   , '\n details:', details
   // )
 
-  return <div className="relative flow-root min-h-full p-4">
+  return <div className="relative flex flex-col h-full p-4">
     <div className="mb-2 flex items-center justify-between">
       <h2 className="text-3xl">
         <WindowIcon className="size-10 inline-block mb-2" />
@@ -63,24 +63,26 @@ export default observer(function WindowDetails () {
       </Btn>}
     </div>
     <ErrorMessage message={errorMessage} onClear={store.clearError} className="m-4" />
-    <Loader active={!initialized} className="!h-96">
-      {!id ? <hr className="border-alt mb-4" /> : <div className="relative -bg-alt border-alt border-b -mx-4 mb-4 pt-1">
-        {_.values(TAB).map(tab => <Btn
-          key={tab}
-          onClick={() => setTab(tab)}
-          className={cn('btn-secondary-outline min-w-36 btn-lg pb-2 px-6 font-extrabold -mb-px ml-10 ring-inset ring-offset-0 shadow-[none] border-alt !border-b-0 rounded-b-none', {
-            'pointer-events-none': !initialized,
-            'pointer-events-none bg-body': tab === selectedTab,
-            'bg-transparent border-transparent hover:border-alt': tab !== selectedTab,
-          })}>
-          {tab}
-          {/* TODO mark if window is in active state */}
-          {/*<span className="ml-1 text-muted">*/}
-          {/*  <Spinner active={!initialized}>{amount}</Spinner>*/}
-          {/*</span>*/}
-        </Btn>)}
-      </div>}
-      <TabView className="" />
-    </Loader>
+    <div className="flex flex-col grow">
+      <Loader active={!initialized} className="!h-96">
+        {!id ? <hr className="border-alt mb-4" /> : <div className="relative -bg-alt border-alt border-b -mx-4 mb-4 pt-1">
+          {_.values(TAB).map(tab => <Btn
+            key={tab}
+            onClick={() => setTab(tab)}
+            className={cn('btn-secondary-outline min-w-36 btn-lg pb-2 px-6 font-extrabold -mb-px ml-10 ring-inset ring-offset-0 shadow-[none] border-alt !border-b-0 rounded-b-none', {
+              'pointer-events-none': !initialized,
+              'pointer-events-none bg-body': tab === selectedTab,
+              'bg-transparent border-transparent hover:border-alt': tab !== selectedTab,
+            })}>
+            {tab}
+            {/* TODO mark if window is in active state */}
+            {/*<span className="ml-1 text-muted">*/}
+            {/*  <Spinner active={!initialized}>{amount}</Spinner>*/}
+            {/*</span>*/}
+          </Btn>)}
+        </div>}
+        <TabView className="flex flex-col grow" />
+      </Loader>
+    </div>
   </div>
 })

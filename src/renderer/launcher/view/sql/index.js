@@ -13,13 +13,12 @@ export default observer(function Toasts () {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(store.initialize, [])
 
-  return <div className="relative flow-root min-h-full p-4">
+  return <div className="relative flex flex-col h-full p-4">
     <h2 className="text-3xl mb-4">DB SQLite query</h2>
     <ErrorMessage message={errorMessage} onClear={store.clearError} className="mb-4" />
-
     <Form store={form} className="relative">
       <Field
-        rows="12"
+        rows="8"
         checkmark
         name="query"
         type="textarea"
@@ -41,7 +40,7 @@ export default observer(function Toasts () {
       </div>
     </Form>
 
-    <div className="p-4">
+    <div className="flex grow code-block">
       <pre>{JSON.stringify(data, null, 4)}</pre>
     </div>
   </div>

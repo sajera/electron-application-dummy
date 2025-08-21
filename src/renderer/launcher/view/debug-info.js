@@ -9,7 +9,7 @@ import { Btn } from '../../component/btn'
 export default observer(function DebugInfo () {
   useEffect(() => { layoutStore.getDebugInfo() }, [])
 
-  return <div className="relative flow-root min-h-full p-4">
+  return <div className="relative flex flex-col h-full p-4">
     <h2 className="flex items-center text-3xl mb-4">
       Debug Info
       <Btn className="btn-secondary-outline p-1 rounded-full ml-3" onClick={layoutStore.getDebugInfo}>
@@ -17,7 +17,7 @@ export default observer(function DebugInfo () {
       </Btn>
     </h2>
 
-    <div className="bg-alt rounded border-alt overflow-auto p-2">
+    <div className="flex grow code-block">
       <pre>{JSON.stringify(layoutStore.debugInfo, null, 4)}</pre>
     </div>
 

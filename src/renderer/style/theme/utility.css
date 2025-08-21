@@ -15,6 +15,9 @@
 @utility border-alt {
   @apply border-gray-200 dark:border-gray-800
 }
+@utility shadow-alt {
+  @apply shadow-gray-300 dark:shadow-gray-700
+}
 
 
 /* HELPERS */
@@ -23,4 +26,7 @@
 }
 @utility required-asterisk {
   @apply after:content-['*'] after:ml-0.5 after:-mt-5 after:text-red-500 after:inline-block after:text-xl;
+}
+@utility code-block {
+  @apply bg-alt inset-shadow-sm shadow-alt border border-alt rounded overflow-auto p-2;
 }

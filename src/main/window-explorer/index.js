@@ -59,6 +59,7 @@ export default new class WindowExplorer {
 
   'get-self-id' = event => {
     const { id: senderWindowId } = BrowserWindow.fromWebContents(event.sender)
+    // eslint-disable-next-line eqeqeq
     const runtime = _.find(this.runtime, runtime => runtime?.windowID == senderWindowId)
     return runtime?.id || null
   }

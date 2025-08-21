@@ -40,13 +40,13 @@ class WindowListStore {
       delayResolve(3e3),
       this.refreshData()
     ])
-      .then(() => runInAction(() => {
-        console.info('%c WindowListStore.initialize ', 'color: #FF6766; font-weight: bolder;'
-          , '\n list:', _.size(this.list)
-          , '\n sample:', { ..._.sample(this.list) }
-          , '\n filters:', { ...this.form.value }
-        )
-      }))
+      // .then(() => runInAction(() => {
+      //   console.info('%c WindowListStore.initialize ', 'color: #FF6766; font-weight: bolder;'
+      //     , '\n list:', _.size(this.list)
+      //     , '\n sample:', { ..._.sample(this.list) }
+      //     , '\n filters:', { ...this.form.value }
+      //   )
+      // }))
       .catch(this.errorHandler('Initialization'))
       .finally(() => runInAction(() => this.initialized = true))
 

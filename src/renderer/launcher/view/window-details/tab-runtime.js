@@ -42,9 +42,8 @@ export default observer(function TabRuntime ({ className, ...attr }) {
         </Btn>
       </div>
     </div>
-
-    <h3 className="text-lg font-medium mb-2">Details</h3>
-    <div className="bg-alt rounded border-alt overflow-auto p-2">
+    {/*<h3 className="text-lg font-medium mb-2">Details</h3>*/}
+    <div className="flex grow code-block h-40">
       <pre>{JSON.stringify(details, null, 4)}</pre>
     </div>
   </div>

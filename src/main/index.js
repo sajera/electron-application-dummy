@@ -34,7 +34,7 @@ app.whenReady()
     // NOTE for now this is a main window and app should be closed
     await launcher.initialize({ show: false })
     launcher.on('close', app.quit)
-    launcher.openDevTools()
+    // launcher.openDevTools()
 
     // NOTE wait until launcher will be ready
     await Promise.all([
