@@ -35,8 +35,8 @@ export default new class DebugInfo {
     this.errors.unshift({ ...error })
     const report = JSON.stringify(this.getDebugInfo(), null, 2)
     const file = `${dayjs().format('hh:mm_DD-MM-YYYY')}-crash.json`
-    fs.existsSync(PATH.LOGS) && fs.writeFileSync(path.join(PATH.LOGS, file), report, 'utf8');
-    console.error('The app crashed and will now close', report)
+    fs.existsSync(PATH.LOGS) && fs.writeFileSync(path.join(PATH.LOGS, file), report, 'utf8')
+    console.error('The app crashed and will now close', error)
     app.quit()
   }
 
@@ -50,7 +50,7 @@ export default new class DebugInfo {
     return {
       isPackaged: app.isPackaged,
       ERRORS, WINDOWS, MODULES,
-      SRC: `--------------------------------${process.env.SID}--------------------------------`,
+      SRC: '---------------------------------------------------------------------------------',
       EXE: PATH.EXE,
       DIR_EXE: fs.readdirSync(path.dirname(PATH.EXE)),
       MAIN: PATH.MAIN,
@@ -66,7 +66,9 @@ export default new class DebugInfo {
       TEMP: PATH.TEMP,
       DIR_TEMP: fs.readdirSync(PATH.TEMP),
       ENV: `--------------------------------${process.env.SID}--------------------------------`,
-      ...process.env
+      ...process.env,
+      VER: `--------------------------------${process.version}--------------------------------`,
+      ...process.versions
     }
   }
 }

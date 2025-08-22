@@ -34,23 +34,15 @@ const App = observer(function App () {
           >
             REFRESH
           </Btn>
-          <Btn
-            onClick={store.openDebug}
-            disabled={disabled.get('debugger')}
-            className="btn-primary-outline mr-3"
-          >
+          <Btn onClick={() => store.selfAct('openDevTools')} className="btn-primary-outline mr-3">
             DEBUGGER
           </Btn>
-          <Btn
-            onClick={store.close}
-            className="btn-danger"
-            disabled={disabled.get('close')}
-          >
+          <Btn onClick={store.close} className="btn-danger" >
             CLOSE
           </Btn>
         </div>
         <div className="row-span-2 code-block">
-          <pre>{JSON.stringify(details, null, 4)}</pre>
+          <pre>{JSON.stringify(preload, null, 4)}</pre>
         </div>
       </div>
     </Loader>

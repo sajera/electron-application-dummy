@@ -26,19 +26,15 @@ class ExplorerStore {
     runInAction(() => this.errorMessage = `${header}: ${message}`)
   }
 
+  // NOTE pretty unsafe but simple to use
+  selfAct = (...args) => preload.windowExplorer('act-self', ...args)
+    .catch(this.errorHandler('Get Debug Info'))
+
   close = () => {
     this.disabled.set('close', true)
-    return preload.windowExplorer('act-by-id', this.id, 'close')
+    return preload.windowExplorer('act-self', 'close')
       .catch(this.errorHandler('Closing window'))
       .finally(() => runInAction(() => this.disabled.set('close', false)))
-  }
-
-  openDebug = () => {
-    this.disabled.set('debugger', true)
-    return preload.windowExplorer('act-by-id', this.id, 'openDevTools')
-      .then(this.refreshDetails)
-      .catch(this.errorHandler('Opening debugger'))
-      .finally(() => runInAction(() => this.disabled.set('debugger', false)))
   }
 
   refreshDetails = () => {
@@ -49,7 +45,7 @@ class ExplorerStore {
       .finally(() => runInAction(() => this.disabled.set('details', false)))
   }
 
-  getSelfId = () => preload.windowExplorer('get-self-id')
+  getSelfId = () => preload.windowExplorer('get-self-runtime-id')
     .then(id => runInAction(() => this.id = id))
     .catch(this.errorHandler('Get self ID'))
 

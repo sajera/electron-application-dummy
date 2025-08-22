@@ -22,26 +22,16 @@ const webPreferences = {
   enableWebSQL: false,
   nodeIntegration: false,
   contextIsolation: true,
+  additionalArguments: [],
   navigateOnDragDrop: false,
   textAreasAreResizable: false,
   allowRunningInsecureContent: false,
   devTools: Boolean(process.env.DEBUG),
 }
 
-export default class Window {
+export default class WindowRuntime {
+  id = null
   window = null
-
-  static get defaults () {
-    return { options, webPreferences }
-  }
-
-  static get optionNames () {
-    return browserWindowOptionNames
-  }
-
-  static get webPreferencesNames () {
-    return webPreferencesOptionNames
-  }
 
   get windowID () {
     return this.window?.id
@@ -81,11 +71,13 @@ export default class Window {
     }
   }
 
-  constructor () {
-    // TODO is that usefully ?
+  constructor (id) {
+    this.id = id
   }
 
   create = options => {
+    WindowRuntime.all.push(this)
+    options?.webPreferences?.additionalArguments?.push(`--window-runtime-id=${this.id}`)
     // IMPORTANT may cause an error: object cannot be cloned
     debugInfo.windows.unshift({
       ...options,
@@ -93,15 +85,14 @@ export default class Window {
       icon: Boolean(options.icon) || void(0),
       parent: Boolean(options.parent) || void(0),
     })
-    return this.window = new BrowserWindow(options)
+    this.window = new BrowserWindow(options)
+    // NOTE remove runtime reference
+    this.on('closed', () => _.remove(WindowRuntime.all, { id: this.id || '100% not match ¯\\_(ツ)_/¯' }))
+    return this.window
   }
-
-  whenReady = () => Promise.race([
-    new Promise(resolve => this.window.once('ready-to-show', resolve)),
-    new Promise(resolve => this.window.webContents.once('did-finish-load', resolve)),
-    delayResolve(2e5).then(() => Promise.reject({ message: 'Window whenReady timeout' })),
-  ])
-
+  /************************************************
+   * Shortcuts - used in 'act-self' and 'act-runtime-by-id'
+   ************************************************/
   on = (...args) => this.window.on(...args)
 
   once = (...args) => this.window.once(...args)
@@ -112,19 +103,51 @@ export default class Window {
 
   hide = () => this.window.hide()
 
-  close = () => {
-    this.window.closable = true
-    return this.window.close()
-  }
+  close = () => this.window.close()
 
   loadURL = url => this.window.loadURL(url)
-
-  loadFile = file => this.window.loadFile(file)
 
   send = (...args) => this.window.webContents.send(...args)
 
   openDevTools = () => this.window.webContents.openDevTools()
+  /************************************************
+   *          Helpers
+   ************************************************/
+  whenReady = () => Promise.race([
+    new Promise(resolve => this.window.once('ready-to-show', resolve)),
+    new Promise(resolve => this.window.webContents.once('did-finish-load', resolve)),
+    delayResolve(2e5).then(() => Promise.reject({ message: 'Window whenReady timeout' })),
+  ])
 
+  forceClose = () => {
+    this.window.setClosable(true)
+    return this.window.close()
+  }
+  /************************************************
+   *          Common Helpers
+   ************************************************/
+  static all = []
+
+  static getById = id => _.find(WindowRuntime.all, { id })
+
+  static getByWindowId = windowID => _.find(WindowRuntime.all, { windowID })
+
+  static getFromEvent = ({ sender }) => {
+    const window = BrowserWindow.fromWebContents(sender)
+    return this.getByWindowId(window?.id)
+  }
+
+  static get defaults () {
+    return { options, webPreferences }
+  }
+
+  static get optionNames () {
+    return browserWindowOptionNames
+  }
+
+  static get webPreferencesNames () {
+    return webPreferencesOptionNames
+  }
 }
 
 const browserWindowOptionNames = [

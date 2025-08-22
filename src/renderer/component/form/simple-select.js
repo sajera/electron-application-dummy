@@ -72,7 +72,7 @@ export const SimpleSelect = memo(function SimpleSelect ({ input, error, value, i
       {isOptionsShown && <ul className="absolute w-full overflow-y-auto max-h-36 rounded-md shadow-lg border border-alt divide-y divide-gray-400 mt-2 z-10">
         {_.map(options, item => <li key={item} className="overflow-hidden">
           <button type="button" onMouseDown={() => onChange(item)} className="w-full text-left bg-alt hover:bg-gray-100 dark:hover:bg-gray-800 px-3 py-2 truncate">
-            {!OptionItem ? item : <OptionItem item={item} />}
+            {!OptionItem ? (item || '~ ~ ~') : <OptionItem item={item} />}
           </button>
         </li>)}
       </ul>}

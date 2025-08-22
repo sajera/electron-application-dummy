@@ -30,26 +30,24 @@ app.whenReady()
     await sqlite.initialize()
     await windowExplorer.initialize()
 
-    // NOTE for now this is a main window and app should be closed
     await launcher.initialize({ show: false })
+    // NOTE for now this is a main window
     launcher.on('close', app.quit)
     // launcher.openDevTools()
 
-    // NOTE wait until launcher will be ready
     await Promise.all([
+      // NOTE not less than 3s ¯\_(ツ)_/¯
       delayResolve(3e3),
+      // NOTE wait until launcher will be ready
       launcher.whenReady(),
     ])
-
+    // NOTE fine view
     launcher.show()
-    initializer.close()
+    initializer.forceClose()
 
-    // app.quit()
     // TODO remove pushing event to launcher window - debug perspective
     await delayResolve(3e3)
     launcher.send('event-from-main', 'hello from main')
-
-    // TODO what next ?
 
   })
   .catch(debugInfo.handleCrash)

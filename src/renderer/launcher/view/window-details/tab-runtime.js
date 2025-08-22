@@ -14,37 +14,27 @@ export default observer(function TabRuntime ({ className, ...attr }) {
   //   , '\n details:', details
   // )
 
-  return <div className={cn('relative', className)} {...attr}>
+  return <div className={cn('relative', { 'pointer-events-none opacity-50': !details?.active }, className)} {...attr}>
     <div className="grid grid-cols-3 gap-4 mb-4">
-      <div></div>
-      <div></div>
-      <div className="text-right flex items-start justify-end">
+      <div className="flex items-start">
         <Btn
-          onClick={store.refreshDetails}
-          disabled={disabled.get('details')}
+          onClick={() => store.act('show')}
           className="btn-secondary-outline btn-md mr-3"
         >
-          REFRESH
+          SHOW
         </Btn>
-        <Btn
-          onClick={store.open}
-          className="btn-primary btn-md mr-3"
-          disabled={disabled.get('open') || details?.active}
-        >
-          OPEN
-        </Btn>
-        <Btn
-          onClick={store.close}
-          className="btn-danger btn-md"
-          disabled={disabled.get('close') || !details?.active}
-        >
+      </div>
+      <div></div>
+      <div className="text-right flex items-start justify-end">
+
+        <Btn onClick={store.close} className="btn-danger btn-md">
           CLOSE
         </Btn>
       </div>
     </div>
     {/*<h3 className="text-lg font-medium mb-2">Details</h3>*/}
     <div className="flex grow code-block h-40">
-      <pre>{JSON.stringify(details, null, 4)}</pre>
+      TODO
     </div>
   </div>
 })

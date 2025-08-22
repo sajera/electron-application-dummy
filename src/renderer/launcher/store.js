@@ -60,6 +60,10 @@ class LayoutStore {
     runInAction(() => this.menu = menu)
   }
 
+  // NOTE pretty unsafe but simple to use
+  selfAct = (...args) => preload.windowExplorer('act-self', ...args)
+    .catch(this.errorHandler('Get Debug Info'))
+
   getDebugInfo = () => preload.getDebugInfo()
     .then(data => runInAction(() => this.debugInfo = data))
     .catch(this.errorHandler('Get Debug Info'))
@@ -94,6 +98,7 @@ class LayoutStore {
     // return () => { }
   }
 
+  // NOTE listen events from "main"
   listenMain = () => {
     preload.on('fake', () => '')
     preload.on('events', () => '')
@@ -102,9 +107,9 @@ class LayoutStore {
         , '\n args:', args
       )
     })
+    // NOTE unsubscribe ?
   }
 
-  // TODO to think about events from "main"
 }
 
 export const layoutStore = new LayoutStore()
