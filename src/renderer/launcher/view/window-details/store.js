@@ -280,7 +280,7 @@ class WindowDetailsStore {
       errors.maxHeight = 'The "max-height" cant be less than 48'
     }
 
-    if (values.additionalArguments && /([\\,\/:*?<>|])/ig.test(values.additionalArguments)) {
+    if (values.additionalArguments && /([\\,/:*?<>|])/ig.test(values.additionalArguments)) {
       errors.additionalArguments = '`\\`, /, :, *, ?, ", <, >, | symbols are not allowed'
     }
 
