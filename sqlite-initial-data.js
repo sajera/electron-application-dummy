@@ -96,17 +96,6 @@ db.serialize(() => {
   windows.run('Kiosk', 1)
   windows.finalize()
 
-  db.run(`CREATE TABLE users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    email TEXT
-  )`)
-
-  const users = db.prepare('INSERT INTO users (name, email) VALUES (?, ?)')
-  users.run('Alice', 'alice@example.com')
-  users.run('Bob', 'bob@example.com')
-  users.run('Carol', 'carol@example.com')
-  users.finalize()
 })
 
 db.close()
