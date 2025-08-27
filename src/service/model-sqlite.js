@@ -41,9 +41,7 @@ export default class SQLiteModel {
 
   // SQLiteModel.dataType()
   // SQLiteModel.dataType('string')
-  // SQLiteModel.dataType('string', { required: true })
   // SQLiteModel.dataType(SQLiteModel.types.STRING)
-  // SQLiteModel.dataType(SQLiteModel.types.STRING, { required: true })
   static dataType = (...args) => new DataType(...args)
 
   static String = () => SQLiteModel.dataType(TYPE.STRING)
@@ -66,21 +64,14 @@ export default class SQLiteModel {
     if (!_.isFunction(this.sqlite3all)) throw new Error(this.constructor.name+' "sqlite3all" is not a function')
   }
 
-  getByID = $id => this.sqlite3all(`SELECT * FROM ${this.table} where id = $id`, { $id })
-    .then(_.first)
-    .then(this.prepareJS)
-    .then(data => data || Promise.reject({ message: `No record with ID ${$id} exists in the "${this.table}" table` }))
-
-  removeByID = $id => this.sqlite3all(`DELETE FROM ${this.table} where id = $id`, { $id })
-
   prepareJS = data => _.reduce(_.keys(this.schema), (acc, field) => {
-    const value = this.schema[field].js(data[field])
+    const value = this.schema[field].js(_.get(data, field))
     !_.isUndefined(value) && (acc[field] = value)
     return acc
   }, {})
 
   prepareSQL = data => _.reduce(_.keys(this.schema), (acc, field) => {
-    const value = this.schema[field].sql(data[field])
+    const value = this.schema[field].sql(_.get(data, field))
     if (!_.isUndefined(value)) {
       acc.fields.push(field)
       acc.params[`$${field}`] = value
@@ -88,18 +79,8 @@ export default class SQLiteModel {
     return acc
   }, { fields: [], params: {} })
 
-  // prepareSQL = data => {
-  //   const params = {}
-  //   const fields = []
-  //   _.map(_.keys(this.schema), field => {
-  //     const value = this.schema[field].sql(data[field])
-  //     if (!_.isUndefined(value) && !_.isNull(value)) {
-  //       fields.push(field)
-  //       params[`$${field}`] = value
-  //     }
-  //   })
-  //   return { params, fields }
-  // }
+  getAll = () => this.sqlite3all(`SELECT * FROM ${this.table}`)
+    .then(list => _.map(list, this.prepareJS))
 
   insert = data => {
     const { params, fields } = this.prepareSQL(data)
@@ -122,24 +103,14 @@ export default class SQLiteModel {
       RETURNING *;
    `, { $id, ...params })
       .then(_.first)
+      .then(data => data || Promise.reject({ message: `No record with ID ${$id} found in "${this.table}"` }))
       .then(this.prepareJS)
   }
-}
 
-// NOTE sample - for sure such model can be used on both side renderer and main
-export class WindowSQ extends SQLiteModel {
-  table = 'windows'
+  getByID = $id => this.sqlite3all(`SELECT * FROM ${this.table} where id = $id`, { $id })
+    .then(_.first)
+    .then(data => data || Promise.reject({ message: `No record with ID ${$id} found in "${this.table}"` }))
+    .then(this.prepareJS)
 
-  schema = {
-    title: SQLiteModel.String(),
-    width: SQLiteModel.Number(),
-    show: SQLiteModel.Boolean(),
-  }
-
-  constructor () {
-    super()
-    this.sqlite3all = '(new sqlite3.Database(path/to/db)).all'
-    this.test()
-  }
-
+  removeByID = $id => this.sqlite3all(`DELETE FROM ${this.table} where id = $id`, { $id })
 }

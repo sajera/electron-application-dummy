@@ -1,10 +1,10 @@
 // outsource dependencies
 
 // local dependencies
-import Window from './window-explorer/window'
+import WindowRuntime from './window-explorer/window-runtime'
 
 // NOTE something specific to this particular window
-export default new class Launcher extends Window {
+export default new class Launcher extends WindowRuntime {
 
   constructor () {
     super()
@@ -12,22 +12,22 @@ export default new class Launcher extends Window {
 
   initialize = async options => {
     this.create({
-      ...Window.defaults.options,
+      ...WindowRuntime.defaults.options,
       x: 0,
       y: 0,
       width: 1200,
       height: 800,
-      minWidth: 640,
+      minWidth: 680,
       minHeight: 480,
-      title: 'Launcher',
+      title: this.id = 'Launcher',
       ...options,
       webPreferences: {
         preload: LAUNCHER_PRELOAD_WEBPACK_ENTRY,
-        ...Window.defaults.webPreferences,
+        ...WindowRuntime.defaults.webPreferences,
       }
     })
 
-    this.loadURL(LAUNCHER_WEBPACK_ENTRY)
+    this.window.loadURL(LAUNCHER_WEBPACK_ENTRY)
   }
 
 }

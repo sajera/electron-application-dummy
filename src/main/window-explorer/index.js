@@ -1,23 +1,23 @@
 // outsource dependencies
 import _ from 'lodash'
-import { BrowserWindow, ipcMain } from 'electron'
+import { ipcMain } from 'electron'
 // local dependencies
-import Window from './window'
 import { windowSQL } from './model'
 import debugInfo from '../debug-info'
+import WindowRuntime from './window-runtime'
 
 // NOTE something specific to this particular window
 export default new class WindowExplorer {
   runtime = {}
+  runtimes = []
+
+  preload = EXPLORER_PRELOAD_WEBPACK_ENTRY
+  url = EXPLORER_WEBPACK_ENTRY
 
   constructor () {
-    const { name, dbInitial, dbPath } = this
-    debugInfo.modules.unshift({
-      module: 'WindowExplorer',
-      name,
-      dbPath,
-      dbInitial,
-    })
+    const module = this.constructor.name
+    const { preload, url } = this
+    debugInfo.modules.unshift({ module, preload, url })
   }
 
   initialize = async () => {
@@ -29,16 +29,14 @@ export default new class WindowExplorer {
     try {
       return await this[action](event, ...params)
     } catch (error) {
-      return debugInfo.handleError({ action, params, message: error.message, stack: error.stack })
+      return debugInfo.handleError(error, { action, params, module: this.constructor.name })
     }
   }
 
   /************************************************
-   *          IPC HANDLERS
+   *         Windows Options management
    ************************************************/
-  'get-all' = () => windowSQL.sqlite3all('SELECT * FROM windows')
-    .then(list => _.map(list, windowSQL.prepareJS))
-    // .then(_.partial(_.map, _, windowSQL.prepareJS))
+  'get-all' = () => windowSQL.getAll()
 
   'get-window-by-id' = (e, id) => windowSQL.getByID(id)
 
@@ -51,49 +49,62 @@ export default new class WindowExplorer {
 
   'update-window' = (e, data) => windowSQL.updateByID(data.id, data)
 
-  'get-window-details-by-id' = async (e, id) => {
-    const runtime = this.runtime[id]
-    const options = await windowSQL.getByID(id)
-    return { active: Boolean(runtime), options, state: runtime?.state || null }
+  /************************************************
+   *          RUNTIME Windows
+   ************************************************/
+  'get-window-details-by-id' = async (e, runtimeID) => {
+    const options = await windowSQL.getByID(runtimeID)
+    const runtime = WindowRuntime.getById(runtimeID)
+    return {
+      active: Boolean(runtime),
+      runtimeID: runtime?.id,
+      windowId: runtime?.windowID,
+      options,
+      state: runtime?.state,
+    }
   }
 
-  'get-self-id' = event => {
-    const { id: senderWindowId } = BrowserWindow.fromWebContents(event.sender)
-    // eslint-disable-next-line eqeqeq
-    const runtime = _.find(this.runtime, runtime => runtime?.windowID == senderWindowId)
+  'start-runtime-by-id' = async (event, runtimeID) => {
+    if (WindowRuntime.getById(runtimeID)) return true
+    const options = await windowSQL.getByID(runtimeID)
+    const runtime = new WindowRuntime(runtimeID)
+    runtime.create({
+      parent: event.sender,
+      ..._.pick(options, WindowRuntime.optionNames),
+      webPreferences: {
+        ..._.pick(options, WindowRuntime.webPreferencesNames),
+        // NOTE within database it is stored as a string
+        additionalArguments: _.split(options.additionalArguments, /\s+/ig),
+        preload: this.preload
+      }
+    })
+    runtime.loadURL(this.url)
+    // NOTE notify launcher window
+    runtime.on('close', () => WindowRuntime.getById('Launcher').send('window-closed', runtimeID))
+    return Boolean(runtime)
+  }
+
+  'stop-runtime-by-id' = (e, runtimeID) => {
+    const runtime = WindowRuntime.getById(runtimeID)
+    if (!runtime) return true
+    // NOTE now Electron only start the destroying process of the window
+    return runtime.forceClose()
+  }
+
+  'act-runtime-by-id' = (e, runtimeID, action, ...params) => {
+    const runtime = WindowRuntime.getById(runtimeID)
+    return runtime[action](...params)
+  }
+
+  'get-self-runtime-id' = event => {
+    const runtime = WindowRuntime.getFromEvent(event)
     return runtime?.id || null
   }
 
-  'start-runtime-by-id' = async (e, id) => {
-    if (this.runtime[id]) return true
-    const runtime = this.runtime[id] = new Window()
-    runtime.id = id // IMPORTANT for get-self-id
-    // FIXME for sure I pass all props into one table ¯\_(ツ)_/¯
-    const options = await windowSQL.getByID(id)
-    runtime.create({
-      ..._.pick(options, Window.optionNames),
-      webPreferences: {
-        ..._.pick(options, Window.webPreferencesNames),
-        preload: EXPLORER_PRELOAD_WEBPACK_ENTRY
-      }
-    })
-    runtime.loadURL(EXPLORER_WEBPACK_ENTRY)
-    // NOTE cleanup
-    runtime.on('close', () => this.runtime[id] = null)
-    return Boolean(this.runtime[id])
-  }
-
-  'stop-runtime-by-id' = (e, id) => {
-    const runtime = this.runtime[id]
-    if (!runtime) return true
-    // NOTE now Electron only start the destroying process of the window
-    return runtime.close()
-  }
-
-  'act-by-id' = (e, id, action, ...params) => {
-    const runtime = this.runtime[id]
-    runtime[action](...params)
-    return Boolean(this.runtime[id])
+  'act-self' = (event, action, ...params) => {
+    const runtime = WindowRuntime.getFromEvent(event)
+    // NOTE allows object path notation 'webContents.openDevTools'
+    return runtime[action](...params)
   }
 
 }

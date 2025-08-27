@@ -1,6 +1,7 @@
 // outsource dependencies
 import fs from 'fs'
 import path from 'path'
+import dayjs from 'dayjs'
 import { ipcMain, app } from 'electron'
 // local dependencies
 import PATH from './app-path'
@@ -13,26 +14,26 @@ export default new class DebugInfo {
   modules = []
 
   constructor () {
-    // TODO is that usefully ?
+    const module = this.constructor.name
+    this.modules.unshift({ module, logs: PATH.LOGS })
   }
 
   outputError = error => ({ isError: true, message: error.message })
 
   debugError = error => ({ ...error, message: error.message, stack: error.stack })
 
-  handleError = error => {
-    console.error('The app encountered an error\n', error)
-    this.errors.unshift(this.debugError(error))
+  handleError = (error, options) => {
+    console.error('The app encountered an error\n', options, error)
+    this.errors.unshift({ ...this.debugError(error), ...options })
     return this.outputError(error)
   }
 
   handleCrash = error => {
     this.handleError(error)
-    this.errors.unshift({ ...error })
-    // TODO store/save/send error report ?
-    const report = this.getDebugInfo()
-
-    console.error('The app crashed and will now close', report)
+    const report = JSON.stringify(this.getDebugInfo(), null, 2)
+    const file = `${dayjs().format('hh:mm_DD-MM-YYYY')}-crash.json`
+    fs.existsSync(PATH.LOGS) && fs.writeFileSync(path.join(PATH.LOGS, file), report, 'utf8')
+    console.error('The app crashed and will now close', error)
     app.quit()
   }
 
@@ -46,7 +47,7 @@ export default new class DebugInfo {
     return {
       isPackaged: app.isPackaged,
       ERRORS, WINDOWS, MODULES,
-      SRC: `--------------------------------${process.env.SID}--------------------------------`,
+      SRC: '---------------------------------------------------------------------------------',
       EXE: PATH.EXE,
       DIR_EXE: fs.readdirSync(path.dirname(PATH.EXE)),
       MAIN: PATH.MAIN,
@@ -62,7 +63,9 @@ export default new class DebugInfo {
       TEMP: PATH.TEMP,
       DIR_TEMP: fs.readdirSync(PATH.TEMP),
       ENV: `--------------------------------${process.env.SID}--------------------------------`,
-      ...process.env
+      ...process.env,
+      VER: `--------------------------------${process.version}--------------------------------`,
+      ...process.versions
     }
   }
 }

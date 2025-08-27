@@ -56,7 +56,7 @@ export const Input = memo(function Input ({ input, error, value, isTouched, skip
         autoComplete="off"
         { ...attr }
         { ...input }
-        value={value || ''}
+        value={[null, void(0)].includes(value) ? '' : value}
         disabled={disabled}
         onBlur={handleBlur}
         onFocus={handleFocus}

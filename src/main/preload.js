@@ -9,6 +9,9 @@ const ipcInvoke = channel => (...args) => ipcRenderer.invoke(channel, ...args)
 
 contextBridge.exposeInMainWorld('preload', {
   // NOTE senders to modules
+  argv: process.argv,
+  versions: process.versions,
+  shell: ipcInvoke('shell'),
   sqlite: ipcInvoke('sqlite'),
   getDebugInfo: ipcInvoke('debug-info'),
   windowExplorer: ipcInvoke('window-explorer'),

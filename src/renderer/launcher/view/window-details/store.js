@@ -9,24 +9,33 @@ import { FormData } from '../../../component/form'
 import { delayResolve } from '../../../../service'
 
 // configure
+export const TAB = {
+  FORM: 'Options',
+  WINDOW: 'Window',
+  RUNTIME: 'Runtime',
+}
 const initial = {
   title: 'Window',
-  frame: true,
-  show: true,
-  closable: true,
-  kiosk: false,
+  // TODO icon
 
   backgroundColor: '',
-  opacity: 0.01,
-  transparent: false,
-  zoomFactor: '',
+  opacity: '',
+  paintWhenInitiallyHidden: true,
 
-  alwaysOnTop: false,
+  useContentSize: false,
   x: '',
   y: '',
   center: false,
 
+  frame: true,
+  show: true,
+  closable: true,
+  kiosk: false,
+  alwaysOnTop: false,
   fullscreen: false,
+  skipTaskbar: false,
+  movable: true,
+  focusable: true,
   fullscreenable: true,
   resizable: true,
   minimizable: true,
@@ -41,12 +50,60 @@ const initial = {
   defaultHeight: '',
   minHeight: '',
   maxHeight: '',
+
+  // NOTE webPreferences
+  transparent: false,
+  devTools: true,
+  nodeIntegration: false,
+  nodeIntegrationInWorker: false,
+  nodeIntegrationInSubFrames: false,
+  // 'preload': '', // for now it will break window-explorer
+  sandbox: false,
+  // 'session': '', // require('electron').fromPartition('persist:name')
+  // 'partition': 'persist:name',
+  javascript: true,
+  webSecurity: true,
+  allowRunningInsecureContent: false,
+  images: true,
+  textAreasAreResizable: true,
+  webgl: true,
+  plugins: false,
+  experimentalFeatures: false,
+  scrollBounce: false,
+  backgroundThrottling: true,
+  offscreen: false,
+  contextIsolation: true,
+  webviewTag: false,
+  safeDialogs: false,
+  disableDialogs: false,
+  navigateOnDragDrop: false,
+  disableHtmlFullscreenWindowResize: false,
+  spellcheck: true,
+  enableWebSQL: true,
+  enablePreferredSizeMode: false,
+  safeDialogsMessage: '',
+  accessibleTitle: '',
+  zoomFactor: '',
+  // @see https://source.chromium.org/chromium/chromium/src/+/main:third_party/blink/renderer/platform/runtime_enabled_features.json5
+  enableBlinkFeatures: '', // A list of feature strings separated by "," like CSSVariables,KeyboardEventKey to enable
+  disableBlinkFeatures: '', // ~~~  to disable
+  // 'defaultFontFamily', // Object
+  defaultFontSize: 16,
+  defaultMonospaceFontSize: 13,
+  minimumFontSize: 0,
+  imageAnimationPolicy: 'animate', // animate, animateOnce, noAnimation
+  additionalArguments: '', // string[]
+  defaultEncoding: '', // UTF-8 default ISO-8859-1
+  v8CacheOptions: 'code', // code, none, bypassHeatCheck, bypassHeatCheckAndEagerCompile
+  autoplayPolicy: 'no-user-gesture-required', // no-user-gesture-required, user-gesture-required, document-user-activation-required
 }
 
 class WindowDetailsStore {
   errorMessage = null
   initialized = false
   disabled = new Map()
+
+  selectedTab = null
 
   id = null
   details = null
@@ -64,6 +121,8 @@ class WindowDetailsStore {
     runInAction(() => this.errorMessage = `${header}: ${message}`)
   }
 
+  setTab = tab => this.selectedTab = tab
+
   initialize = id => {
     this.id = id
     // NOTE cleanup
@@ -71,6 +130,8 @@ class WindowDetailsStore {
     this.details = null
     this.initialized = !id
     this.form.initialize(initial)
+    this.setTab(id ? TAB.WINDOW : TAB.FORM)
+    const offWindowClosed = preload.on('window-closed', this.onWindowClosed)
     if (!id) return
     // console.log(`%c WindowDetailsStore.initialize ${id}`, 'color: #FF6766; font-weight: bolder;'
     //   , '\n isNew:', !id
@@ -91,22 +152,39 @@ class WindowDetailsStore {
       .finally(() => runInAction(() => this.initialized = true))
 
     // NOTE unmount
-    return () => clearInterval(this.interval)
+    return () => {
+      offWindowClosed()
+      clearInterval(this.interval)
+    }
+  }
+
+  onWindowClosed = id => {
+    if (this.id !== id) return
+    this.setTab(TAB.WINDOW)
+    return this.refreshDetails()
+  }
+
+  act = (...args) => {
+    this.disabled.set('act', true)
+    return preload.windowExplorer('act-runtime-by-id', this.id, ...args)
+      .then(this.refreshDetails)
+      .catch(this.errorHandler('Act window'))
+      .finally(() => runInAction(() => this.disabled.set('act', false)))
   }
 
   open = () => {
     this.disabled.set('open', true)
     return preload.windowExplorer('start-runtime-by-id', this.id)
+      .then(() => this.setTab(TAB.RUNTIME))
       .then(this.refreshDetails)
       .catch(this.errorHandler('Open window'))
       .finally(() => runInAction(() => this.disabled.set('open', false)))
   }
 
-
   close = () => {
     this.disabled.set('close', true)
     return preload.windowExplorer('stop-runtime-by-id', this.id)
-      .then(this.refreshDetails)
+      .then(() => this.onWindowClosed(this.id))
       .catch(this.errorHandler('Close window'))
       .finally(() => runInAction(() => this.disabled.set('close', false)))
   }
@@ -200,6 +278,10 @@ class WindowDetailsStore {
 
     if (values.maxHeight && values.maxHeight < 48) {
       errors.maxHeight = 'The "max-height" cant be less than 48'
+    }
+
+    if (values.additionalArguments && /([\\,/:*?<>|])/ig.test(values.additionalArguments)) {
+      errors.additionalArguments = '`\\`, /, :, *, ?, ", <, >, | symbols are not allowed'
     }
 
     // console.log('%c validate ', 'color: #FF6766; font-weight: bolder;'
