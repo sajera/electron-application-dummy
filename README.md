@@ -37,7 +37,3 @@ TODO
 ```
 > npm run test
 ```
-
-TODO
-external links
-all BrowserWindow options
