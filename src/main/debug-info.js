@@ -30,7 +30,6 @@ export default new class DebugInfo {
 
   handleCrash = error => {
     this.handleError(error)
-    this.errors.unshift({ ...error })
     const report = JSON.stringify(this.getDebugInfo(), null, 2)
     const file = `${dayjs().format('hh:mm_DD-MM-YYYY')}-crash.json`
     fs.existsSync(PATH.LOGS) && fs.writeFileSync(path.join(PATH.LOGS, file), report, 'utf8')
