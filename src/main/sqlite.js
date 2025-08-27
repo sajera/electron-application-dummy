@@ -19,13 +19,9 @@ export default new class SQLite {
   dbInitial = path.join(PATH.RESOURCES, initialData)
 
   constructor () {
+    const module = this.constructor.name
     const { name, dbInitial, dbPath } = this
-    debugInfo.modules.unshift({
-      module: 'SQLite',
-      name,
-      dbPath,
-      dbInitial,
-    })
+    debugInfo.modules.unshift({ module, name, dbPath, dbInitial })
   }
 
   prebuilt = () => {
@@ -49,12 +45,12 @@ export default new class SQLite {
     this.upgrade()
   }
 
-  handle = (event, ...param) => this.promise('all', ...param)
+  handle = (event, ...params) => this.promise('all', ...params)
 
-  promise = (action, ...param) => new Promise(resolve => {
-    this.db[action](...param, (error, data) => {
+  promise = (action, ...params) => new Promise(resolve => {
+    this.db[action](...params, (error, data) => {
       if (!error) return resolve(data)
-      resolve(debugInfo.handleError(error))
+      resolve(debugInfo.handleError(error, { action, params, module: this.constructor.name }))
     })
   })
 

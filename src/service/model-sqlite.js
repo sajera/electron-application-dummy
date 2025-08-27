@@ -79,6 +79,9 @@ export default class SQLiteModel {
     return acc
   }, { fields: [], params: {} })
 
+  getAll = () => this.sqlite3all(`SELECT * FROM ${this.table}`)
+    .then(list => _.map(list, this.prepareJS))
+
   insert = data => {
     const { params, fields } = this.prepareSQL(data)
     return this.sqlite3all(`

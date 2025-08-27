@@ -2,6 +2,7 @@
 import path from 'path'
 import { app, nativeImage } from 'electron'
 // local dependencies
+import shell from './shell'
 import PATH from './app-path'
 import sqlite from './sqlite'
 import debugInfo from './debug-info'
@@ -27,6 +28,7 @@ app.whenReady()
     await initializer.initialize()
     // initializer.openDevTools()
 
+    await shell.initialize()
     await sqlite.initialize()
     await windowExplorer.initialize()
 

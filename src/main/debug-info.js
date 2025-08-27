@@ -11,22 +11,20 @@ export default new class DebugInfo {
 
   windows = []
 
-  modules = [{
-    module: 'DebugInfo',
-    logs: PATH.LOGS
-  }]
+  modules = []
 
   constructor () {
-    // TODO is that usefully ?
+    const module = this.constructor.name
+    this.modules.unshift({ module, logs: PATH.LOGS })
   }
 
   outputError = error => ({ isError: true, message: error.message })
 
   debugError = error => ({ ...error, message: error.message, stack: error.stack })
 
-  handleError = error => {
-    console.error('The app encountered an error\n', error)
-    this.errors.unshift(this.debugError(error))
+  handleError = (error, options) => {
+    console.error('The app encountered an error\n', options, error)
+    this.errors.unshift({ ...this.debugError(error), ...options })
     return this.outputError(error)
   }
 

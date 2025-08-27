@@ -15,12 +15,9 @@ export default new class WindowExplorer {
   url = EXPLORER_WEBPACK_ENTRY
 
   constructor () {
+    const module = this.constructor.name
     const { preload, url } = this
-    debugInfo.modules.unshift({
-      module: 'WindowExplorer',
-      preload,
-      url,
-    })
+    debugInfo.modules.unshift({ module, preload, url })
   }
 
   initialize = async () => {
@@ -32,16 +29,14 @@ export default new class WindowExplorer {
     try {
       return await this[action](event, ...params)
     } catch (error) {
-      console.log(error)
-      return debugInfo.handleError({ action, params, message: error.message, stack: error.stack })
+      return debugInfo.handleError(error, { action, params, module: this.constructor.name })
     }
   }
 
   /************************************************
    *         Windows Options management
    ************************************************/
-  'get-all' = () => windowSQL.sqlite3all('SELECT * FROM windows')
-    .then(list => _.map(list, windowSQL.prepareJS))
+  'get-all' = () => windowSQL.getAll()
 
   'get-window-by-id' = (e, id) => windowSQL.getByID(id)
 

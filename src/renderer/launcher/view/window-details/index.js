@@ -10,8 +10,8 @@ import store, { TAB } from './store'
 import TabWindow from './tab-window'
 import TabRuntime from './tab-runtime'
 import { WINDOW } from '../../navigation'
-import { Btn } from '../../../component/btn'
 import { ErrorMessage } from '../../../component/alert'
+import { Btn, ExternalLink } from '../../../component/btn'
 import { Loader, Spinner } from '../../../component/loader'
 
 export default observer(function WindowDetails () {
@@ -44,17 +44,22 @@ export default observer(function WindowDetails () {
           </Spinner>
         </>}
       </h2>
-      {/* TODO confirmation */}
-      {/*"Are you sure you want to delete the window runtime and its definition?"*/}
-      {/*"This action will permanently delete the window runtime and definition. Do you want to continue?"*/}
-      {initialized && details && <Btn
-        onClick={store.remove}
-        className="btn-danger btn-md"
-        disabled={disabled.get('remove')}
-        title="Delete window runtime and definition"
-      >
-        <TrashIcon className="inline-block size-5 mb-1" /> DELETE
-      </Btn>}
+      <div className="flex items-center">
+        <ExternalLink href="https://www.electronjs.org/docs/latest/api/browser-window" className="mr-4">
+          Electron.BrowserWindow
+        </ExternalLink>
+        {/* TODO confirmation */}
+        {/*"Are you sure you want to delete the window runtime and its definition?"*/}
+        {/*"This action will permanently delete the window runtime and definition. Do you want to continue?"*/}
+        {initialized && details && <Btn
+          onClick={store.remove}
+          className="btn-danger btn-md"
+          disabled={disabled.get('remove')}
+          title="Delete window runtime and definition"
+        >
+          <TrashIcon className="inline-block size-5 mb-1" /> DELETE
+        </Btn>}
+      </div>
     </div>
     <ErrorMessage message={errorMessage} onClear={store.clearError} className="m-4" />
     <div className="flex flex-col grow">
