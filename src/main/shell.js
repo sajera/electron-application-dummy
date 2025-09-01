@@ -1,10 +1,6 @@
 // outsource dependencies
-import fs from 'fs'
-import _ from 'lodash'
-import path from 'path'
 import { ipcMain, shell } from 'electron'
 // local dependencies
-import PATH from './app-path'
 import debugInfo from './debug-info'
 
 export default new class Shell {

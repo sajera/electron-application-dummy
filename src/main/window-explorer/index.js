@@ -8,9 +8,6 @@ import WindowRuntime from './window-runtime'
 
 // NOTE something specific to this particular window
 export default new class WindowExplorer {
-  runtime = {}
-  runtimes = []
-
   preload = EXPLORER_PRELOAD_WEBPACK_ENTRY
   url = EXPLORER_WEBPACK_ENTRY
 
