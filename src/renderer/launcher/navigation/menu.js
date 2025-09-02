@@ -1,5 +1,5 @@
 // outsource dependencies
-import { HomeIcon, QueueListIcon, WindowIcon, PlusIcon, WrenchScrewdriverIcon } from '@heroicons/react/24/solid'
+import { HomeIcon, QueueListIcon, WindowIcon, PlusIcon, WrenchScrewdriverIcon, CpuChipIcon } from '@heroicons/react/24/solid'
 // local dependencies
 import * as ROUTS from './routs'
 
@@ -26,6 +26,41 @@ export default [
     type: MENU_ITEM_TYPE.LINK,
     link: ROUTS.WELCOME.LINK(),
     isActive: path => ROUTS.WELCOME.ROUTE === path,
+  },
+  {
+    name: 'AI',
+    icon: CpuChipIcon,
+    type: MENU_ITEM_TYPE.MENU,
+    isActive: ROUTS.WINDOW.TEST,
+    list: [
+      {
+        name: 'Image',
+        type: MENU_ITEM_TYPE.LINK,
+        link: ROUTS.AI.IMAGE.LINK(),
+        isActive: ROUTS.AI.IMAGE.TEST,
+      },
+      {
+        icon: PlusIcon,
+        name: 'Resources',
+        type: MENU_ITEM_TYPE.ACTION,
+        // link: ROUTS.WINDOW.DETAILS.LINK(),
+        // isActive: path => ROUTS.WINDOW.DETAILS.LINK() === path,
+      },
+      {
+        icon: PlusIcon,
+        name: 'Create source',
+        type: MENU_ITEM_TYPE.LINK,
+        link: ROUTS.AI.DRAW.LINK(),
+        isActive: path => ROUTS.AI.DRAW.LINK() === path,
+      },
+      {
+        icon: PlusIcon,
+        name: 'Create model',
+        type: MENU_ITEM_TYPE.ACTION,
+        // link: ROUTS.WINDOW.DETAILS.LINK(),
+        // isActive: path => ROUTS.WINDOW.DETAILS.LINK() === path,
+      },
+    ]
   },
   {
     name: 'WINDOWS',

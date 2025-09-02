@@ -39,7 +39,7 @@ const Layout = observer(function Layout () {
       <div className="flex items-center pr-3 mr-3 h-6">
         <Btn
           onClick={layoutStore.toggleSideBar}
-          className="ptn-secondary-outline flex items-center justify-center"
+          className="btn-primary flex items-center justify-center"
           title={<><strong>{isSidebarHidden ? 'Show' : 'Hide'}</strong> the navigation sidebar</>}
         >
           <Bars4Icon className="size-6 inline-block" />

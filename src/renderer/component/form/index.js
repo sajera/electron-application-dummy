@@ -7,6 +7,7 @@ export { FormData } from './form-data'
 export * from './simple-select'
 // export * from './select' // TODO
 export * from './switch'
+export * from './color'
 export * from './input'
 export * from './field'
 export * from './form'

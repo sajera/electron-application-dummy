@@ -32,13 +32,14 @@ export default observer(function List () {
         tag={Link}
         title="Create new Window"
         to={WINDOW.DETAILS.LINK()}
-        className="btn-primary-outline flex ml-4"
+        className="btn-primary-outline flex mx-4"
       >
         <PlusIcon className="size-6" />
       </Btn> - TODO is that usefully ?
     </h2>
     <ErrorMessage message={errorMessage} onClear={store.clearError} className="m-4" />
     <div className="overflow-auto">
+      <h2 className="text-3xl">TODO remove ??? </h2>
       <Loader active={!initialized || disabled.get('list')} className="!h-96">
         <div className="inline-block min-w-full align-middle">
           <table className="relative min-w-full align-middle">

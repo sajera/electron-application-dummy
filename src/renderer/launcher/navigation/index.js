@@ -26,7 +26,7 @@ export const SidebarItem = memo(function SidebarItem ({ type, ...attr }) {
 
 const NavLink = memo(function NavLink ({ className, icon: Icon, link, name = '~ ~ ~', isActive, disabled, hidden, onClick }) {
   const { pathname } = useLocation()
-  const active = isActive(pathname)
+  const active = isActive && isActive(pathname)
   // TODO verify the case that occurred once and concatenate the paths of the different links
   // console.log(`%c NavLink ${name} `, 'color: #FF6766; font-weight: bolder;'
   //   , '\n link:', link
@@ -45,14 +45,14 @@ const NavLink = memo(function NavLink ({ className, icon: Icon, link, name = '~ 
 
 const Action = memo(function Action ({ className, icon: Icon, action, name = '~ ~ ~', isActive, onClick, hidden, disabled }) {
   const { pathname } = useLocation()
-  const active = isActive(pathname)
+  const active = isActive && isActive(pathname)
   const handleClick = useCallback(event => {
     _.isFunction(action) && action(event)
     _.isFunction(onClick) && onClick(event)
   }, [onClick, action])
 
   return hidden ? <div className="hidden" /> : <button type="button" onClick={handleClick} className={cn(
-    'group flex w-full items-center p-2 hover:opacity-100', className, {
+    'group flex w-full items-center p-2 hover:opacity-100 cursor-pointer', className, {
       'opacity-75 pointer-events-none': disabled,
       'hover:text-primary-600': !disabled && !active,
       'text-primary-900 dark:text-primary-500 opacity-90': active,

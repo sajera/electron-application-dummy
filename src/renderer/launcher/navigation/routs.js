@@ -27,19 +27,22 @@ export const NOT_FOUND = createRoute('/404', {
   query: [{ name: 'error', short: 'e', defaults: null }],
 })
 
-const WINDOW = createRoute('window')
+export const AI = createRoute('ai')
+const aiRoute = (url, options) => createRoute(`/ai/${clean(url)}`, options)
+AI.IMAGE = aiRoute('/ai-image')
+AI.DRAW = aiRoute('/draw-image')
+// TODO window to work with different AI models
+
+export const WINDOW = createRoute('window')
 const windowRoute = (url, options) => createRoute(`/window/${clean(url)}`, options)
 WINDOW.LIST = windowRoute('/list')
 WINDOW.DETAILS = windowRoute('/details/:id', {
   params: [ANNOTATION.ID({})],
 })
-export { WINDOW }
 
-const DEV = createRoute('/dev')
+export const DEV = createRoute('/dev')
 const devRoute = (url, options) => createRoute(`/dev/${clean(url)}`, options)
 DEV.COLOR = devRoute('/color')
 DEV.TOAST = devRoute('/toast')
 DEV.DEBUG = devRoute('/debug')
 DEV.SQL = devRoute('/sql')
-
-export { DEV }

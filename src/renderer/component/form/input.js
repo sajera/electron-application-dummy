@@ -17,7 +17,7 @@ export const Input = memo(function Input ({ input, error, value, isTouched, skip
   const [isSuggestionsShown, setShowSuggestions] = useState(false)
   const handleFocus = useCallback(() => setShowSuggestions(true), [])
   const handleBlur = useCallback(e => {
-    onBlur(e)
+    onBlur && onBlur(e)
     setTimeout(setShowSuggestions, 3e2, false)
   }, [onBlur])
   const handleKeyDown = useCallback(event => {

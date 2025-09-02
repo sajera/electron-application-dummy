@@ -11,6 +11,9 @@ export default memo(function Routing () {
   return <Switch>
     <Route path={ROUTS.WELCOME.ROUTE} exact component={require('../view/home').default} />
 
+    <Route path={ROUTS.AI.IMAGE.ROUTE} component={require('../view/ai-image').default} />
+    <Route path={ROUTS.AI.DRAW.ROUTE} component={require('../view/draw-image').default} />
+
     <Route path={ROUTS.WINDOW.DETAILS.ROUTE} component={require('../view/window-details').default} />
     <Route path={ROUTS.WINDOW.LIST.ROUTE} component={require('../view/window-list').default} />
 

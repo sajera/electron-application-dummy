@@ -2,6 +2,7 @@
 import path from 'path'
 import { app, nativeImage } from 'electron'
 // local dependencies
+import ai from './ai'
 import shell from './shell'
 import PATH from './app-path'
 import sqlite from './sqlite'
@@ -28,6 +29,7 @@ app.whenReady()
     await initializer.initialize()
     // initializer.openDevTools()
 
+    await ai.initialize()
     await shell.initialize()
     await sqlite.initialize()
     await windowExplorer.initialize()
@@ -35,7 +37,7 @@ app.whenReady()
     await launcher.initialize({ show: false })
     // NOTE for now this is a main window
     launcher.on('close', app.quit)
-    // launcher.openDevTools()
+    launcher.openDevTools()
 
     await Promise.all([
       // NOTE not less than 3s ¯\_(ツ)_/¯

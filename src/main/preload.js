@@ -11,6 +11,7 @@ contextBridge.exposeInMainWorld('preload', {
   // NOTE senders to modules
   argv: process.argv,
   versions: process.versions,
+  ai: ipcInvoke('ai'),
   shell: ipcInvoke('shell'),
   sqlite: ipcInvoke('sqlite'),
   getDebugInfo: ipcInvoke('debug-info'),

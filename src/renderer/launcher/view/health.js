@@ -6,7 +6,7 @@ import { Cog6ToothIcon as CogIcon } from '@heroicons/react/24/solid'
 
 export default memo(function Health ({ className }) {
   return <div className={cn('health flex items-center', className)} id="Maintenance">
-    <div className="mx-auto max-w-7xl p-4 text-center">
+    <div className="mx-auto max-w-7xl p-4 pt-40 text-center">
       <div className="mb-3 relative inline-flex items-end mx-auto">
         <CogIcon className="animate-spin-slow inline-block text-indigo-500 w-28" />
         <CogIcon className="animate-wiggle inline-block text-green-500 w-40 -mx-6" />
