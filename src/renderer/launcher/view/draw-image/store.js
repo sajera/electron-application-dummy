@@ -3,9 +3,11 @@ import _ from 'lodash'
 import { fabric } from 'fabric'
 import { makeAutoObservable, runInAction } from 'mobx'
 // local dependencies
+import './selectable-controls.fabric'
 import toast from '../../../component/toast'
 import { DrawLS } from '../../local-storage'
 import { FormData } from '../../../component/form'
+import { delayResolve, delayReject } from '../../../../service'
 
 const initialSize = {
   width: 100,
@@ -49,7 +51,6 @@ class DrawImagePageStore {
     this.initialized = true
     this.showControls = false
     if (!canvas) return
-
     const toRestore = DrawLS.get()
     if (toRestore) {
       this.options = _.omit(toRestore, ['width', 'height', 'point'])
@@ -57,7 +58,6 @@ class DrawImagePageStore {
     }
     this.canvas = canvas
     this.resetFabric(this.sizeForm.value, this.canvas)
-
 
     // NOTE record last state of page
     return () => DrawLS.set({
@@ -87,16 +87,12 @@ class DrawImagePageStore {
     this.setGridMode(this.options.isGridMode)
     this.setPencilColor(this.options.pencilColor)
     this.setDrawingMode(this.options.isDrawingMode)
-    // TODO remove - for development mode when page is reloaded
-    DrawLS.set({ ...this.options, ...this.sizeForm.value })
-    console.log(`%c resetFabric ${1} `, 'color: #FF6766; font-weight: bolder;'
-      , '\n fabric:', { ...this.fabric }
-      , '\n sizeForm:', {...this.sizeForm.value}
-      , '\n options:', { ...this.options }
-      , '\n width:', width
-      , '\n height:', height
-      , '\n point:', point
-    )
+    // console.log(`%c resetFabric ${1} `, 'color: #FF6766; font-weight: bolder;'
+    //   , '\n fabric:', { ...this.fabric }
+    //   , '\n sizeForm:', {...this.sizeForm.value}
+    //   , '\n options:', { ...this.options }
+    //   , '\n point:', point
+    // )
   }
 
   validateSizeForm = values => {
@@ -159,22 +155,32 @@ class DrawImagePageStore {
     this.fabric.renderAll()
   }
 
-  todo = values => {
-    this.clearError()
-    this.disabled.set('get-random-image', true)
-
-    // console.log(`%c DrawImagePageStore ${'submit'} `, 'color: #FF6766; font-weight: bolder;'
-    //   , '\n values:', { ...values }
-    // )
-    // NOTE no parameters for now
-    return preload.ai('get-random-image', {})
-      .then(data => runInAction(() => {
-        console.log(`%c DrawImagePageStore ${'output'} `, 'color: #FF6766; font-weight: bolder;'
-          , '\n data:', data
-        )
+  addImageToCanvas = file => {
+    this.disabled.set('add-image-to-canvas', true)
+    return Promise.race([
+      delayReject(3e3, { message: `Failed to read file "${file.name}"` }),
+      new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = ({ target }) => resolve(target.result)
+        reader.onerror = error => reject(error)
+        reader.readAsDataURL(file)
+      })
+    ])
+      .then(dataUrl => new Promise(resolve => {
+        // NOTE left 1 point for offsets
+        const fw = this.fabric.getWidth() - this.sizeForm.value.point
+        const fh = this.fabric.getHeight() - this.sizeForm.value.point
+        // IMPORTANT might be an issues with SVG that doesn't have correct sizes as attributes - fix svg itself ¯\_(ツ)_/¯
+        fabric.Image.fromURL(dataUrl, image => {
+          image.scale(Math.min(fw / image.width, fh / image.height))
+          this.fabric.add(image)
+          this.fabric.centerObject(image)
+          this.fabric.renderAll()
+          resolve()
+        })
       }))
-      .catch(this.errorHandler('Image Generation'))
-      .finally(() => runInAction(() => this.disabled.set('get-random-image', false)))
+      .catch(this.errorHandler('Add image to canvas'))
+      .finally(() => runInAction(() => this.disabled.set('add-image-to-canvas', false)))
   }
 
 }

@@ -67,7 +67,7 @@ export default observer(function Controls ({ className }) {
       onChange={({ target }) => store.setGridMode(target.checked)}
     />
     <hr className="border-t border-alt -mx-4 mb-3" />
-    <Btn className="btn-primary-outline btn-lg flex items-center justify-center w-full text-center">
+    <Btn className="click-to-upload btn-primary-outline btn-lg flex items-center justify-center w-full text-center mb-3">
       <ArrowUpCircleIcon className="size-6 mr-2" />
       APPLY IMAGE
     </Btn>
@@ -82,6 +82,5 @@ export default observer(function Controls ({ className }) {
     2. circle
     3. text
     4. poligon
-    5. image
   </div>
 })

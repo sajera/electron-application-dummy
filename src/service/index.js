@@ -42,6 +42,7 @@ export const safeJsonParse = (json, def = {}) => {
  * @returns {Promise}
  */
 export const delayResolve = (delay, result) => new Promise(resolve => setTimeout(resolve, delay || 40, result))
+export const delayReject = (delay, error) => new Promise((r, reject) => setTimeout(reject, delay || 40, error))
 
 /**
  * safe creation of dynamical regular expression

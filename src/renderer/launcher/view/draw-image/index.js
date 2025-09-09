@@ -1,6 +1,9 @@
 // outsource dependencies
+import _ from 'lodash'
+import cn from 'classnames'
 import { observer } from 'mobx-react'
-import React, { memo, useEffect } from 'react'
+import { useDropzone } from 'react-dropzone'
+import React, { memo, useEffect, useMemo } from 'react'
 import { Cog8ToothIcon } from '@heroicons/react/24/solid'
 // local dependencies
 import store from './store'
@@ -8,8 +11,8 @@ import Controls from './controls'
 import { Btn } from '../../../component/btn'
 import { Loader } from '../../../component/loader'
 import { ErrorMessage } from '../../../component/alert'
-import { useRefCallback } from '../../../component/hook'
 import { Form, Field, Input } from '../../../component/form'
+import { useRefCallback, checkParentNodes } from '../../../component/hook'
 
 
 export const NoRenderCanvas = memo(function NoRenderCanvas ({ ref }) {
@@ -19,10 +22,27 @@ export const NoRenderCanvas = memo(function NoRenderCanvas ({ ref }) {
 export default observer(function DrawImage () {
   const { sizeForm, errorMessage, initialized, disabled, data } = store
   const [canvas, getCanvas] = useRefCallback()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
   useEffect(() => store.initialize(canvas), [canvas])
 
-  return <div className="relative flex flex-col h-full p-4">
+  const { getRootProps, getInputProps, isFileDialogActive, isDragAccept, isDragActive, isDragReject, acceptedFiles } = useDropzone({
+    maxFiles: 1,
+    maxSize: 16e6, // NOTE: max file size is 16MB
+    preventDropOnDocument: true,
+    disabled: disabled.get('upload'),
+    onDrop: acceptedFiles => store.addImageToCanvas(_.first(acceptedFiles)),
+    accept: {
+      'image/png': ['.png'],
+      'image/svg+xml': ['.svg'],
+      'image/jpeg': ['.jpeg', '.jpg'],
+    },
+  })
+
+  const rootPros = useMemo(() => ({
+    onClick: event => checkParentNodes(event.target, t => t.classList?.contains('click-to-upload')) || event.stopPropagation()
+  }), [])
+
+  return <div className="relative flex flex-col h-full p-4" {...getRootProps(rootPros)}>
     <Controls className="z-10 bg-alt shadow-lg border-l border-alt" />
     <div className="flex items-start justify-between mb-4">
       <Form store={sizeForm} className="flex">
@@ -62,6 +82,22 @@ export default observer(function DrawImage () {
         >
           <Cog8ToothIcon className="size-6 inline-block" />
         </Btn>
+      </div>
+    </div>
+    <div className="h-0 overflow-visible">
+      <input {...getInputProps()} />
+      <div className={cn('flex flex-1 flex-col items-center justify-center cursor-pointer absolute text-5xl font-medium',
+        {
+          'bg-alt border border-2 border-alt border-dashed shadow shadow-alt shadow-2xl top-3 inset-x-3 z-50 !h-5/6': isDragActive || isFileDialogActive || disabled.get('add-image-to-canvas'),
+          '!border-green-500 !text-green-500': isDragActive && isDragAccept,
+          '!border-red-500 !text-red-500': isDragActive && isDragReject,
+          '!border-primary-500 !text-primary-500': isFileDialogActive,
+        })}>
+        <Loader active={disabled.get('add-image-to-canvas')} size="32" title={`File "${_.get(acceptedFiles, '0.name', '~ ~ ~')}" is pushing to canvas...`}>
+          {!isDragActive ? !isFileDialogActive ? null : <p>Selecting file...</p>
+            : isDragReject ? <p>Invalid file...</p>
+              : <p>Drop the file here ...</p>}
+        </Loader>
       </div>
     </div>
     <ErrorMessage message={errorMessage} onClear={store.clearError} className="mb-4" />
