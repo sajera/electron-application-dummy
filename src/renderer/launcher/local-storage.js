@@ -4,6 +4,7 @@ import { localStorage } from '../../service/storage'
  * Ready to use stores for specific things
  */
 export const PageLS = localStorage.bindToPath('page')
+export const DrawLS = localStorage.bindToPath('draw')
 export const ThemeLS = localStorage.bindToPath('theme')
 export const SidebarLS = localStorage.bindToPath('nav')
 export const SQLPageLS = localStorage.bindToPath('sql')

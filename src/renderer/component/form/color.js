@@ -10,13 +10,13 @@ import { Spinner } from '../loader'
 export const isValidHexColor = value => /^#([0-9a-f]{3,3}|[0-9a-f]{6,6})$/i.test(value)
 export const COLORS = [
   '#F44E3B', '#FE9200', '#FCDC00', '#DBDF00', '#A4DD00', '#68CCCA', '#73D8FF', '#AEA1FF',
-  '#FDA1FF', '#333333', '#808080', '#cccccc', '#D33115', '#E27300', '#FCC400', '#B0BC00',
-  '#68BC00', '#16A5A5', '#009CE0', '#7B64FF', '#FA28FF', '#666666', '#B3B3B3', '#9F0500',
+  '#FDA1FF', '#333333', '#808080', '#B3B3B3', '#CCCCCC', '#D33115', '#E27300', '#FCC400',
+  '#68BC00', '#16A5A5', '#009CE0', '#7B64FF', '#FA28FF', '#666666', '#9F0500', '#B0BC00',
   '#C45100', '#FB9E00', '#808900', '#194D33', '#0C797D', '#0062B1', '#653294', '#AB149E',
 ]
 
-// eslint-disable-next-line max-len
-export const Color = memo(function Color ({ input, error, value, isTouched, skipTouch, isLoading, className, classNameFormGroup, optional, label, errorClassName, hideError, type, checkmark, leading, ending, clearable, disabled, ...attr }) {
+
+export const Color = memo(function Color ({ input, error, value, isTouched, skipTouch, isLoading, className, classNameFormGroup, optional, label, errorClassName, hideError, type, checkmark, leading, ending, clearable, disabled, colors, ...attr }) {
   const { onChange, onBlur } = input
   const touched = Boolean(skipTouch || isTouched)
   const isInvalid = Boolean(error && touched)
@@ -77,7 +77,7 @@ export const Color = memo(function Color ({ input, error, value, isTouched, skip
       {isShown && <div className="absolute mt-2 z-10">
         <GithubPicker
           width={212}
-          colors={COLORS}
+          colors={colors || COLORS}
           onChange={handleChangeColor}
           color={{ hex: validColor }}
         />
