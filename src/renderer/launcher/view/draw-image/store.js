@@ -183,6 +183,42 @@ class DrawImagePageStore {
       .finally(() => runInAction(() => this.disabled.set('add-image-to-canvas', false)))
   }
 
+  savePNG = () => {
+    // TODO file name
+    const fileName = 'X'
+    this.disabled.set('to-png', true)
+    // console.log(`%c savePNG ${1} `, 'color: #FF6766; font-weight: bolder;'
+    //   , '\n fabric:', { ...this.fabric }
+    //   , '\n sizeForm:', {...this.sizeForm.value}
+    //   , '\n options:', { ...this.options }
+    // )
+    return Promise.race([
+      delayReject(3e3, { message: `Failed to create image "${fileName}.png"` }),
+      new Promise(resolve => {
+        const a = document.createElement('a')
+        const dataUrl = this.fabric.toDataURL({ format: 'png', quality: 1 })
+        a.setAttribute('href', dataUrl)
+        a.setAttribute('download', `${fileName}.png`)
+        a.style.display = 'none'
+        document.body.appendChild(a)
+        a.click()
+        // document.body.removeChild(a)
+        a.remove()
+        resolve()
+      })
+    ])
+      .catch(this.errorHandler('Create PNG image'))
+      .finally(() => runInAction(() => this.disabled.set('to-png', false)))
+  }
+
+  saveRAW = () => {
+    console.log(`%c saveRAW ${1} `, 'color: #FF6766; font-weight: bolder;'
+      , '\n fabric:', { ...this.fabric }
+      , '\n sizeForm:', {...this.sizeForm.value}
+      , '\n options:', { ...this.options }
+    )
+  }
+
 }
 
 export const drawImagePageStore = new DrawImagePageStore()

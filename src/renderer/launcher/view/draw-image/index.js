@@ -87,13 +87,13 @@ export default observer(function DrawImage () {
           </Btn>}
         >
           <Dropdown.Item as="li">
-            <Btn className="btn-secondary-outline btn-md shadow-none ring-inset rounded-none border-b-0 flex items-center whitespace-nowrap text-right w-full">
+            <Btn onClick={store.savePNG} className="btn-secondary-outline btn-md shadow-none ring-inset rounded-none border-b-0 flex items-center whitespace-nowrap text-right w-full">
               <PhotoIcon className="size-6 mr-2" />
               PNG image
             </Btn>
           </Dropdown.Item>
           <Dropdown.Item as="li">
-            <Btn className="btn-secondary-outline btn-md shadow-none ring-inset rounded-none border-b-0 flex items-center whitespace-nowrap text-right w-full">
+            <Btn onClick={store.saveRAW} className="btn-secondary-outline btn-md shadow-none ring-inset rounded-none border-b-0 flex items-center whitespace-nowrap text-right w-full">
               <RectangleGroupIcon className="size-6 mr-2" />
               RAW Template
             </Btn>
