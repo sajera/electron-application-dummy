@@ -11,7 +11,7 @@ import { Form, Field, Input, Color, COLORS } from '../../../component/form'
 
 
 export default observer(function Controls ({ className }) {
-  const { showControls, fabric, options } = store
+  const { showControls, options } = store
 
   // console.log(`%c DrawImage ${1} `, 'color: #FF6766; font-weight: bolder;'
   //   , '\n fabric:', fabric
@@ -32,7 +32,6 @@ export default observer(function Controls ({ className }) {
         className="btn-secondary-outline flex items-center justify-center size-10 p-1"
       >
         <XMarkIcon className="size-6 inline-block" />
-        {/*<strong>Hide</strong>&nbsp;CONTROLS*/}
       </Btn>
     </div>
     <Color

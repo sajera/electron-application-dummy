@@ -4,12 +4,14 @@ import cn from 'classnames'
 import { observer } from 'mobx-react'
 import { useDropzone } from 'react-dropzone'
 import React, { memo, useEffect, useMemo } from 'react'
-import { Cog8ToothIcon } from '@heroicons/react/24/solid'
+import { Cog8ToothIcon, CloudArrowDownIcon } from '@heroicons/react/24/solid'
+import { PhotoIcon, RectangleGroupIcon, FolderPlusIcon } from '@heroicons/react/24/outline'
 // local dependencies
 import store from './store'
 import Controls from './controls'
 import { Btn } from '../../../component/btn'
 import { Loader } from '../../../component/loader'
+import { Dropdown } from '../../../component/dropdown'
 import { ErrorMessage } from '../../../component/alert'
 import { Form, Field, Input } from '../../../component/form'
 import { useRefCallback, checkParentNodes } from '../../../component/hook'
@@ -75,6 +77,34 @@ export default observer(function DrawImage () {
         </div>
       </Form>
       <div className="flex justify-end">
+        <Dropdown
+          as="ul"
+          anchor="bottom end"
+          containerClassName="mr-3"
+          className="min-w-32 bg-alt border border-alt rounded mt-1 z-50"
+          trigger={({ active }) => <Btn title="Save Options" className={cn('btn-primary btn-md flex items-center truncate h-10', { active })}>
+            <CloudArrowDownIcon className="size-6 mr-2" /> SAVE
+          </Btn>}
+        >
+          <Dropdown.Item as="li">
+            <Btn className="btn-secondary-outline btn-md shadow-none ring-inset rounded-none border-b-0 flex items-center whitespace-nowrap text-right w-full">
+              <PhotoIcon className="size-6 mr-2" />
+              PNG image
+            </Btn>
+          </Dropdown.Item>
+          <Dropdown.Item as="li">
+            <Btn className="btn-secondary-outline btn-md shadow-none ring-inset rounded-none border-b-0 flex items-center whitespace-nowrap text-right w-full">
+              <RectangleGroupIcon className="size-6 mr-2" />
+              RAW Template
+            </Btn>
+          </Dropdown.Item>
+          <Dropdown.Item as="li">
+            <Btn className="btn-secondary-outline btn-md shadow-none ring-inset rounded-none flex items-center whitespace-nowrap text-right w-full">
+              <FolderPlusIcon className="size-6 mr-2" />
+              Add to source
+            </Btn>
+          </Dropdown.Item>
+        </Dropdown>
         <Btn
           title="Show controls panel"
           onClick={() => store.update({ showControls: true })}
