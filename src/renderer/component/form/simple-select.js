@@ -7,7 +7,7 @@ import { ChevronDownIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Spinner } from '../loader'
 
 
-export const SimpleSelect = memo(function SimpleSelect ({ input, error, value, isTouched, skipTouch, isLoading, className, classNameFormGroup, optional, label, options, optionItem: OptionItem, errorClassName, hideError, type = 'text', leading, ending, clearable, disabled, ...attr }) {
+export const SimpleSelect = memo(function SimpleSelect ({ input, error, value, isTouched, skipTouch, isLoading, className, classNameFormGroup, optional, label, options, optionItem: OptionItem, errorClassName, hideError, type = 'text', leading, inLabel, clearable, disabled, ...attr }) {
   const { onChange, onBlur } = input
   const touched = Boolean(skipTouch || isTouched)
   const isInvalid = Boolean(error && touched)
@@ -57,7 +57,9 @@ export const SimpleSelect = memo(function SimpleSelect ({ input, error, value, i
           invalid: touched && isInvalid && !isLoading,
         })}
       />
-      {ending && <div className="pointer-events-none absolute inset-y-0 right-1.5 flex items-center pl-3">{ending}</div>}
+      {inLabel && <label htmlFor={input?.id} className={cn('block absolute pointer-events-none top-2 text-muted w-full pt-px', { 'text-red-900': isInvalid })}>
+        <span className="opacity-0 mr-5">{value || ''}</span>{inLabel}
+      </label>}
       {/* NOTE the icon place */}
       <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
         {isLoading ? <Spinner active={isLoading} className="size-5" />

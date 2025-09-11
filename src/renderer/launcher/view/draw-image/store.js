@@ -9,12 +9,6 @@ import { DrawLS } from '../../local-storage'
 import { FormData } from '../../../component/form'
 import { delayResolve, delayReject } from '../../../../service'
 
-const initialSize = {
-  width: 100,
-  height: 100,
-  point: 10,
-}
-
 class DrawImagePageStore {
   showControls = false
   initialized = true
@@ -35,7 +29,10 @@ class DrawImagePageStore {
   }
 
   constructor () {
-    this.sizeForm = new FormData(initialSize, this.validateSizeForm, this.resetFabric)
+    this.textForm = new FormData({ }, this.validateTextForm, this.addText)
+    this.sizeForm = new FormData({ width: 100, height: 100 }, this.validateSizeForm, this.resetFabric)
+    this.circleForm = new FormData({ radius: 50, stroke: '#333', strokeWidth: 2, fill: '' }, this.validateCircleForm, this.addCircle)
+    this.rectForm = new FormData({ width: 50, height: 50, stroke: '#333', strokeWidth: 2, fill: '' }, this.validateRectForm, this.addRect)
     makeAutoObservable(this)
   }
 
@@ -95,24 +92,6 @@ class DrawImagePageStore {
     //   , '\n options:', { ...this.options }
     //   , '\n point:', point
     // )
-  }
-
-  validateSizeForm = values => {
-    const errors = {}
-
-    errors.width = !values.width ? 'Mandatory'
-      : values.width < 10 ? 'Minimum 10'
-        : values.width > 1000 ? 'Maximum 1000' : null
-
-    errors.height = !values.height ? 'Mandatory'
-      : values.height < 10 ? 'Minimum 10'
-        : values.height > 1000 ? 'Maximum 1000' : null
-
-    // console.log(`%c validate ${_.size(values)}`, 'color: #FF6766; font-weight: bolder;'
-    //   , '\n values:', { ...values }
-    //   , '\n errors:', { ...errors }
-    // )
-    return errors
   }
 
   setGridSize = value => this.options.grid = value
@@ -187,6 +166,85 @@ class DrawImagePageStore {
       ]))
       .catch(this.errorHandler('Add image to canvas'))
       .finally(() => runInAction(() => this.disabled.set('add-image-to-canvas', false)))
+  }
+
+  addRect = values => {
+    const rect = new fabric.Rect({ ...values, })
+    this.fabric.add(rect)
+    this.fabric.centerObject(rect)
+    this.fabric.renderAll()
+    this.setDrawingMode(false)
+  }
+
+  addCircle = values => {
+    const circle = new fabric.Circle({ ...values, })
+    this.fabric.add(circle)
+    this.fabric.centerObject(circle)
+    this.fabric.renderAll()
+    this.setDrawingMode(false)
+  }
+
+  validateSizeForm = values => {
+    const errors = {}
+
+    errors.width = !values.width ? 'Mandatory'
+      : values.width < 10 ? 'Minimum 10'
+        : values.width > 1000 ? 'Maximum 1000' : null
+
+    errors.height = !values.height ? 'Mandatory'
+      : values.height < 10 ? 'Minimum 10'
+        : values.height > 1000 ? 'Maximum 1000' : null
+
+    // console.log(`%c validate ${_.size(values)}`, 'color: #FF6766; font-weight: bolder;'
+    //   , '\n values:', { ...values }
+    //   , '\n errors:', { ...errors }
+    // )
+    return errors
+  }
+
+  validateRectForm = values => {
+    const errors = {}
+
+    errors.width = !values.width ? 'Mandatory'
+      : values.width < 10 ? 'Minimum 10'
+        : values.width > 1000 ? 'Maximum 1000' : null
+
+    errors.height = !values.height ? 'Mandatory'
+      : values.height < 10 ? 'Minimum 10'
+        : values.height > 1000 ? 'Maximum 1000' : null
+
+    errors.stroke = !values.stroke ? 'Mandatory' : null
+
+    errors.strokeWidth = !values.strokeWidth ? 'Mandatory'
+      : values.strokeWidth < 1 ? 'Minimum 1'
+        : values.strokeWidth > 100 ? 'Maximum 100' : null
+
+    // console.log(`%c validate ${_.size(values)}`, 'color: #FF6766; font-weight: bolder;'
+    //   , '\n values:', { ...values }
+    //   , '\n errors:', { ...errors }
+    // )
+    return errors
+  }
+
+
+  validateCircleForm = values => {
+    const errors = {}
+
+    errors.radius = !values.radius ? 'Mandatory'
+      : values.radius < 10 ? 'Minimum 10'
+        : values.radius > 1000 ? 'Maximum 1000' : null
+
+    errors.stroke = !values.stroke ? 'Mandatory' : null
+
+    errors.strokeWidth = !values.strokeWidth ? 'Mandatory'
+      : values.strokeWidth < 1 ? 'Minimum 1'
+        : values.strokeWidth > 100 ? 'Maximum 100' : null
+
+    // console.log(`%c validate ${_.size(values)}`, 'color: #FF6766; font-weight: bolder;'
+    //   , '\n values:', { ...values }
+    //   , '\n errors:', { ...errors }
+    // )
+    return errors
   }
 
   savePNG = () => {

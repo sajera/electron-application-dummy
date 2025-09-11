@@ -8,7 +8,7 @@ import { Spinner } from '../loader'
 import { safeRegExp } from '../../../service'
 
 
-export const Input = memo(function Input ({ input, error, value, isTouched, skipTouch, isLoading, className, classNameFormGroup, optional, label, suggestions, suggestionItem: SuggestionItem, errorClassName, hideError, type = 'text', checkmark, leading, ending, clearable, disabled, ...attr }) {
+export const Input = memo(function Input ({ input, error, value, isTouched, skipTouch, isLoading, className, classNameFormGroup, optional, label, inLabel, suggestions, suggestionItem: SuggestionItem, errorClassName, hideError, type = 'text', checkmark, leading, clearable, disabled, ...attr }) {
   const { onChange, onBlur } = input
   const InputTag = useMemo(() => type === 'textarea' ? 'textarea' : 'input', [type])
   const touched = Boolean(skipTouch || isTouched)
@@ -70,7 +70,9 @@ export const Input = memo(function Input ({ input, error, value, isTouched, skip
           'pr-8': checkmark || clearable || isLoading, // NOTE might be only one of them at one time
         })}
       />
-      {ending && <div className="pointer-events-none absolute inset-y-0 right-1.5 flex items-center pl-3">{ending}</div>}
+      {inLabel && <label htmlFor={input?.id} className={cn('block absolute pointer-events-none top-2 text-muted w-full pt-px', { 'text-red-900': isInvalid })}>
+        <span className="opacity-0 mr-5">{value || ''}</span>{inLabel}
+      </label>}
       {/* NOTE the icon place */}
       <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
         {isLoading ? <Spinner active={isLoading} className="size-5" />

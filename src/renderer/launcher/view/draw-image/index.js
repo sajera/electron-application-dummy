@@ -60,18 +60,24 @@ export default observer(function DrawImage () {
         >
           RESET CANVAS
         </Btn>
-        <div className="relative mr-3 w-44">
-          <Field min="10" max="1000" type="number" name="width" component={Input} />
-          <span className="text-muted absolute pointer-events-none top-2">
-            <span className="opacity-0 mr-3 ml-1">{sizeForm.value.width}</span> WIDTH
-          </span>
-        </div>
-        <div className="relative mr-3 w-44">
-          <Field min="10" max="1000" type="number" name="height" component={Input} />
-          <span className="text-muted absolute pointer-events-none top-2">
-            <span className="opacity-0 mr-3 ml-1">{sizeForm.value.height}</span> HEIGHT
-          </span>
-        </div>
+        <Field
+          min="10"
+          max="1000"
+          type="number"
+          name="width"
+          inLabel="WIDTH"
+          component={Input}
+          classNameFormGroup="mr-3 w-44"
+        />
+        <Field
+          min="10"
+          max="1000"
+          type="number"
+          name="height"
+          inLabel="HEIGHT"
+          component={Input}
+          classNameFormGroup="mr-3 w-44"
+        />
       </Form>
       <div className="flex justify-end">
         <Dropdown
