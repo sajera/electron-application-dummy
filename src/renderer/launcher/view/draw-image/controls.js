@@ -34,42 +34,82 @@ export default observer(function Controls ({ className }) {
         <XMarkIcon className="size-6 inline-block" />
       </Btn>
     </div>
-    <Color
-      label="BACKGROUND"
-      classNameFormGroup="mb-3"
-      value={options.backgroundColor}
-      colors={[...COLORS, 'transparent']}
-      input={{ onChange: value => store.setBG(value) }}
-    />
-    <hr className="border-t border-alt -mx-4 mb-3" />
-    <Toggle
-      label="Enable drawing mode"
-      className="toggle-primary mb-3"
-      checked={options.isDrawingMode}
-      toggleClassName="toggle-primary"
-      onChange={({ target }) => store.setDrawingMode(target.checked)}
-    />
-    <Color
-      label="Pencil color"
-      classNameFormGroup="mb-3"
-      value={options.pencilColor}
-      colors={[...COLORS, '#000000']}
-      disabled={!options.isDrawingMode}
-      input={{ onChange: value => store.setPencilColor(value) }}
-    />
-    <hr className="border-t border-alt -mx-4 mb-3" />
-    <Toggle
-      label="Enable grid mode"
-      checked={options.isGridMode}
-      className="toggle-primary mb-3"
-      toggleClassName="toggle-primary"
-      onChange={({ target }) => store.setGridMode(target.checked)}
-    />
+    <div className="relative mb-3">
+      <Color
+        value={options.backgroundColor}
+        colors={[...COLORS, 'transparent']}
+        input={{ onChange: value => store.setBG(value) }}
+      />
+      <span className="text-muted absolute pointer-events-none top-2 pt-px">
+        <span className="opacity-0 mr-3 ml-1 pt-px">{options.backgroundColor}</span> BACKGROUND
+      </span>
+    </div>
     <hr className="border-t border-alt -mx-4 mb-3" />
     <Btn className="click-to-upload btn-primary-outline btn-lg flex items-center justify-center w-full text-center mb-3">
       <ArrowUpCircleIcon className="size-6 mr-2" />
       APPLY IMAGE
     </Btn>
+    <hr className="border-t border-alt -mx-4 mb-3" />
+    <div className="flex items-center justify-between mb-3">
+      <h2 className="text-medium mr-3">PENCIL DRAWING</h2>
+      <Toggle
+        label="ENABLED"
+        className="toggle-primary"
+        checked={options.isDrawingMode}
+        toggleClassName="toggle-primary"
+        onChange={({ target }) => store.setDrawingMode(target.checked)}
+      />
+    </div>
+    <div className="relative mb-3">
+      <Color
+        value={options.pencilColor}
+        colors={[...COLORS, '#000000']}
+        disabled={!options.isDrawingMode}
+        input={{ onChange: value => store.setPencilColor(value) }}
+      />
+      <span className="text-muted absolute pointer-events-none top-2 pt-px">
+        <span className="opacity-0 mr-3 ml-1 pt-px">{options.pencilColor}</span> COLOR
+      </span>
+    </div>
+    <div className="relative mb-3">
+      <Input
+        min="5"
+        step="1"
+        type="number"
+        value={options.pencilSize}
+        input={{ onChange: value => store.setPencilSize(value) }}
+      />
+      <span className="text-muted absolute pointer-events-none top-2">
+        <span className="opacity-0 mr-3 ml-1 pt-px">{options.pencilSize}</span> PX
+      </span>
+    </div>
+    <hr className="border-t border-alt -mx-4 mb-3" />
+    <div className="flex items-center justify-between mb-3">
+      <h2 className="text-medium mr-3">GRID</h2>
+      <Toggle
+        label="ENABLED"
+        checked={options.isGridMode}
+        className="toggle-primary"
+        toggleClassName="toggle-primary"
+        onChange={({ target }) => store.setGridMode(target.checked)}
+      />
+    </div>
+    <div className="relative mb-3">
+      <Input
+        min="5"
+        step="1"
+        max="50"
+        type="number"
+        value={options.grid}
+        input={{
+          onChange: value => store.setGridSize(value),
+          onBlur: () => options.isGridMode && store.drawGrid(),
+        }}
+      />
+      <span className="text-muted absolute pointer-events-none top-2">
+        <span className="opacity-0 mr-3 ml-1 pt-px">{options.grid}</span> SIZE
+      </span>
+    </div>
     <hr className="border-t border-alt -mx-4 mb-3" />
 
     TODO more options ?

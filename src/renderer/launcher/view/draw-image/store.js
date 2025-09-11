@@ -29,7 +29,9 @@ class DrawImagePageStore {
     backgroundColor: 'transparent',
     pencilColor: '#000000',
     isDrawingMode: true,
+    pencilSize: 3,
     isGridMode: true,
+    grid: 10,
   }
 
   constructor () {
@@ -53,8 +55,8 @@ class DrawImagePageStore {
     if (!canvas) return
     const toRestore = DrawLS.get()
     if (toRestore) {
-      this.options = _.omit(toRestore, ['width', 'height', 'point'])
-      this.sizeForm.initialize(_.pick(toRestore, ['width', 'height', 'point']))
+      this.options = _.omit(toRestore, ['width', 'height'])
+      this.sizeForm.initialize(_.pick(toRestore, ['width', 'height']))
     }
     this.canvas = canvas
     this.resetFabric(this.sizeForm.value, this.canvas)
@@ -78,13 +80,13 @@ class DrawImagePageStore {
     if (this.fabric) this.fabric.dispose()
     this.fabric = new fabric.Canvas(this.canvas, {
       interactive: true, // NOTE require "resetFabric" to apply
-      width: width * point,
-      height: height * point,
+      height: height,
+      width: width,
     })
-    this.fabric.freeDrawingBrush.width = point
     // NOTE apply after reset
     this.setBG(this.options.backgroundColor)
     this.setGridMode(this.options.isGridMode)
+    this.setPencilSize(this.options.pencilSize)
     this.setPencilColor(this.options.pencilColor)
     this.setDrawingMode(this.options.isDrawingMode)
     // console.log(`%c resetFabric ${1} `, 'color: #FF6766; font-weight: bolder;'
@@ -106,16 +108,16 @@ class DrawImagePageStore {
       : values.height < 10 ? 'Minimum 10'
         : values.height > 1000 ? 'Maximum 1000' : null
 
-    errors.point = !values.point ? 'Mandatory'
-      : values.point < 1 ? 'Minimum 1'
-        : values.point > 50 ? 'Maximum 50' : null
-
     // console.log(`%c validate ${_.size(values)}`, 'color: #FF6766; font-weight: bolder;'
     //   , '\n values:', { ...values }
     //   , '\n errors:', { ...errors }
     // )
     return errors
   }
+
+  setGridSize = value => this.options.grid = value
+
+  setPencilSize = value => this.fabric.freeDrawingBrush.width = this.options.pencilSize = value
 
   setDrawingMode = value => this.fabric.isDrawingMode = this.options.isDrawingMode = value
 
@@ -139,8 +141,9 @@ class DrawImagePageStore {
   }
 
   drawGrid = () => {
+    this.removeGrid()
     const gridLines = buildGridLines({
-      point: this.fabric.freeDrawingBrush.width,
+      grid: this.options.grid,
       width: this.fabric.getWidth(),
       height: this.fabric.getHeight(),
     })
@@ -166,19 +169,22 @@ class DrawImagePageStore {
         reader.readAsDataURL(file)
       })
     ])
-      .then(dataUrl => new Promise(resolve => {
-        // NOTE left 1 point for offsets
-        const fw = this.fabric.getWidth() - this.sizeForm.value.point
-        const fh = this.fabric.getHeight() - this.sizeForm.value.point
-        // IMPORTANT might be an issues with SVG that doesn't have correct sizes as attributes - fix svg itself ¯\_(ツ)_/¯
-        fabric.Image.fromURL(dataUrl, image => {
-          image.scale(Math.min(fw / image.width, fh / image.height))
-          this.fabric.add(image)
-          this.fabric.centerObject(image)
-          this.fabric.renderAll()
-          resolve()
+      .then(dataUrl => Promise.race([
+        delayReject(3e3, { message: `Failed to draw image "${file.name}"` }),
+        new Promise(resolve => {
+          const fw = this.fabric.getWidth()
+          const fh = this.fabric.getHeight()
+          // IMPORTANT might be an issues with SVG that doesn't have correct sizes as attributes - fix svg itself ¯\_(ツ)_/¯
+          fabric.Image.fromURL(dataUrl, image => {
+            image.scale(Math.min(fw / image.width, fh / image.height))
+            this.fabric.add(image)
+            this.fabric.centerObject(image)
+            this.fabric.renderAll()
+            this.setDrawingMode(false)
+            resolve()
+          })
         })
-      }))
+      ]))
       .catch(this.errorHandler('Add image to canvas'))
       .finally(() => runInAction(() => this.disabled.set('add-image-to-canvas', false)))
   }
@@ -196,7 +202,9 @@ class DrawImagePageStore {
       delayReject(3e3, { message: `Failed to create image "${fileName}.png"` }),
       new Promise(resolve => {
         const a = document.createElement('a')
+        this.grid.visible = false
         const dataUrl = this.fabric.toDataURL({ format: 'png', quality: 1 })
+        this.grid.visible = true
         a.setAttribute('href', dataUrl)
         a.setAttribute('download', `${fileName}.png`)
         a.style.display = 'none'
@@ -225,20 +233,21 @@ export const drawImagePageStore = new DrawImagePageStore()
 export default drawImagePageStore
 
 
-function buildGridLines ({ width, height, point }) {
-  const grid = []
-  const options = { stroke: '#0000002b', strokeWidth: 1 }
+function buildGridLines ({ width, height, grid, stroke = '#0000002b' }) {
+  const lines = []
+  // NOTE restrict grid cell size from 5 to 50 px
+  grid = grid >= 5 && grid < 51 ? grid : 5
   // NOTE vertical lines
-  for (let i = 0; i <= width / point; i++) {
-    const x = i * point
-    const line = new fabric.Line([x, 0, x, height], options)
-    grid.push(line)
+  for (let i = 0; i <= width / grid; i++) {
+    const x = i * grid
+    const strokeWidth = i && !(i%10) ? 2 : 1
+    lines.push(new fabric.Line([x, 0, x, height], { stroke, strokeWidth }))
   }
   // NOTE horizontal lines
-  for (let i = 0; i <= height / point; i++) {
-    const y = i * point
-    const line = new fabric.Line([0, y, width, y], options)
-    grid.push(line)
+  for (let i = 0; i <= height / grid; i++) {
+    const y = i * grid
+    const strokeWidth = i && !(i%10) ? 2 : 1
+    lines.push(new fabric.Line([0, y, width, y], { stroke, strokeWidth }))
   }
-  return grid
+  return lines
 }

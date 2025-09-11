@@ -32,7 +32,10 @@ export default observer(function DrawImage () {
     maxSize: 16e6, // NOTE: max file size is 16MB
     preventDropOnDocument: true,
     disabled: disabled.get('upload'),
-    onDrop: acceptedFiles => store.addImageToCanvas(_.first(acceptedFiles)),
+    onDrop: acceptedFiles => {
+      const file = _.first(acceptedFiles)
+      file && store.addImageToCanvas(file)
+    },
     accept: {
       'image/png': ['.png'],
       'image/svg+xml': ['.svg'],
@@ -57,12 +60,6 @@ export default observer(function DrawImage () {
         >
           RESET CANVAS
         </Btn>
-        <div className="relative mr-3 w-52">
-          <Field min="1" max="50" type="number" name="point" component={Input} />
-          <span className="text-muted absolute pointer-events-none top-2">
-            <span className="opacity-0 mr-3 ml-1">{sizeForm.value.point}</span> POINT SIZE
-          </span>
-        </div>
         <div className="relative mr-3 w-44">
           <Field min="10" max="1000" type="number" name="width" component={Input} />
           <span className="text-muted absolute pointer-events-none top-2">
