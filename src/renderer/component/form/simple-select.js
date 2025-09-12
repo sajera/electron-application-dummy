@@ -57,7 +57,7 @@ export const SimpleSelect = memo(function SimpleSelect ({ input, error, value, i
           invalid: touched && isInvalid && !isLoading,
         })}
       />
-      {inLabel && <label htmlFor={input?.id} className={cn('block absolute pointer-events-none top-2 text-muted w-full pt-px', { 'text-red-900': isInvalid })}>
+      {inLabel && <label htmlFor={input?.id} className={cn('block absolute pointer-events-none top-2 text-muted w-full', { 'text-red-900': isInvalid })}>
         <span className="opacity-0 mr-5">{value || ''}</span>{inLabel}
       </label>}
       {/* NOTE the icon place */}

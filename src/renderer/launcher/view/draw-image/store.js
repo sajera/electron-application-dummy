@@ -40,7 +40,7 @@ class DrawImagePageStore {
       linethrough: false,
       underline: false,
       stroke: '',
-      strokeWidth: 1,
+      strokeWidth: '',
       lineHeight: 1.2,
       text: ''
     }, this.validateTextForm, this.addText)
@@ -101,12 +101,24 @@ class DrawImagePageStore {
     this.setPencilSize(this.options.pencilSize)
     this.setPencilColor(this.options.pencilColor)
     this.setDrawingMode(this.options.isDrawingMode)
-    // console.log(`%c resetFabric ${1} `, 'color: #FF6766; font-weight: bolder;'
-    //   , '\n fabric:', { ...this.fabric }
-    //   , '\n sizeForm:', {...this.sizeForm.value}
-    //   , '\n options:', { ...this.options }
-    //   , '\n point:', point
+  }
+
+  validateSizeForm = values => {
+    const errors = {}
+
+    errors.width = !values.width ? 'Mandatory'
+      : values.width < 10 ? 'Minimum 10'
+        : values.width > 1000 ? 'Maximum 1000' : null
+
+    errors.height = !values.height ? 'Mandatory'
+      : values.height < 10 ? 'Minimum 10'
+        : values.height > 1000 ? 'Maximum 1000' : null
+
+    // console.log(`%c validate ${_.size(values)}`, 'color: #FF6766; font-weight: bolder;'
+    //   , '\n values:', { ...values }
+    //   , '\n errors:', { ...errors }
     // )
+    return errors
   }
 
   setGridSize = value => this.options.grid = value
@@ -183,38 +195,37 @@ class DrawImagePageStore {
       .finally(() => runInAction(() => this.disabled.set('add-image-to-canvas', false)))
   }
 
-  addRect = values => {
-    const rect = new fabric.Rect({ ...values, })
-    this.fabric.add(rect)
-    this.fabric.centerObject(rect)
+  addText = values => {
+    const text = new fabric.Text(values.text, { ...values, })
+    this.fabric.add(text)
+    this.fabric.centerObject(text)
     this.fabric.renderAll()
     this.setDrawingMode(false)
   }
 
-  addCircle = values => {
-    const circle = new fabric.Circle({ ...values, })
-    this.fabric.add(circle)
-    this.fabric.centerObject(circle)
-    this.fabric.renderAll()
-    this.setDrawingMode(false)
-  }
-
-  validateSizeForm = values => {
+  validateTextForm = values => {
     const errors = {}
 
-    errors.width = !values.width ? 'Mandatory'
-      : values.width < 10 ? 'Minimum 10'
-        : values.width > 1000 ? 'Maximum 1000' : null
+    errors.text = !values.text ? 'Mandatory' : null
+    errors.fill = !values.fill ? 'Mandatory' : null
 
-    errors.height = !values.height ? 'Mandatory'
-      : values.height < 10 ? 'Minimum 10'
-        : values.height > 1000 ? 'Maximum 1000' : null
+    errors.fontSize = !values.fontSize ? 'Mandatory'
+      : values.fontSize < 8 ? 'Minimum 8'
+        : values.fontSize > 100 ? 'Maximum 100' : null
 
     // console.log(`%c validate ${_.size(values)}`, 'color: #FF6766; font-weight: bolder;'
     //   , '\n values:', { ...values }
     //   , '\n errors:', { ...errors }
     // )
     return errors
+  }
+
+  addRect = values => {
+    const rect = new fabric.Rect({ ...values, })
+    this.fabric.add(rect)
+    this.fabric.centerObject(rect)
+    this.fabric.renderAll()
+    this.setDrawingMode(false)
   }
 
   validateRectForm = values => {
@@ -241,6 +252,13 @@ class DrawImagePageStore {
     return errors
   }
 
+  addCircle = values => {
+    const circle = new fabric.Circle({ ...values, })
+    this.fabric.add(circle)
+    this.fabric.centerObject(circle)
+    this.fabric.renderAll()
+    this.setDrawingMode(false)
+  }
 
   validateCircleForm = values => {
     const errors = {}

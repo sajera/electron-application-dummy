@@ -70,7 +70,7 @@ export const Input = memo(function Input ({ input, error, value, isTouched, skip
           'pr-8': checkmark || clearable || isLoading, // NOTE might be only one of them at one time
         })}
       />
-      {inLabel && <label htmlFor={input?.id} className={cn('block absolute pointer-events-none top-2 text-muted w-full pt-px', { 'text-red-900': isInvalid })}>
+      {inLabel && <label htmlFor={input?.id} className={cn('block absolute pointer-events-none top-2 text-muted w-full', { 'text-red-900': isInvalid })}>
         <span className="opacity-0 mr-5">{value || ''}</span>{inLabel}
       </label>}
       {/* NOTE the icon place */}
