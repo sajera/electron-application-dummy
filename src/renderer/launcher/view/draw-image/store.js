@@ -62,8 +62,7 @@ class DrawImagePageStore {
     // NOTE reset
     this.clearError()
     this.initialized = true
-    this.showControls = true
-    // this.showControls = false
+    this.showControls = false
     if (!canvas) return
     const toRestore = DrawLS.get()
     if (toRestore) {

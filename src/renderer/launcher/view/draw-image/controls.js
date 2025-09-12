@@ -47,23 +47,24 @@ export default observer(function Controls ({ className }) {
         onChange={({ target }) => store.setDrawingMode(target.checked)}
       />
     </div>
-    <Color
-      inLabel="COLOR"
-      classNameFormGroup="mb-3"
-      value={options.pencilColor}
-      colors={[...COLORS, '#000000']}
-      disabled={!options.isDrawingMode}
-      input={{ onChange: value => store.setPencilColor(value) }}
-    />
-    <Input
-      min="5"
-      step="1"
-      type="number"
-      inLabel="PX"
-      classNameFormGroup="mb-3"
-      value={options.pencilSize}
-      input={{ onChange: value => store.setPencilSize(value) }}
-    />
+    <div className="grid grid-cols-3 gap-3 mb-3">
+      <Color
+        inLabel="COLOR"
+        value={options.pencilColor}
+        colors={[...COLORS, '#000000']}
+        classNameFormGroup="col-span-2"
+        disabled={!options.isDrawingMode}
+        input={{ onChange: value => store.setPencilColor(value) }}
+      />
+      <Input
+        min="5"
+        step="1"
+        type="number"
+        inLabel="PX"
+        value={options.pencilSize}
+        input={{ onChange: value => store.setPencilSize(value) }}
+      />
+    </div>
     <hr className="border-t border-alt -mx-4 mb-3" />
     <div className="flex items-center justify-between mb-3">
       <h2 className="font-medium text-alt mr-3">GRID</h2>
@@ -110,5 +111,7 @@ export default observer(function Controls ({ className }) {
     4. undo/redo
     <hr className="border-t border-alt -mx-4 mb-3" />
     5. zoom +/-
+    <hr className="border-t border-alt -mx-4 mb-3" />
+    6. layers/groups
   </div>
 })
