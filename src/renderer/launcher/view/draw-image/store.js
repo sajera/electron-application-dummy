@@ -29,7 +29,21 @@ class DrawImagePageStore {
   }
 
   constructor () {
-    this.textForm = new FormData({ }, this.validateTextForm, this.addText)
+    // https://fabric5.fabricjs.com/fabric-intro-part-2#text
+    this.textForm = new FormData({
+      fontWeight: 'normal',
+      fontStyle: 'normal',
+      fontFamily: 'Times New Roman', // NOTE same as fabric.js default
+      fill: '#000',
+      fontSize: 18,
+      overline: false,
+      linethrough: false,
+      underline: false,
+      stroke: '',
+      strokeWidth: 1,
+      lineHeight: 1.2,
+      text: ''
+    }, this.validateTextForm, this.addText)
     this.sizeForm = new FormData({ width: 100, height: 100 }, this.validateSizeForm, this.resetFabric)
     this.circleForm = new FormData({ radius: 50, stroke: '#333', strokeWidth: 2, fill: '' }, this.validateCircleForm, this.addCircle)
     this.rectForm = new FormData({ width: 50, height: 50, stroke: '#333', strokeWidth: 2, fill: '' }, this.validateRectForm, this.addRect)
@@ -48,7 +62,8 @@ class DrawImagePageStore {
     // NOTE reset
     this.clearError()
     this.initialized = true
-    this.showControls = false
+    this.showControls = true
+    // this.showControls = false
     if (!canvas) return
     const toRestore = DrawLS.get()
     if (toRestore) {

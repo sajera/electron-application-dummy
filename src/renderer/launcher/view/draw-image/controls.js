@@ -5,6 +5,7 @@ import { observer } from 'mobx-react'
 import { ArrowUpCircleIcon, XMarkIcon } from '@heroicons/react/24/solid'
 // local dependencies
 import store from './store'
+import TextForm from './text.form'
 import RectForm from './rect.form'
 import CircleForm from './circle.form'
 import { Btn } from '../../../component/btn'
@@ -23,8 +24,8 @@ export default observer(function Controls ({ className }) {
     'settings overflow-y-auto p-4',
     className,
     // NOTE collapsible
-    'inset-y-0 fixed mt-12 w-80 transition-all',
-    showControls ? 'right-0' : '-right-80',
+    'inset-y-0 fixed mt-12 w-84 transition-all',
+    showControls ? 'right-0' : '-right-84',
   )}>
     <div className="flex justify-between mb-4">
       <h2 className="text-2xl text-alt">Controls panel</h2>
@@ -36,21 +37,8 @@ export default observer(function Controls ({ className }) {
         <XMarkIcon className="size-6 inline-block" />
       </Btn>
     </div>
-    <Color
-      inLabel="BACKGROUND"
-      classNameFormGroup="mb-3"
-      value={options.backgroundColor}
-      colors={[...COLORS, 'transparent']}
-      input={{ onChange: value => store.setBG(value) }}
-    />
-    <hr className="border-t border-alt -mx-4 mb-3" />
-    <Btn className="click-to-upload btn-primary-outline btn-lg flex items-center justify-center w-full text-center mb-3">
-      <ArrowUpCircleIcon className="size-6 mr-2" />
-      APPLY IMAGE
-    </Btn>
-    <hr className="border-t border-alt -mx-4 mb-3" />
     <div className="flex items-center justify-between mb-3">
-      <h2 className="text-medium mr-3">PENCIL DRAWING</h2>
+      <h2 className="font-medium text-alt">PENCIL DRAWING</h2>
       <Toggle
         label="ENABLED"
         className="toggle-primary"
@@ -78,7 +66,7 @@ export default observer(function Controls ({ className }) {
     />
     <hr className="border-t border-alt -mx-4 mb-3" />
     <div className="flex items-center justify-between mb-3">
-      <h2 className="text-medium mr-3">GRID</h2>
+      <h2 className="font-medium text-alt mr-3">GRID</h2>
       <Toggle
         label="ENABLED"
         className="toggle-primary"
@@ -92,20 +80,32 @@ export default observer(function Controls ({ className }) {
       step="1"
       max="50"
       type="number"
-      inLabel="SIZE"
       value={options.grid}
+      inLabel="GRID CELL SIZE"
       classNameFormGroup="mb-3"
       input={{
         onChange: value => store.setGridSize(value),
         onBlur: () => options.isGridMode && store.drawGrid(),
       }}
     />
-    <hr className="border-t border-alt -mx-4 mb-3" />
-    <RectForm />
-    <hr className="border-t border-alt -mx-4 mb-3" />
-    <CircleForm />
-    <hr className="border-t border-alt -mx-4 mb-3" />
-    3. text
+    <Color
+      inLabel="BACKGROUND"
+      classNameFormGroup="mb-3"
+      value={options.backgroundColor}
+      colors={[...COLORS, 'transparent']}
+      input={{ onChange: value => store.setBG(value) }}
+    />
+    {/*<hr className="border-t border-alt -mx-4 mb-3" />*/}
+    <Btn className="click-to-upload btn-primary-outline btn-md flex items-center justify-center w-full text-center mb-3">
+      <ArrowUpCircleIcon className="size-6 mr-2" />
+      APPLY IMAGE
+    </Btn>
+    <hr className="border-t border-alt -mx-4" />
+    <RectForm className="" />
+    <hr className="border-t border-alt -mx-4" />
+    <CircleForm className="" />
+    <hr className="border-t border-alt -mx-4" />
+    <TextForm className="" />
     <hr className="border-t border-alt -mx-4 mb-3" />
     4. undo/redo
     <hr className="border-t border-alt -mx-4 mb-3" />

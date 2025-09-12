@@ -4,9 +4,10 @@ import React, { memo, useEffect, useState } from 'react'
 // local dependencies
 import { useRefCallback } from './hook'
 
-export const Collapsible = memo(function Collapsible ({ tag: Tag = 'div', subTag: SubTag = 'div', className, style, isOpen, children, ...attr }) {
+export const Collapsible = memo(function Collapsible ({ tag: Tag = 'div', subTag: SubTag = 'div', className, style, isOpen, children, openClassName, ...attr }) {
   const [container, ref] = useRefCallback()
   const [height, setHeight] = useState(50)
+  const [trans, setTrans] = useState(false)
   useEffect(() => {
     if (container) {
       setHeight(container.getBoundingClientRect()?.height)
@@ -21,7 +22,13 @@ export const Collapsible = memo(function Collapsible ({ tag: Tag = 'div', subTag
   return <Tag
     { ...attr }
     style={{ height: isOpen ? height : 0 }}
-    className={cn('relative overflow-hidden transition-[height] duration-200', className)}
+    onTransitionEnd={() => setTrans(false)}
+    onTransitionStart={() => setTrans(true)}
+    className={cn(
+      'relative overflow-hidden transition-[height] duration-200',
+      { [openClassName]: !trans && isOpen },
+      className
+    )}
   >
     {children}
     <Tag className="absolute top-0 invisible">

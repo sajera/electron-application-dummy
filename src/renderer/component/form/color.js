@@ -74,7 +74,7 @@ export const Color = memo(function Color ({ input, error, value, isTouched, skip
       {/* NOTE the icon place */}
       <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
         {isLoading ? <Spinner active={isLoading} size="18" />
-          : <CubeIcon className="h-5 w-5" style={{ color: value }} aria-hidden="true" />}
+          : <CubeIcon className="h-5 w-5" style={{ color: value || 'transparent' }} aria-hidden="true" />}
       </div>
       {isShown && <div className="absolute mt-2 z-10">
         <GithubPicker

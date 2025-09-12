@@ -1,6 +1,7 @@
 // outsource dependencies
-import { useCallback, useState } from 'react'
+import { useCallback, useState, useEffect } from 'react'
 // local dependencies
+import { ToggleLS } from '../launcher/local-storage'
 
 export const stopPropagation = event => typeof event?.stopPropagation === 'function' && event.stopPropagation()
 export const preventDefault = event => typeof event?.preventDefault === 'function' && event.preventDefault()
@@ -22,6 +23,19 @@ export const useRefCallback = () => {
  */
 export const useToggle = initial => {
   const [value, set] = useState(Boolean(initial))
+  return [value, useCallback(() => set(current => !current), []), set]
+}
+
+/**
+ * prepared boolean toggle with saving state into local storage by id of toggle
+ * @param id {String}
+ * @param [def=true] {Boolean} default value
+ * @returns {[boolean,(function(): void)]}
+ */
+export const useStoredToggle = (id, def = true) => {
+  const storage = ToggleLS.get() || {}
+  const [value, set] = useState(typeof storage[id] === 'undefined' ? def : storage[id])
+  useEffect(() => id && ToggleLS.update({ [id]: value }), [value, id])
   return [value, useCallback(() => set(current => !current), []), set]
 }
 
