@@ -23,9 +23,8 @@ const clean = url => String(url).replace(/^\/+/, '')
  *          Pages          *
  ***************************/
 export const WELCOME = createRoute('/')
-export const NOT_FOUND = createRoute('/404', {
-  query: [{ name: 'error', short: 'e', defaults: null }],
-})
+
+export const DRAW_IMAGE = createRoute('/draw-image')
 
 export const AI = createRoute('ai')
 const aiRoute = (url, options) => createRoute(`/ai/${clean(url)}`, options)

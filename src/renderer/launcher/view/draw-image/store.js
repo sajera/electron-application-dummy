@@ -30,6 +30,7 @@ class DrawImagePageStore {
   }
 
   constructor () {
+    makeAutoObservable(this)
     // https://fabric5.fabricjs.com/fabric-intro-part-2#text
     this.textForm = new FormData({
       fontWeight: 'normal',
@@ -48,7 +49,6 @@ class DrawImagePageStore {
     this.sizeForm = new FormData({ width: 100, height: 100 }, this.validateSizeForm, this.resetFabric)
     this.circleForm = new FormData({ radius: 50, stroke: '#333', strokeWidth: 2, fill: '' }, this.validateCircleForm, this.addCircle)
     this.rectForm = new FormData({ width: 50, height: 50, stroke: '#333', strokeWidth: 2, fill: '' }, this.validateRectForm, this.addRect)
-    makeAutoObservable(this)
   }
 
   clearError = () => this.errorMessage = null
@@ -276,38 +276,53 @@ class DrawImagePageStore {
     return errors
   }
 
-  gridToPNG = () => this.savePNG({ quality: this.grid })
-
-  toPNG = () => this.savePNG({ quality: 1 })
-
-  savePNG = ({ quality }) => {
-    // TODO file name
-    const fileName = 'X'
+  toPNG = () => {
     this.disabled.set('to-png', true)
-    // console.log(`%c savePNG ${1} `, 'color: #FF6766; font-weight: bolder;'
-    //   , '\n fabric:', { ...this.fabric }
-    //   , '\n sizeForm:', {...this.sizeForm.value}
-    //   , '\n options:', { ...this.options }
-    // )
-    return Promise.race([
-      delayReject(3e3, { message: `Failed to create image "${fileName}.png"` }),
-      new Promise(resolve => {
-        const a = document.createElement('a')
-        this.grid.visible = false
-        const dataUrl = this.fabric.toDataURL({ format: 'png', quality })
-        this.grid.visible = true
-        a.setAttribute('href', dataUrl)
-        a.setAttribute('download', `${fileName}.png`)
-        a.style.display = 'none'
-        document.body.appendChild(a)
-        a.click()
-        // document.body.removeChild(a)
-        a.remove()
-        resolve()
-      })
-    ])
+    this.grid.visible = false
+    const dataUrl = this.fabric.toDataURL({ format: 'png', quality: 1, multiplier: 1 })
+    this.grid.visible = true
+    return savePNG(dataUrl)
       .catch(this.errorHandler('Create PNG image'))
       .finally(() => runInAction(() => this.disabled.set('to-png', false)))
+  }
+
+  // TODO reduce grid cell to one pixel
+  gridToPNG = () => {
+    const width = this.fabric.getWidth()
+    const height = this.fabric.getHeight()
+    const rw = width / this.options.grid
+    const rh = height / this.options.grid
+    console.log(`%c gridToPNG ${this.options.grid} `, 'color: #FF6766; font-weight: bolder;'
+      , '\n fabric:', { ...this.fabric }
+      , '\n width:', width
+      , '\n height:', height
+      , '\n rw:', rw
+      , '\n rh:', rh
+    )
+    this.disabled.set('grid-to-png', true)
+    this.grid.visible = false
+    const dataUrl = this.fabric.toDataURL({ format: 'png', quality: 1, multiplier: 1 })
+    this.grid.visible = true
+    return Promise.race([
+      delayReject(3e3, { message: 'Failed to align grid to PNG image' }),
+      new Promise(resolve => {
+        const canvas = document.createElement('canvas')
+        document.body.appendChild(canvas)
+        const fc = new fabric.Canvas(canvas, { interactive: false, width: rw, height: rh })
+        fabric.Image.fromURL(dataUrl, image => {
+          image.scale(Math.min(rw / image.width, rh / image.height))
+          fc.add(image)
+          fc.centerObject(image)
+          fc.renderAll()
+          const res = fc.toDataURL({ format: 'png', quality: 1, multiplier: 1 })
+          resolve(res)
+          canvas.remove()
+        })
+      })
+    ])
+      .then(savePNG)
+      .catch(this.errorHandler('Create PNG image'))
+      .finally(() => runInAction(() => this.disabled.set('grid-to-png', false)))
   }
 
   saveRAW = () => {
@@ -322,7 +337,6 @@ class DrawImagePageStore {
 
 export const drawImagePageStore = new DrawImagePageStore()
 export default drawImagePageStore
-
 
 function buildGridLines ({ width, height, grid, stroke = '#0000002b' }) {
   const lines = []
@@ -342,3 +356,18 @@ function buildGridLines ({ width, height, grid, stroke = '#0000002b' }) {
   }
   return lines
 }
+
+const savePNG = dataUrl => Promise.race([
+  delayReject(3e3, { message: 'Failed to create PNG image' }),
+  new Promise(resolve => {
+    const a = document.createElement('a')
+    a.setAttribute('href', dataUrl)
+    a.setAttribute('download', `${Date.now()}.png`)
+    a.style.display = 'none'
+    document.body.appendChild(a)
+    a.click()
+    // document.body.removeChild(a)
+    a.remove()
+    resolve()
+  })
+])

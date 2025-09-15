@@ -82,8 +82,8 @@ export default observer(function Controls ({ className }) {
       max="50"
       type="number"
       value={options.grid}
-      inLabel="GRID CELL SIZE"
       classNameFormGroup="mb-3"
+      inLabel="PX GRID CELL SIZE"
       input={{
         onChange: value => store.setGridSize(value),
         onBlur: () => options.isGridMode && store.drawGrid(),

@@ -13,6 +13,7 @@ import '../style/theme/index.css'
 import { layoutStore } from './store'
 import { Btn } from '../component/btn'
 import { PageLS } from './local-storage'
+import { Prompt } from '../component/prompt'
 import { Spinner } from '../component/loader'
 import { Confirmation } from '../component/confirm'
 import { createHistory } from '../../service/route'
@@ -69,6 +70,7 @@ const Layout = observer(function Layout () {
     <div id="ModalPortal" />
     <Confirmation />
     <Toaster />
+    <Prompt />
   </>
 // </Loader>
 })

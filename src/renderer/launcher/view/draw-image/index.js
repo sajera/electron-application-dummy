@@ -96,18 +96,27 @@ export default observer(function DrawImage () {
             </Btn>
           </Dropdown.Item>
           <Dropdown.Item as="li">
-            <Btn onClick={store.toPNG} className="btn-secondary-outline btn-md shadow-none ring-inset rounded-none border-b-0 flex items-center whitespace-nowrap text-right w-full">
+            <Btn onClick={store.gridToPNG} className="btn-secondary-outline btn-md shadow-none ring-inset rounded-none border-b-0 flex items-center whitespace-nowrap text-right w-full">
               <PhotoIcon className="size-6 mr-2" />
-              as PNG(grid)
+              as PNG(grid:1)
             </Btn>
           </Dropdown.Item>
           <Dropdown.Item as="li">
+            {/* TODO */}
+            <Btn onClick={store.gridToPNG} className="btn-secondary-outline btn-md shadow-none ring-inset rounded-none border-b-0 flex items-center whitespace-nowrap text-right w-full">
+              <PhotoIcon className="size-6 mr-2" />
+              as SVG
+            </Btn>
+          </Dropdown.Item>
+          <Dropdown.Item as="li">
+            {/* TODO */}
             <Btn onClick={store.saveRAW} className="btn-secondary-outline btn-md shadow-none ring-inset rounded-none border-b-0 flex items-center whitespace-nowrap text-right w-full">
               <RectangleGroupIcon className="size-6 mr-2" />
               RAW Template
             </Btn>
           </Dropdown.Item>
           <Dropdown.Item as="li">
+            {/* TODO */}
             <Btn className="btn-secondary-outline btn-md shadow-none ring-inset rounded-none flex items-center whitespace-nowrap text-right w-full">
               <FolderPlusIcon className="size-6 mr-2" />
               Add to source

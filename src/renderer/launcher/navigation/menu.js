@@ -28,6 +28,13 @@ export default [
     isActive: path => ROUTS.WELCOME.ROUTE === path,
   },
   {
+    icon: PaintBrushIcon,
+    name: 'Draw image',
+    type: MENU_ITEM_TYPE.LINK,
+    link: ROUTS.DRAW_IMAGE.LINK(),
+    isActive: path => ROUTS.DRAW_IMAGE.ROUTE === path,
+  },
+  {
     name: 'AI',
     icon: CpuChipIcon,
     type: MENU_ITEM_TYPE.MENU,
@@ -54,13 +61,6 @@ export default [
         type: MENU_ITEM_TYPE.ACTION,
         // link: ROUTS.WINDOW.DETAILS.LINK(),
         // isActive: path => ROUTS.WINDOW.DETAILS.LINK() === path,
-      },
-      {
-        icon: PaintBrushIcon,
-        name: 'Draw image',
-        type: MENU_ITEM_TYPE.LINK,
-        link: ROUTS.AI.DRAW.LINK(),
-        isActive: path => ROUTS.AI.DRAW.LINK() === path,
       },
     ]
   },
