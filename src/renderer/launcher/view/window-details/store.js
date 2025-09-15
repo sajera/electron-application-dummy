@@ -7,6 +7,7 @@ import { WINDOW } from '../../navigation'
 import toast from '../../../component/toast'
 import { FormData } from '../../../component/form'
 import { delayResolve } from '../../../../service'
+import { confirm } from '../../../component/confirm'
 
 // configure
 export const TAB = {
@@ -189,14 +190,21 @@ class WindowDetailsStore {
       .finally(() => runInAction(() => this.disabled.set('close', false)))
   }
 
-  remove = () => {
+  remove = () => confirm({
+    silence: true,
+    destructive: true,
+    mark: this.details?.options?.title,
+    title: `Confirm the deletion of the window ${this.details?.options?.title || ''}`,
+    message: `Please confirm the deletion of the window "${this.details?.options?.title || ''}". This action cannot be undone, and the window will no longer be available. Make sure this action is necessary before proceeding.`,
+  }).then(() => runInAction(() => {
     this.disabled.set('remove', true)
+
     return preload.windowExplorer('remove-window-by-id', this.id)
       .then(() => WINDOW.DETAILS.PUSH())
       .then(layoutStore.refineNavigation)
       .catch(this.errorHandler('Removing window'))
       .finally(() => runInAction(() => this.disabled.set('remove', false)))
-  }
+  }))
 
   refreshDetails = () => {
     this.disabled.set('details', true)

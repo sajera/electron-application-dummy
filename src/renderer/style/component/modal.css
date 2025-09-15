@@ -1,0 +1,47 @@
+@reference '../theme/index.css';
+
+.app-modal {
+  @apply
+  relative
+  transform
+  rounded-md
+  transition-all
+  shadow-lg
+  bg-body;
+}
+
+.app-modal-header {
+  @apply
+  sticky
+  top-0
+  z-20
+  px-4
+  py-3
+  text-lg
+  leading-6
+  font-medium
+  rounded-t-md
+  shadow
+  dark:shadow-gray-700
+  bg-alt;
+}
+.app-modal-body {
+  @apply relative p-4 shadow-inner dark:shadow-gray-800
+}
+.app-modal-footer {
+  @apply
+  sticky
+  bottom-0
+  px-4
+  py-3
+  z-20
+  font-medium
+  rounded-b-md
+  dark:shadow-gray-700
+  shadow-[0_-1px_3px_0_rgba(0,0,0,0.1)]
+  bg-alt;
+}
+
+.app-modal-btn-close {
+  @apply cursor-pointer text-gray-400 hover:text-gray-800 dark:hover:text-gray-100 -mr-1
+}

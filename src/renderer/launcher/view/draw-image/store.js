@@ -16,6 +16,7 @@ class DrawImagePageStore {
   disabled = new Map()
 
   data = null
+  // grid = null // avoid mobx observation
   // fabric = null // avoid mobx observation
   canvas = null
 
@@ -87,13 +88,9 @@ class DrawImagePageStore {
     }
   }
 
-  resetFabric = ({ width, height, point }) => {
+  resetFabric = ({ width, height }) => {
     if (this.fabric) this.fabric.dispose()
-    this.fabric = new fabric.Canvas(this.canvas, {
-      interactive: true, // NOTE require "resetFabric" to apply
-      height: height,
-      width: width,
-    })
+    this.fabric = new fabric.Canvas(this.canvas, { interactive: true, height: height, width: width })
     // NOTE apply after reset
     this.setBG(this.options.backgroundColor)
     this.setGridMode(this.options.isGridMode)
@@ -279,7 +276,11 @@ class DrawImagePageStore {
     return errors
   }
 
-  savePNG = () => {
+  gridToPNG = () => this.savePNG({ quality: this.grid })
+
+  toPNG = () => this.savePNG({ quality: 1 })
+
+  savePNG = ({ quality }) => {
     // TODO file name
     const fileName = 'X'
     this.disabled.set('to-png', true)
@@ -293,7 +294,7 @@ class DrawImagePageStore {
       new Promise(resolve => {
         const a = document.createElement('a')
         this.grid.visible = false
-        const dataUrl = this.fabric.toDataURL({ format: 'png', quality: 1 })
+        const dataUrl = this.fabric.toDataURL({ format: 'png', quality })
         this.grid.visible = true
         a.setAttribute('href', dataUrl)
         a.setAttribute('download', `${fileName}.png`)

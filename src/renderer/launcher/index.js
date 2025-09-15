@@ -14,6 +14,7 @@ import { layoutStore } from './store'
 import { Btn } from '../component/btn'
 import { PageLS } from './local-storage'
 import { Spinner } from '../component/loader'
+import { Confirmation } from '../component/confirm'
 import { createHistory } from '../../service/route'
 import { SidebarItem, Routing } from './navigation'
 
@@ -65,6 +66,8 @@ const Layout = observer(function Layout () {
     <div className={cn('relative h-screen pt-12 transition-all overflow-y-auto shadow-inner', { 'ml-60': !isSidebarHidden })}>
       <Routing />
     </div>
+    <div id="ModalPortal" />
+    <Confirmation />
     <Toaster />
   </>
 // </Loader>

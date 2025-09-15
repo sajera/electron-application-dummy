@@ -90,9 +90,15 @@ export default observer(function DrawImage () {
           </Btn>}
         >
           <Dropdown.Item as="li">
-            <Btn onClick={store.savePNG} className="btn-secondary-outline btn-md shadow-none ring-inset rounded-none border-b-0 flex items-center whitespace-nowrap text-right w-full">
+            <Btn onClick={store.toPNG} className="btn-secondary-outline btn-md shadow-none ring-inset rounded-none border-b-0 flex items-center whitespace-nowrap text-right w-full">
               <PhotoIcon className="size-6 mr-2" />
-              PNG image
+              as PNG(1:1)
+            </Btn>
+          </Dropdown.Item>
+          <Dropdown.Item as="li">
+            <Btn onClick={store.toPNG} className="btn-secondary-outline btn-md shadow-none ring-inset rounded-none border-b-0 flex items-center whitespace-nowrap text-right w-full">
+              <PhotoIcon className="size-6 mr-2" />
+              as PNG(grid)
             </Btn>
           </Dropdown.Item>
           <Dropdown.Item as="li">
