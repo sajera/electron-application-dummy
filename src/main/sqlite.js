@@ -7,6 +7,7 @@ import { ipcMain } from 'electron'
 // local dependencies
 import PATH from './app-path'
 import debugInfo from './debug-info'
+// sqlite file should be copied and path of it will be passed here
 import initialData from '../assets/sqlite/local.initial.sqlite'
 
 export default new class SQLite {
@@ -42,7 +43,7 @@ export default new class SQLite {
     // const Database = sqlite3.Database
     this.db = new Database(this.dbPath)
     // NOTE run upgrade migrations
-    this.upgrade()
+    return this.migrations()
   }
 
   handle = (event, ...params) => this.promise('all', ...params)
@@ -56,18 +57,25 @@ export default new class SQLite {
 
   close = () => this.db?.close()
 
-  upgrade = () => {
-    const upgrades = _.filter(
-      fs.readdirSync(PATH.RESOURCES),
-      name => /^upgrade.*\.sqlite$/.test(name)
-    )
-
-    for (const file of upgrades) {
-      console.log('upgrade from ', file)
-
+  migrations = async () => {
+    for (const { up, script } of [
+      { script: 'create-table-windows', up: require('../assets/sqlite/create-table-windows') },
+      { script: 'create-table-robots', up: require('../assets/sqlite/create-table-robots') },
+    ]) {
+      await this.promise('run', `INSERT OR IGNORE INTO migrations (script) VALUES (?)`, script)
+      let [migration] = await this.promise('all', `SELECT * FROM migrations WHERE script = ?`, script)
+      // console.log(`upgrade ${script}`, '\n migration:', migration)
+      if (!migration?.done) {
+        await up(this)
+        await this.promise('run', `UPDATE migrations SET done = ? WHERE id = ?;`, 1, migration.id)
+        console.log(`upgrade script "${script}"`)
+      }
+      // const res = await this.promise('all', `SELECT * FROM migrations WHERE id = ?`, migration.id)
+      // console.log(`upgrade results for ${script}`
+      //   , '\n res:', res
+      // )
     }
-
-    // TODO upgrade migrations
     console.info('DB up to date ')
   }
+
 }
