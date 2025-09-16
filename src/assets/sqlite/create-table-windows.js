@@ -1,4 +1,4 @@
-module.exports = SQLite => new Promise(resolve => {
+module.exports = SQLite => new Promise((resolve, reject) => {
   SQLite.db.serialize(() => {
     SQLite.db.run(`CREATE TABLE windows (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -79,6 +79,6 @@ module.exports = SQLite => new Promise(resolve => {
     const windows = SQLite.db.prepare('INSERT INTO windows (title, kiosk) VALUES (?,?)')
     windows.run('Default', 0)
     windows.run('Kiosk', 1)
-    windows.finalize(resolve)
+    windows.finalize(err => !err ? resolve() : reject(err))
   })
 })
