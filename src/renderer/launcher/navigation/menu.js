@@ -57,10 +57,9 @@ export default [
       {
         icon: PlusIcon,
         name: 'Create model',
-        disabled: true,
-        type: MENU_ITEM_TYPE.ACTION,
-        // link: ROUTS.WINDOW.DETAILS.LINK(),
-        // isActive: path => ROUTS.WINDOW.DETAILS.LINK() === path,
+        type: MENU_ITEM_TYPE.LINK,
+        link: ROUTS.AI.DETAILS.LINK(),
+        isActive: ROUTS.AI.DETAILS.TEST
       },
     ]
   },

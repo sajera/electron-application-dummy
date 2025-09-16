@@ -2,30 +2,28 @@
 import _ from 'lodash'
 import cn from 'classnames'
 import { observer } from 'mobx-react'
-import React, { useEffect, useMemo, useState } from 'react'
-import { WindowIcon, TrashIcon } from '@heroicons/react/24/solid'
+import React, { useEffect, useMemo } from 'react'
+import { CpuChipIcon, TrashIcon } from '@heroicons/react/24/outline'
 // local dependencies
 import TabForm from './tab-form'
 import store, { TAB } from './store'
 import TabWindow from './tab-window'
+import { AI } from '../../navigation'
 import TabRuntime from './tab-runtime'
-import { WINDOW } from '../../navigation'
 import { ErrorMessage } from '../../../component/alert'
 import { Btn, ExternalLink } from '../../../component/btn'
 import { Loader, Spinner } from '../../../component/loader'
 
-export default observer(function WindowDetails () {
+export default observer(function AIModelDetails () {
   const { initialized, disabled, errorMessage, details, selectedTab } = store
 
-  const { id } = WINDOW.DETAILS.PARAMS()
+  const { id } = AI.DETAILS.PARAMS()
   useEffect(() => store.initialize(id), [id])
 
   const TabView = useMemo(() => {
     switch (selectedTab) {
       case TAB.FORM:
       default: return TabForm
-      case TAB.WINDOW: return TabWindow
-      case TAB.RUNTIME: return TabRuntime
     }
   }, [selectedTab])
 
@@ -36,26 +34,26 @@ export default observer(function WindowDetails () {
   return <div className="relative flex flex-col h-full overflow-hidden p-4">
     <div className="mb-2 flex items-center justify-between">
       <h2 className="text-3xl">
-        <WindowIcon className="size-10 inline-block mb-2" />
+        <CpuChipIcon className="size-10 inline-block mb-2" />
         <strong className="text-muted mx-2">{id ? `#${id}` : 'NEW'}</strong>
-        {!id ? <span className="mx-2">Window</span> : <>
+        {!id ? <span className="mx-2">AI Model</span> : <>
           <Spinner active={!initialized} className="size-6 mb-2 mx-4">
             <span className="mx-2">{details?.options?.title}</span>
           </Spinner>
         </>}
       </h2>
       <div className="flex items-center">
-        <ExternalLink href="https://www.electronjs.org/docs/latest/api/browser-window" className="mr-4">
-          Electron.BrowserWindow
+        <ExternalLink href="https://www.tensorflow.org/js" className="mr-4">
+          Tensorflow
         </ExternalLink>
         {/* TODO confirmation */}
         {/*"Are you sure you want to delete the window runtime and its definition?"*/}
         {/*"This action will permanently delete the window runtime and definition. Do you want to continue?"*/}
         {initialized && details && <Btn
           onClick={store.remove}
+          title="Delete AI Model"
           className="btn-danger btn-md"
           disabled={disabled.get('remove')}
-          title="Delete window runtime and definition"
         >
           <TrashIcon className="inline-block size-5 mb-1" /> DELETE
         </Btn>}

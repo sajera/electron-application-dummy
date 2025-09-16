@@ -17,8 +17,8 @@ export default observer(function TabForm ({ className, ...attr }) {
   // )
 
   // FIXME should I remove direct "disabled" nad delay for update ?
-  return <div className={cn('relative', { 'pointer-events-none': disabled.get('form') }, className)} {...attr}>
-    <Form store={form} className="grow overflow-y-auto h-40 -my-4 py-4 -mr-4 pr-4">
+  return <div className={cn('relative grow h-40 -my-4 py-4 -mr-4 pr-4 !overflow-y-auto', { 'pointer-events-none': disabled.get('form') }, className)} {...attr}>
+    <Form store={form} className="">
       <div className="grid grid-cols-3 gap-4 mb-4">
         <Field
           checkmark

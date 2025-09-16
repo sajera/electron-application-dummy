@@ -13,6 +13,7 @@ export default memo(function Routing () {
     <Route path={ROUTS.DRAW_IMAGE.ROUTE} component={require('../view/draw-image').default} />
 
     <Route path={ROUTS.AI.IMAGE.ROUTE} component={require('../view/ai-image').default} />
+    <Route path={ROUTS.AI.DETAILS.ROUTE} component={require('../view/ai-model-details').default} />
 
     <Route path={ROUTS.WINDOW.DETAILS.ROUTE} component={require('../view/window-details').default} />
     <Route path={ROUTS.WINDOW.LIST.ROUTE} component={require('../view/window-list').default} />

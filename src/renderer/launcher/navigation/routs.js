@@ -29,7 +29,9 @@ export const DRAW_IMAGE = createRoute('/draw-image')
 export const AI = createRoute('ai')
 const aiRoute = (url, options) => createRoute(`/ai/${clean(url)}`, options)
 AI.IMAGE = aiRoute('/ai-image')
-AI.DRAW = aiRoute('/draw-image')
+AI.DETAILS = aiRoute('/details/:id', {
+  params: [ANNOTATION.ID({})],
+})
 // TODO window to work with different AI models
 
 export const WINDOW = createRoute('window')
