@@ -103,7 +103,7 @@ export default observer(function DrawImage () {
           </Dropdown.Item>
           <Dropdown.Item as="li">
             {/* TODO */}
-            <Btn onClick={store.gridToPNG} className="btn-secondary-outline btn-md shadow-none ring-inset rounded-none border-b-0 flex items-center whitespace-nowrap text-right w-full">
+            <Btn onClick={store.toSVG} className="btn-secondary-outline btn-md shadow-none ring-inset rounded-none border-b-0 flex items-center whitespace-nowrap text-right w-full">
               <PhotoIcon className="size-6 mr-2" />
               as SVG
             </Btn>
