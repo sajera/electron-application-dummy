@@ -18,7 +18,7 @@ class DrawImagePageStore {
   data = null
   // grid = null // avoid mobx observation
   // fabric = null // avoid mobx observation
-  canvas = null
+  // canvas = null // avoid mobx observation
 
   options = {
     backgroundColor: 'transparent',
@@ -286,36 +286,25 @@ class DrawImagePageStore {
       .finally(() => runInAction(() => this.disabled.set('to-png', false)))
   }
 
-  // TODO reduce grid cell to one pixel
   gridToPNG = () => {
-    const width = this.fabric.getWidth()
-    const height = this.fabric.getHeight()
-    const rw = width / this.options.grid
-    const rh = height / this.options.grid
-    console.log(`%c gridToPNG ${this.options.grid} `, 'color: #FF6766; font-weight: bolder;'
-      , '\n fabric:', { ...this.fabric }
-      , '\n width:', width
-      , '\n height:', height
-      , '\n rw:', rw
-      , '\n rh:', rh
-    )
     this.disabled.set('grid-to-png', true)
     this.grid.visible = false
     const dataUrl = this.fabric.toDataURL({ format: 'png', quality: 1, multiplier: 1 })
     this.grid.visible = true
+    const width = this.fabric.getWidth() / this.options.grid
+    const height = this.fabric.getHeight() / this.options.grid
     return Promise.race([
       delayReject(3e3, { message: 'Failed to align grid to PNG image' }),
       new Promise(resolve => {
         const canvas = document.createElement('canvas')
         document.body.appendChild(canvas)
-        const fc = new fabric.Canvas(canvas, { interactive: false, width: rw, height: rh })
+        const fc = new fabric.Canvas(canvas, { interactive: false, width, height })
         fabric.Image.fromURL(dataUrl, image => {
-          image.scale(Math.min(rw / image.width, rh / image.height))
+          image.scale(Math.min(width / image.width, height / image.height))
           fc.add(image)
           fc.centerObject(image)
           fc.renderAll()
-          const res = fc.toDataURL({ format: 'png', quality: 1, multiplier: 1 })
-          resolve(res)
+          resolve(fc.toDataURL({ format: 'png', quality: 1, multiplier: 1 }))
           canvas.remove()
         })
       })
@@ -326,6 +315,7 @@ class DrawImagePageStore {
   }
 
   saveRAW = () => {
+    // TODO
     console.log(`%c saveRAW ${1} `, 'color: #FF6766; font-weight: bolder;'
       , '\n fabric:', { ...this.fabric }
       , '\n sizeForm:', {...this.sizeForm.value}
